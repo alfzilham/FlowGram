@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlowGram</title>
+  <link rel="stylesheet" href="css/variable.css">
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/loader.css">
+  <link rel="stylesheet" href="css/home.css">
+  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+</head>
+
+<body>
+  <div id="app">
+
+    <div id="loader-overlay">
+      <div class="loader-spinner">
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#6366F1" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="65 198" />
+        </svg>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#818CF8" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="50 198" />
+        </svg>
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="42" fill="none" stroke="#A5B4FC" stroke-width="10" stroke-linecap="round"
+            stroke-dasharray="30 198" />
+        </svg>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside id="sidebar">
+      <div id="sidebar-logo">
+        <img src="assets/images/logo/Logo.png" alt="FlowGram" id="home-logo">
+        <span id="home-title">Flow<span style="color: var(--accent)">Gram</span></span>
+      </div>
+
+      <nav id="sidebar-nav">
+        <button class="nav-item active" data-filter="all">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+          </svg>
+          Semua Project
+        </button>
+        <button class="nav-item" data-filter="archived">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M21 8v13H3V8" />
+            <path d="M1 3h22v5H1z" />
+            <path d="M10 12h4" />
+          </svg>
+          Diarsipkan
+        </button>
+      </nav>
+
+      <div id="sidebar-folders">
+        <div id="folders-header">
+          <span id="folders-label">Folder</span>
+          <button id="btn-new-folder" title="Folder baru">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+          </button>
+        </div>
+        <div id="folders-list">
+          <!-- dirender oleh home.js -->
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main area -->
+    <div id="main">
+
+      <!-- Top bar -->
+      <header id="topbar">
+        <button id="btn-hamburger" title="Menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </button>
+        <div id="search-wrap">
+          <svg id="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input type="text" id="search-input" placeholder="Cari project…">
+        </div>
+        <div id="topbar-actions">
+          <button id="btn-theme-home" title="Ganti tema">
+            <svg class="tb-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="4" />
+              <path
+                d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+            </svg>
+            <svg class="tb-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+          <button id="btn-new-project" class="btn-primary">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            New Project
+          </button>
+        </div>
+      </header>
+
+      <!-- Project grid -->
+      <div id="content">
+        <div id="content-header">
+          <h2 id="content-title">Semua Project</h2>
+        </div>
+        <div id="projects-grid">
+          <!-- dirender oleh home.js -->
+        </div>
+        <div id="empty-home" class="hidden">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 11l9-8 9 8" />
+            <path d="M5 10v10h14V10" />
+          </svg>
+          <p><b>Belum ada project.</b></p>
+          <p>Klik <b>New Project</b> untuk memulai.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar overlay (mobile) -->
+    <div id="sidebar-overlay"></div>
+
+    <!-- Context menu (shared) -->
+    <div id="ctx-menu" class="hidden"></div>
+
+    <!-- Toast -->
+    <div id="toast"></div>
+
+    <!-- Delete modal -->
+        <div id="delete-modal" class="hidden">
+            <div id="delete-backdrop"></div>
+            <div id="delete-dialog">
+                <h3 id="delete-title">Hapus Project</h3>
+                <p id="delete-desc">Tindakan ini tidak bisa dibatalkan.</p>
+                <div id="delete-actions">
+                    <button id="delete-cancel" class="btn-secondary">Batal</button>
+                    <button id="delete-confirm" class="btn-danger">Hapus</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Rename modal -->
+        <div id="rename-modal" class="hidden">
+            <div id="rename-backdrop"></div>
+            <div id="rename-dialog">
+                <h3 id="rename-title">Rename</h3>
+                <input type="text" id="rename-input" placeholder="Nama baru…">
+                <div id="rename-actions">
+                    <button id="rename-cancel" class="btn-secondary">Batal</button>
+                    <button id="rename-confirm" class="btn-primary">Simpan</button>
+                </div>
+            </div>
+        </div>
+
+  </div>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="js/shared.js"></script>
+  <script src="js/home.js"></script>
+</body>
+
+</html>

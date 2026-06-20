@@ -1,0 +1,13 @@
+# Database
+ruvector.db
+
+# Docs
+docs/*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,179 @@
+.tb-logo{height:28px;width:auto;display:block;}
+
+/* ---------- Node icon ---------- */
+.node-icon{width:26px;height:26px;display:block;margin:0 auto 6px;color:var(--accent);}
+
+/* ---------- Icon picker ---------- */
+.ctx-icons{display:grid;grid-template-columns:repeat(6,1fr);gap:5px;padding:4px 10px 8px;}
+.ctx-icon-cell{display:flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:8px;cursor:pointer;color:var(--text);background:transparent;transition:background .1s ease,color .1s ease;}
+.ctx-icon-cell:hover{background:var(--accent-soft);color:var(--accent);}
+.ctx-icon-cell.selected{background:var(--accent-soft);color:var(--accent);box-shadow:0 0 0 2px var(--accent);}
+.ctx-icon-cell svg{width:18px;height:18px;}
+.ctx-icon-category-label{padding:8px 12px 2px;font-size:11px;font-weight:600;letter-spacing:.04em;color:var(--text-muted);text-transform:uppercase;}
+.ctx-icon-submenu{max-height:420px;overflow-y:auto;min-width:220px;}
+.ctx-icon-submenu::-webkit-scrollbar{width:4px;}
+.ctx-icon-submenu::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px;}
+
+/* ---------- Connection ---------- */
+.connection-hit {
+    fill: none;
+    stroke: transparent;
+    stroke-width: 16;
+    pointer-events: stroke;
+    cursor: pointer;
+}
+
+.connection-visible {
+    fill: none;
+    stroke: var(--connection-stroke);
+    stroke-width: 2;
+    pointer-events: none;
+    stroke-dasharray: 7 7;
+    animation: flowDash 0.9s linear infinite;
+    transition: stroke .12s ease, stroke-width .12s ease;
+}
+
+.connection-hit:hover+.connection-visible,
+.connection-visible.hover {
+    stroke: var(--accent);
+    stroke-width: 2.5;
+}
+
+#temp-line {
+    fill: none;
+    stroke: var(--accent);
+    stroke-width: 2;
+    stroke-dasharray: 6 4;
+    pointer-events: none;
+}
+
+#arrowhead path {
+    fill: var(--connection-stroke);
+}
+
+/* ---------- Node ---------- */
+.node {
+    position: absolute;
+    min-width: 180px;
+    max-width: 260px;
+    user-select: none;
+}
+
+.node-body {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+    padding: 14px 16px;
+    cursor: grab;
+    touch-action: none;
+    transition: box-shadow .15s ease, border-color .15s ease, transform .08s ease, background-color .2s ease;
+}
+
+.node-body:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.node.dragging .node-body {
+    cursor: grabbing;
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.01);
+}
+
+.node.selected .node-body {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft), var(--shadow-md);
+}
+
+.node-text {
+    font-size: 13.5px;
+    line-height: 1.5;
+    color: var(--text);
+    outline: none;
+    word-break: break-word;
+    white-space: pre-wrap;
+    min-height: 20px;
+    text-align: center;
+}
+
+.node-text[contenteditable="true"] {
+    cursor: text;
+    box-shadow: inset 0 0 0 1px var(--accent);
+    border-radius: 6px;
+    padding: 2px 4px;
+    margin: -2px -4px;
+}
+
+.node-text:empty:before {
+    content: 'Ketik teks…';
+    color: var(--text-muted);
+}
+
+.node-menu-btn {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 7px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .12s ease, background .12s ease;
+    color: var(--text-muted);
+}
+
+.node-body:hover .node-menu-btn {
+    opacity: 1;
+}
+
+.node-menu-btn:hover {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
+/* ---------- Connector dots ---------- */
+.connector-dot {
+    position: absolute;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--connector-border);
+    transform: translate(-50%, -50%);
+    cursor: crosshair;
+    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+    z-index: 5;
+}
+
+.connector-dot:hover,
+.connector-dot.active {
+    transform: translate(-50%, -50%) scale(1.5);
+    background: var(--accent);
+    border-color: var(--accent);
+}
+
+.connector-dot.top {
+    left: 50%;
+    top: 0;
+}
+
+.connector-dot.bottom {
+    left: 50%;
+    top: 100%;
+}
+
+.connector-dot.left {
+    left: 0;
+    top: 50%;
+}
+
+.connector-dot.right {
+    left: 100%;
+    top: 50%;
+}

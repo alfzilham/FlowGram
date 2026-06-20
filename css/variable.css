@@ -1,0 +1,52 @@
+:root {
+    --bg: #f0f0f0;
+    --dot: #E2E2E6;
+    --surface: #FFFFFF;
+    --border: #E4E4E7;
+    --border-strong: #D4D4D8;
+    --text: #18181B;
+    --text-muted: #8B8B93;
+    --accent: #6366F1;
+    --accent-soft: #EEF0FF;
+    --connector-border: #C4C6F5;
+    --connection-stroke: #B9BCF5;
+    --shadow-sm: 0 1px 2px rgba(24, 24, 27, 0.04);
+    --shadow-md: 0 2px 6px rgba(24, 24, 27, 0.06), 0 8px 24px rgba(24, 24, 27, 0.06);
+    --shadow-lg: 0 8px 24px rgba(24, 24, 27, 0.12), 0 2px 6px rgba(24, 24, 27, 0.08);
+    --radius: 14px;
+}
+
+:root[data-theme="dark"] {
+    --bg: #19191C;
+    --dot: #28282C;
+    --surface: #212126;
+    --border: #323238;
+    --border-strong: #46464E;
+    --text: #F1F1F3;
+    --text-muted: #8E8E97;
+    --accent: #818CF8;
+    --accent-soft: rgba(129, 140, 248, 0.16);
+    --connector-border: #5457A6;
+    --connection-stroke: #54577F;
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.25);
+    --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    --shadow-lg: 0 8px 28px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+@keyframes flowDash {
+    to {
+        stroke-dashoffset: -28;
+    }
+}
+
+@keyframes ctxIn {
+    from {
+        opacity: 0;
+        transform: scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

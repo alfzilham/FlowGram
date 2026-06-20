@@ -1,0 +1,296 @@
+/* ========================================
+   Responsive Design
+   ======================================== */
+
+.tb-show-mobile { display: none; }
+
+/* ---------- Tablet (≤1024px) ---------- */
+@media (max-width: 1024px) {
+    #toolbar {
+        gap: 1px;
+        padding: 5px;
+    }
+
+    .tb-btn {
+        height: 34px;
+        min-width: 34px;
+        padding: 0 8px;
+        font-size: 12px;
+    }
+
+    .tb-btn span {
+        display: none;
+    }
+
+    .tb-zoom-label {
+        min-width: 34px;
+        font-size: 11px;
+    }
+
+    .tb-logo {
+        height: 24px;
+    }
+
+    .node {
+        max-width: 230px;
+    }
+}
+
+/* ---------- Mobile (≤768px) ---------- */
+@media (max-width: 768px) {
+
+    /* --- Toolbar → Bottom --- */
+    #toolbar {
+        top: auto;
+        bottom: 14px;
+        left: 12px;
+        right: 12px;
+        transform: none;
+        border-radius: 14px;
+        padding: 6px 8px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        gap: 1px;
+    }
+
+    #toolbar::-webkit-scrollbar {
+        display: none;
+    }
+
+    .tb-btn {
+        height: 36px;
+        min-width: 36px;
+        font-size: 12px;
+    }
+
+    .tb-btn span {
+        display: none;
+    }
+
+    .tb-logo {
+        height: 22px;
+    }
+
+    .tb-sep {
+        height: 18px;
+        margin: 0 3px;
+    }
+
+    .tb-zoom-label {
+        min-width: 32px;
+        font-size: 11px;
+    }
+
+    .tb-hide-mobile {
+        display: none !important;
+    }
+
+    .tb-show-mobile {
+        display: flex !important;
+    }
+
+    /* --- Canvas --- */
+    #empty-state {
+        width: 85%;
+        max-width: 320px;
+        font-size: 13px;
+        line-height: 1.5;
+        top: 38%;
+    }
+
+    .node {
+        max-width: 200px;
+    }
+
+    /* --- Bottom Sheet --- */
+    .ctx-menu {
+        position: fixed !important;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        top: auto !important;
+        border-radius: 16px 16px 0 0 !important;
+        max-height: 70vh;
+        overflow-y: auto;
+        min-width: auto !important;
+        animation: sheetUp .25s ease;
+        box-shadow: 0 -4px 28px rgba(0, 0, 0, 0.2);
+        z-index: 200 !important;
+        left: 0 !important;
+        transform: none !important;
+    }
+
+    @keyframes sheetUp {
+        from {
+            transform: translateY(100%);
+        }
+
+        to {
+            transform: translateY(0);
+        }
+    }
+
+    .sheet-backdrop {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.45);
+        z-index: 199;
+        animation: fadeIn .2s ease;
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+
+        to {
+            opacity: 1;
+        }
+    }
+
+    .sheet-handle {
+        width: 36px;
+        height: 4px;
+        border-radius: 4px;
+        background: var(--border-strong);
+        margin: 8px auto 4px;
+    }
+
+    /* --- Context menu items (bigger touch) --- */
+    .ctx-item {
+        padding: 12px 14px;
+        font-size: 14px;
+    }
+
+    .ctx-item svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .ctx-label {
+        font-size: 12px;
+        padding: 10px 14px 6px;
+    }
+
+    .ctx-sep {
+        margin: 4px 12px;
+    }
+
+    .ctx-colors {
+        gap: 8px;
+        padding: 8px 14px 10px;
+    }
+
+    .ctx-color-sw {
+        width: 26px;
+        height: 26px;
+    }
+
+    .ctx-icons {
+        padding: 4px 14px 10px;
+        gap: 6px;
+    }
+
+    .ctx-icon-cell {
+        width: 40px;
+        height: 40px;
+    }
+
+    .ctx-icon-cell svg {
+        width: 22px;
+        height: 22px;
+    }
+
+    /* --- Icon submenu full-screen --- */
+    .ctx-icon-submenu {
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        border-radius: 0 !important;
+        min-width: auto !important;
+        max-height: none !important;
+        z-index: 201 !important;
+        animation: fadeIn .15s ease;
+        overflow-y: auto;
+        padding-top: 0;
+    }
+
+    .ctx-icon-submenu .ctx-icon-category-label {
+        padding: 14px 16px 4px;
+        font-size: 12px;
+    }
+
+    .ctx-icon-submenu .ctx-icons {
+        grid-template-columns: repeat(5, 1fr);
+        gap: 8px;
+        padding: 4px 16px 12px;
+    }
+
+    .ctx-icon-submenu .ctx-icon-cell {
+        width: 44px;
+        height: 44px;
+    }
+
+    .ctx-icon-submenu .ctx-icon-cell svg {
+        width: 24px;
+        height: 24px;
+    }
+
+    /* --- Toast --- */
+    #toast {
+        bottom: 80px;
+    }
+}
+
+/* ---------- Small Mobile (≤480px) ---------- */
+@media (max-width: 480px) {
+    #toolbar {
+        bottom: 10px;
+        left: 8px;
+        right: 8px;
+        padding: 5px 6px;
+        border-radius: 12px;
+    }
+
+    .tb-btn {
+        height: 32px;
+        min-width: 32px;
+    }
+
+    .tb-logo {
+        height: 18px;
+    }
+
+    .tb-btn svg {
+        width: 15px;
+        height: 15px;
+    }
+
+    .tb-zoom-label {
+        min-width: 28px;
+        font-size: 10px;
+    }
+
+    .ctx-item {
+        padding: 10px 12px;
+        font-size: 13px;
+    }
+
+    .ctx-icon-submenu .ctx-icons {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .ctx-icon-submenu .ctx-icon-cell {
+        width: 40px;
+        height: 40px;
+    }
+
+    #toast {
+        bottom: 72px;
+        font-size: 12px;
+        padding: 7px 12px;
+    }
+}

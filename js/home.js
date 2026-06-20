@@ -1,0 +1,531 @@
+(function () {
+    "use strict";
+
+    const THEME_KEY = 'wf_builder_theme';
+
+    /* ---------------- state ---------------- */
+    let currentFilter = 'all';      // 'all' | 'archived' | folder id
+    let searchQuery = '';
+
+    /* ---------------- dom refs ---------------- */
+    const projectsGrid = document.getElementById('projects-grid');
+    const emptyHome = document.getElementById('empty-home');
+    const foldersList = document.getElementById('folders-list');
+    const contentTitle = document.getElementById('content-title');
+    const searchInput = document.getElementById('search-input');
+    const ctxMenu = document.getElementById('ctx-menu');
+    const toastEl = document.getElementById('toast');
+    const renameModal = document.getElementById('rename-modal');
+    const renameInput = document.getElementById('rename-input');
+    const renameTitle = document.getElementById('rename-title');
+    const renameConfirm = document.getElementById('rename-confirm');
+    const renameCancel = document.getElementById('rename-cancel');
+    const renameBd = document.getElementById('rename-backdrop');
+
+    /* ---------------- theme ---------------- */
+    function isDark() { return document.documentElement.getAttribute('data-theme') === 'dark'; }
+
+    function applyTheme(t) {
+        document.documentElement.setAttribute('data-theme', t);
+        try { localStorage.setItem(THEME_KEY, t); } catch (e) { }
+    }
+
+    function initTheme() {
+        let saved = null;
+        try { saved = localStorage.getItem(THEME_KEY); } catch (e) { }
+        if (!saved) {
+            saved = (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+        }
+        document.documentElement.setAttribute('data-theme', saved);
+    }
+
+    document.getElementById('btn-theme-home').addEventListener('click', () => {
+        applyTheme(isDark() ? 'light' : 'dark');
+    });
+
+    /* ---------------- toast ---------------- */
+    let toastTimer = null;
+    function showToast(msg) {
+        toastEl.textContent = msg;
+        toastEl.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1800);
+    }
+
+    /* ---------------- helpers ---------------- */
+    function formatDate(ts) {
+        if (!ts) return '';
+        const d = new Date(ts);
+        const now = new Date();
+        const diff = now - d;
+        const mins = Math.floor(diff / 60000);
+        if (mins < 1) return 'Baru saja';
+        if (mins < 60) return mins + ' menit lalu';
+        const hours = Math.floor(mins / 60);
+        if (hours < 24) return hours + ' jam lalu';
+        const days = Math.floor(hours / 24);
+        if (days < 7) return days + ' hari lalu';
+        return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+    }
+
+    function iconSvg(path) {
+        return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
+    }
+
+    /* ---------------- context menu ---------------- */
+    let ctxVisible = false;
+
+    function closeCtxMenu() {
+        if (!ctxVisible) return;
+        ctxMenu.classList.add('hidden');
+        ctxMenu.innerHTML = '';
+        ctxVisible = false;
+    }
+
+    function openCtxMenu(items, clientX, clientY) {
+        closeCtxMenu();
+        ctxMenu.innerHTML = '';
+
+        items.forEach(item => {
+            if (item === 'sep') {
+                const sep = document.createElement('div');
+                sep.className = 'ctx-menu-sep';
+                ctxMenu.appendChild(sep);
+                return;
+            }
+            const btn = document.createElement('button');
+            btn.className = 'ctx-menu-item' + (item.danger ? ' danger' : '');
+            btn.innerHTML = item.icon + '<span>' + item.label + '</span>';
+            btn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                closeCtxMenu();
+                item.action();
+            });
+            ctxMenu.appendChild(btn);
+        });
+
+        ctxMenu.classList.remove('hidden');
+        ctxVisible = true;
+
+        // Posisi
+        const vw = window.innerWidth, vh = window.innerHeight;
+        ctxMenu.style.left = '0px';
+        ctxMenu.style.top = '0px';
+        const rect = ctxMenu.getBoundingClientRect();
+        let x = clientX, y = clientY;
+        if (x + rect.width > vw - 8) x = vw - rect.width - 8;
+        if (y + rect.height > vh - 8) y = vh - rect.height - 8;
+        ctxMenu.style.left = x + 'px';
+        ctxMenu.style.top = y + 'px';
+    }
+
+    document.addEventListener('mousedown', (e) => {
+        if (ctxVisible && !ctxMenu.contains(e.target)) closeCtxMenu();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeCtxMenu(); closeRenameModal(); closeDeleteModal(); }
+    });
+
+    /* ---------------- delete modal ---------------- */
+    const deleteModal = document.getElementById('delete-modal');
+    const deleteTitle = document.getElementById('delete-title');
+    const deleteDesc = document.getElementById('delete-desc');
+    const deleteConfirm = document.getElementById('delete-confirm');
+    const deleteCancel = document.getElementById('delete-cancel');
+    const deleteBd = document.getElementById('delete-backdrop');
+    let deleteCb = null;
+
+    function openDeleteModal(title, desc, cb) {
+        deleteTitle.textContent = title;
+        deleteDesc.textContent = desc;
+        deleteCb = cb;
+        deleteModal.classList.remove('hidden');
+    }
+
+    function closeDeleteModal() {
+        deleteModal.classList.add('hidden');
+        deleteCb = null;
+    }
+
+    deleteConfirm.addEventListener('click', () => {
+        if (deleteCb) deleteCb();
+        closeDeleteModal();
+    });
+    deleteCancel.addEventListener('click', closeDeleteModal);
+    deleteBd.addEventListener('click', closeDeleteModal);
+
+    /* ---------------- rename modal ---------------- */
+    let renameCb = null;
+
+    function openRenameModal(title, currentVal, cb) {
+        renameTitle.textContent = title;
+        renameInput.value = currentVal || '';
+        renameCb = cb;
+        renameModal.classList.remove('hidden');
+        setTimeout(() => {
+            renameInput.focus();
+            renameInput.select();
+        }, 50);
+    }
+
+    function closeRenameModal() {
+        renameModal.classList.add('hidden');
+        renameCb = null;
+    }
+
+    function confirmRename() {
+        const val = renameInput.value.trim();
+        if (!val) return;
+        if (renameCb) renameCb(val);
+        closeRenameModal();
+    }
+
+    renameConfirm.addEventListener('click', confirmRename);
+    renameCancel.addEventListener('click', closeRenameModal);
+    renameBd.addEventListener('click', closeRenameModal);
+    renameInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') confirmRename();
+        if (e.key === 'Escape') closeRenameModal();
+    });
+
+    /* ---------------- project card actions ---------------- */
+    function buildCardMenuItems(meta) {
+        const folders = FG.getFolders();
+        return [
+            {
+                icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+                label: 'Rename',
+                action: () => {
+                    openRenameModal('Rename Project', meta.name, (newName) => {
+                        FG.renameProject(meta.id, newName);
+                        renderAll();
+                        showToast('Project direname');
+                    });
+                }
+            },
+            {
+                icon: iconSvg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+                label: 'Duplikat',
+                action: () => {
+                    FG.duplicateProject(meta.id);
+                    renderAll();
+                    showToast('Project diduplikat');
+                }
+            },
+            ...(folders.length > 0 ? [{
+                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                label: meta.folderId ? 'Pindah / Keluarkan dari Folder' : 'Pindah ke Folder',
+                action: () => openMoveToFolderMenu(meta)
+            }] : []),
+            'sep',
+            {
+                icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
+                label: meta.archived ? 'Batalkan Arsip' : 'Arsipkan',
+                action: () => {
+                    FG.setArchived(meta.id, !meta.archived);
+                    renderAll();
+                    showToast(meta.archived ? 'Arsip dibatalkan' : 'Project diarsipkan');
+                }
+            },
+            'sep',
+            {
+                icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
+                label: 'Hapus',
+                danger: true,
+                action: () => {
+                    openDeleteModal(
+                        'Hapus Project',
+                        'Hapus "' + meta.name + '"? Tindakan ini tidak bisa dibatalkan.',
+                        () => {
+                            FG.deleteProject(meta.id);
+                            renderAll();
+                            showToast('Project dihapus');
+                        }
+                    );
+                }
+            }
+        ];
+    }
+
+    function openMoveToFolderMenu(meta) {
+        const folders = FG.getFolders();
+        const items = [];
+
+        if (meta.folderId) {
+            items.push({
+                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                label: 'Keluarkan dari folder',
+                action: () => {
+                    FG.moveToFolder(meta.id, null);
+                    renderAll();
+                    showToast('Project dikeluarkan dari folder');
+                }
+            });
+            items.push('sep');
+        }
+
+        folders.forEach(f => {
+            if (f.id === meta.folderId) return;
+            items.push({
+                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                label: f.name,
+                action: () => {
+                    FG.moveToFolder(meta.id, f.id);
+                    renderAll();
+                    showToast('Project dipindah ke ' + f.name);
+                }
+            });
+        });
+
+        openCtxMenu(items, parseInt(ctxMenu.style.left) || 200, parseInt(ctxMenu.style.top) || 200);
+    }
+
+    /* ---------------- render project card ---------------- */
+    function buildCard(meta) {
+        const card = document.createElement('div');
+        card.className = 'project-card';
+        card.dataset.id = meta.id;
+
+        // Thumbnail
+        const thumb = document.createElement('div');
+        thumb.className = 'card-thumb';
+
+        const thumbIcon = document.createElement('div');
+        thumbIcon.className = 'card-thumb-icon';
+        thumbIcon.innerHTML = iconSvg('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>');
+        thumb.appendChild(thumbIcon);
+
+        const thumbCount = document.createElement('div');
+        thumbCount.className = 'card-thumb-count';
+        thumbCount.textContent = (meta.nodeCount || 0) + ' node';
+        thumb.appendChild(thumbCount);
+
+        if (meta.archived) {
+            const badge = document.createElement('div');
+            badge.className = 'card-archived-badge';
+            badge.textContent = 'Arsip';
+            thumb.appendChild(badge);
+        }
+
+        card.appendChild(thumb);
+
+        // Body
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+
+        const name = document.createElement('div');
+        name.className = 'card-name';
+        name.textContent = meta.name;
+        info.appendChild(name);
+
+        const date = document.createElement('div');
+        date.className = 'card-date';
+        date.textContent = formatDate(meta.updatedAt);
+        info.appendChild(date);
+
+        body.appendChild(info);
+
+        const menuBtn = document.createElement('button');
+        menuBtn.className = 'card-menu-btn';
+        menuBtn.title = 'Opsi';
+        menuBtn.innerHTML = iconSvg('<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const r = menuBtn.getBoundingClientRect();
+            openCtxMenu(buildCardMenuItems(meta), r.right, r.bottom + 4);
+        });
+        body.appendChild(menuBtn);
+
+        card.appendChild(body);
+
+        // Click → open builder
+        card.addEventListener('click', () => {
+            window.location.href = 'builder.html?id=' + meta.id;
+        });
+
+        // Right click → context menu
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            openCtxMenu(buildCardMenuItems(meta), e.clientX, e.clientY);
+        });
+
+        return card;
+    }
+
+    /* ---------------- render projects grid ---------------- */
+    function getFilteredProjects() {
+        let list = FG.getIndex();
+
+        if (currentFilter === 'archived') {
+            list = list.filter(p => p.archived);
+        } else if (currentFilter === 'all') {
+            list = list.filter(p => !p.archived);
+        } else {
+            // folder id
+            list = list.filter(p => !p.archived && p.folderId === currentFilter);
+        }
+
+        if (searchQuery) {
+            const q = searchQuery.toLowerCase();
+            list = list.filter(p => p.name.toLowerCase().includes(q));
+        }
+
+        return list;
+    }
+
+    function renderProjects() {
+        projectsGrid.innerHTML = '';
+        const list = getFilteredProjects();
+
+        if (list.length === 0) {
+            emptyHome.classList.remove('hidden');
+            projectsGrid.classList.add('hidden');
+        } else {
+            emptyHome.classList.add('hidden');
+            projectsGrid.classList.remove('hidden');
+            list.forEach(meta => {
+                projectsGrid.appendChild(buildCard(meta));
+            });
+        }
+    }
+
+    /* ---------------- render folders sidebar ---------------- */
+    function renderFolders() {
+        foldersList.innerHTML = '';
+        const folders = FG.getFolders();
+        folders.forEach(f => {
+            const btn = document.createElement('button');
+            btn.className = 'folder-item' + (currentFilter === f.id ? ' active' : '');
+            btn.dataset.folderId = f.id;
+            btn.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') +
+                '<span class="folder-item-name">' + f.name + '</span>';
+
+            btn.addEventListener('click', () => setFilter(f.id, f.name));
+            btn.addEventListener('contextmenu', (e) => {
+                e.preventDefault();
+                openCtxMenu([
+                    {
+                        icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+                        label: 'Rename Folder',
+                        action: () => {
+                            openRenameModal('Rename Folder', f.name, (newName) => {
+                                FG.renameFolder(f.id, newName);
+                                renderAll();
+                                showToast('Folder direname');
+                            });
+                        }
+                    },
+                    'sep',
+                    {
+                        icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
+                        label: 'Hapus Folder',
+                        danger: true,
+                        action: () => {
+                            openDeleteModal(
+                                'Hapus Folder',
+                                'Hapus folder "' + f.name + '"? Project di dalamnya tidak akan ikut terhapus.',
+                                () => {
+                                    if (currentFilter === f.id) setFilter('all', 'Semua Project');
+                                    FG.deleteFolder(f.id);
+                                    renderAll();
+                                    showToast('Folder dihapus');
+                                }
+                            );
+                        }
+                    }
+                ], e.clientX, e.clientY);
+            });
+
+            foldersList.appendChild(btn);
+        });
+    }
+
+    /* ---------------- render all ---------------- */
+    function renderAll() {
+        renderFolders();
+        renderProjects();
+    }
+
+    /* ---------------- filter ---------------- */
+    function setFilter(filter, title) {
+        currentFilter = filter;
+        contentTitle.textContent = title;
+
+        document.querySelectorAll('.nav-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.filter === filter);
+        });
+        document.querySelectorAll('.folder-item').forEach(el => {
+            el.classList.toggle('active', el.dataset.folderId === filter);
+        });
+
+        renderProjects();
+    }
+
+    document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const filter = btn.dataset.filter;
+            const title = filter === 'all' ? 'Semua Project' : 'Diarsipkan';
+            setFilter(filter, title);
+        });
+    });
+
+    /* ---------------- search ---------------- */
+    searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value.trim();
+        renderProjects();
+    });
+
+    /* ---------------- new project ---------------- */
+    document.getElementById('btn-new-project').addEventListener('click', () => {
+        const folderId = (currentFilter !== 'all' && currentFilter !== 'archived') ? currentFilter : null;
+        const meta = FG.createProject({ name: 'Untitled Project', folderId });
+        window.location.href = 'builder.html?id=' + meta.id;
+    });
+
+    /* ---------------- new folder ---------------- */
+    document.getElementById('btn-new-folder').addEventListener('click', () => {
+        // Inline input di sidebar
+        const wrap = document.createElement('div');
+        wrap.className = 'folder-input-wrap';
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'folder-inline-input';
+        input.placeholder = 'Nama folder…';
+        wrap.appendChild(input);
+
+        foldersList.insertBefore(wrap, foldersList.firstChild);
+        input.focus();
+
+        function confirm() {
+            const name = input.value.trim();
+            wrap.remove();
+            if (name) {
+                FG.createFolder(name);
+                renderFolders();
+                showToast('Folder dibuat');
+            }
+        }
+
+        input.addEventListener('blur', confirm);
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { input.blur(); }
+            if (e.key === 'Escape') { wrap.remove(); }
+        });
+    });
+
+    /* ---------------- init ---------------- */
+    initTheme();
+    FG.migrateLegacyIfNeeded();
+    renderAll();
+
+    // Loader fade-out
+    setTimeout(() => {
+        const overlay = document.getElementById('loader-overlay');
+        if (overlay) overlay.classList.add('fade-out');
+    }, 600);
+
+})();

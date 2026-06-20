@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workflow Builder</title>
+    <link rel="stylesheet" href="css/variable.css">
+    <link rel="stylesheet" href="css/reset.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+    <link rel="stylesheet" href="css/loader.css">
+</head>
+
+<body>
+    <div id="app">
+
+        <div id="loader-overlay">
+            <div class="loader-spinner">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#6366F1" stroke-width="10" stroke-linecap="round"
+                        stroke-dasharray="65 198" />
+                </svg>
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#818CF8" stroke-width="10" stroke-linecap="round"
+                        stroke-dasharray="50 198" />
+                </svg>
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="50" cy="50" r="42" fill="none" stroke="#A5B4FC" stroke-width="10" stroke-linecap="round"
+                        stroke-dasharray="30 198" />
+                </svg>
+            </div>
+        </div>
+
+        <div id="toolbar">
+            <img src="assets/images/logo/Logo.png" alt="FlowGram" class="tb-logo">
+            <button class="tb-btn" id="btn-home" title="Kembali ke Home">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 11l9-8 9 8" />
+                    <path d="M5 10v10h14V10" />
+                </svg>
+            </button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn primary" id="btn-add-node" title="Tambah node">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+                Node
+            </button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn" id="btn-zoom-out" title="Perkecil">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M5 12h14" />
+                </svg>
+            </button>
+            <span class="tb-zoom-label" id="zoom-label">100%</span>
+            <button class="tb-btn" id="btn-zoom-in" title="Perbesar">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+                    <path d="M12 5v14M5 12h14" />
+                </svg>
+            </button>
+            <button class="tb-btn" id="btn-reset-view" title="Reset tampilan">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 12a9 9 0 1 1 9 9" />
+                    <path d="M3 12v5h5" />
+                </svg>
+            </button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn tb-hide-mobile" id="btn-export" title="Export JSON">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 3v12" />
+                    <path d="M7 10l5 5 5-5" />
+                    <path d="M5 21h14" />
+                </svg>
+                Export
+            </button>
+            <button class="tb-btn tb-hide-mobile" id="btn-import" title="Import JSON">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M12 21V9" />
+                    <path d="M7 14l5-5 5 5" />
+                    <path d="M5 3h14" />
+                </svg>
+                Import
+            </button>
+            <div class="tb-sep"></div>
+            <button class="tb-btn tb-hide-mobile" id="btn-theme" title="Ganti tema">
+                <svg class="tb-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4" />
+                    <path
+                        d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41" />
+                </svg>
+                <svg class="tb-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                </svg>
+            </button>
+            <button class="tb-btn tb-hide-mobile" id="btn-clear" title="Hapus semua">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M3 6h18" />
+                    <path d="M8 6V4h8v2" />
+                    <path d="M19 6l-1 14H6L5 6" />
+                </svg>
+            </button>
+            <div class="tb-sep tb-hide-mobile"></div>
+            <button class="tb-btn tb-show-mobile" id="btn-more" title="Lainnya">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="5" r="1" />
+                    <circle cx="12" cy="12" r="1" />
+                    <circle cx="12" cy="19" r="1" />
+                </svg>
+            </button>
+        </div>
+
+        <div id="canvas-wrapper">
+            <div id="world">
+                <svg id="conn-svg">
+                    <defs>
+                        <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7"
+                            orient="auto-start-reverse">
+                            <path d="M0,0 L10,5 L0,10 z"></path>
+                        </marker>
+                    </defs>
+                    <g id="conn-group"></g>
+                    <path id="temp-line" d=""></path>
+                </svg>
+                <div id="nodes-layer"></div>
+            </div>
+            <div id="empty-state">
+                <div><b>Kanvas kosong.</b></div>
+                <div>Klik <b>+ Node</b>, atau klik kanan di kanvas untuk menambah node.</div>
+                <div>Tarik dari titik di tepi node untuk menghubungkan alur.</div>
+                <div>Tahan <b>Shift</b> + drag untuk memilih banyak node sekaligus.</div>
+            </div>
+        </div>
+
+        <input type="file" id="file-input" accept="application/json" hidden>
+        <div id="toast"></div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+    <script src="js/shared.js"></script>
+    <script src="js/main.js"></script>
+</body>
+
+</html>
