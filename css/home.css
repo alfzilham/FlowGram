@@ -867,6 +867,41 @@ body {
 
     #search-wrap {
         max-width: none;
+        position: static;
+    }
+
+    #search-icon {
+        position: static;
+        transform: none;
+        pointer-events: auto;
+        cursor: pointer;
+        display: block;
+        flex-shrink: 0;
+    }
+
+    #search-input {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        max-width: none;
+        margin: 0;
+        padding: 10px 14px;
+        height: 40px;
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-top: 1px solid var(--border);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.2s ease, visibility 0.2s ease;
+        z-index: 10;
+        background: var(--surface);
+    }
+
+    #search-wrap.search-open #search-input {
+        opacity: 1;
+        visibility: visible;
     }
 
     #btn-new-project span,

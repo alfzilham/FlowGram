@@ -894,6 +894,24 @@
         });
     }
 
+    /* ---------------- search toggle (mobile) ---------------- */
+    var searchIcon = document.getElementById('search-icon');
+    var searchWrap = document.getElementById('search-wrap');
+    var searchInput = document.getElementById('search-input');
+
+    if (searchIcon && searchWrap) {
+        searchIcon.addEventListener('click', function (e) {
+            e.stopPropagation();
+            searchWrap.classList.toggle('search-open');
+            if (searchWrap.classList.contains('search-open')) {
+                setTimeout(function () { if (searchInput) searchInput.focus(); }, 100);
+            }
+        });
+        document.addEventListener('click', function () {
+            if (searchWrap) searchWrap.classList.remove('search-open');
+        });
+    }
+
     /* ---------------- init ---------------- */
     initTheme();
     FG.migrateLegacyIfNeeded();
