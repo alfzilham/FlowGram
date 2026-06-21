@@ -1460,34 +1460,65 @@ body {
     line-height: 1.5;
 }
 
-/* ── FAQ ── */
+/* ── FAQ Accordion ── */
 .settings-faq-list {
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 0;
 }
 
 .settings-faq-item {
     border-bottom: 1px solid var(--border);
-    padding-bottom: 12px;
+    padding: 10px 0;
 }
 
 .settings-faq-item:last-child {
     border-bottom: none;
-    padding-bottom: 0;
 }
 
 .settings-faq-q {
     font-size: 13px;
     font-weight: 600;
     color: var(--text);
-    margin-bottom: 4px;
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.settings-faq-q:hover {
+    opacity: 0.85;
+}
+
+.settings-faq-icon {
+    flex-shrink: 0;
+    font-size: 16px;
+    color: var(--text-muted);
+    transition: transform 0.25s ease;
+    font-weight: 300;
+    line-height: 1;
+}
+
+.settings-faq-icon.open {
+    transform: rotate(45deg);
+}
+
+.settings-faq-a-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.25s ease;
+}
+
+.settings-faq-a-wrapper.open {
+    max-height: 200px;
 }
 
 .settings-faq-a {
     font-size: 12px;
     color: var(--text-muted);
     line-height: 1.6;
+    padding-top: 6px;
 }
 
 /* ── About ── */

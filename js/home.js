@@ -668,6 +668,16 @@
         });
     }
 
+    // FAQ accordion
+    document.querySelectorAll('.settings-faq-q').forEach(function (q) {
+        q.addEventListener('click', function () {
+            var wrapper = this.nextElementSibling;
+            var icon = this.querySelector('.settings-faq-icon');
+            wrapper.classList.toggle('open');
+            if (icon) icon.classList.toggle('open');
+        });
+    });
+
     // Tab switching
     settingsNavItems.forEach(function (item) {
         item.addEventListener('click', function () {
