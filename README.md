@@ -108,8 +108,7 @@ JWT_SECRET=your_random_jwt_secret
 │   ├── main.js         # Builder logic (canvas, nodes, connections)
 │   ├── onboarding.js   # Onboarding name input
 │   └── shared.js       # Shared data layer (localStorage + API)
-├── onboarding/
-│   └── name.html       # Onboarding page (input name)
+├── onboarding.html     # Onboarding page (input name)
 ├── builder.html        # Canvas / workflow editor
 ├── index.html          # Homepage / project dashboard
 ├── package.json        # Dependencies (hono, neon, jsonwebtoken)

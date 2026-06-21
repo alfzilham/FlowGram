@@ -121,7 +121,7 @@
             }
 
             if (isNew) {
-                window.location.href = '/onboarding/name.html';
+                window.location.href = '/onboarding.html';
                 return;
             }
 
