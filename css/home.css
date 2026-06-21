@@ -867,7 +867,7 @@ body {
 
     #search-wrap {
         max-width: none;
-        position: static;
+        position: relative;
     }
 
     #search-icon {
