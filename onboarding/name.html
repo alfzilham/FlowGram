@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siapa nama kamu? — FlowGram</title>
+    <link rel="icon" type="image/x-icon" href="/assets/favicon/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/onboarding.css">
+</head>
+
+<body data-page="name">
+    <main class="onboarding-shell">
+
+        <!-- LEFT -->
+        <div class="ob-left">
+            <div class="ob-brand">
+                <img src="/assets/images/logo/Logo.png" alt="FlowGram">
+                <span class="ob-brand-name">FlowGram</span>
+            </div>
+
+            <div class="ob-progress">
+                <div class="ob-progress-dot active"></div>
+            </div>
+
+            <p class="ob-step">Langkah 1 dari 1</p>
+            <h1 class="ob-title">Siapa nama kamu?</h1>
+            <p class="ob-desc">Nama ini akan muncul di profil samping kamu dan digunakan untuk menyapa kamu.</p>
+
+            <form id="nameForm">
+                <label class="ob-label" for="displayName">Nama kamu</label>
+                <input id="displayName" class="ob-input" type="text" placeholder="Masukkan nama kamu di sini..."
+                    maxlength="255" autocomplete="name" autofocus required>
+                <p id="nameError" class="ob-error"></p>
+                <button id="nameContinue" class="ob-btn" type="submit">
+                    Lanjutkan <span>→</span>
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT -->
+        <div class="ob-right">
+            <div class="ob-orb-wrap ob-orb-float">
+                <img src="/assets/images/logo/Logo.png" alt="FlowGram" class="ob-logo-img">
+            </div>
+            <span class="ob-right-badge">Workflow Builder</span>
+            <h2 class="ob-right-title">Mulai buat alur kerja</h2>
+            <p class="ob-right-desc">Buat, hubungkan, dan kelola alur kerja visual dengan mudah.</p>
+        </div>
+
+    </main>
+    <script src="/js/onboarding.js"></script>
+</body>
+
+</html>

@@ -231,6 +231,27 @@
             return t === 'demo' || window.__fgIsDemo === true;
         },
 
+        // ── Migrate demo data to user account ──
+        migrateDemoToUser: async function (userId) {
+            var projects = getIndex();
+            var folders = getFolders();
+            for (var i = 0; i < projects.length; i++) {
+                var p = projects[i];
+                var data = getProjectData(p.id) || emptyProjectData();
+                await apiCall('POST', '/projects', {
+                    name: p.name,
+                    folderId: p.folderId,
+                    color: p.color,
+                    data: data
+                });
+            }
+            for (var j = 0; j < folders.length; j++) {
+                await apiCall('POST', '/folders', { name: folders[j].name });
+            }
+            removeLS(IDX_KEY);
+            removeLS(FOLDERS_KEY);
+        },
+
         // ── API layer (dipakai saat login) ──
         api: {
             // ── Auth ──

@@ -46,9 +46,11 @@ app.post('/api/auth/google', async (c) => {
             [googleId]
         );
 
-        let user;
+        let user, isNew = false;
         if (existing.length > 0) {
             user = existing[0];
+            // Mark as new if user has no name set (onboarding incomplete)
+            isNew = !user.name;
         } else {
             const id = uid('u');
             await pool.query(
@@ -56,6 +58,7 @@ app.post('/api/auth/google', async (c) => {
                 [id, email, name, avatarUrl, googleId]
             );
             user = { id, email, name, avatar_url: avatarUrl };
+            isNew = true;
         }
 
         const token = jwt.sign(
@@ -64,7 +67,7 @@ app.post('/api/auth/google', async (c) => {
             { expiresIn: '30d' }
         );
 
-        return c.json({ token, user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatar_url } });
+        return c.json({ token, user: { id: user.id, email: user.email, name: user.name, avatarUrl: user.avatar_url }, isNew });
     } catch (e) {
         console.error('Auth google error:', e);
         return c.json({ error: 'Internal server error' }, 500);
@@ -84,6 +87,18 @@ app.get('/api/auth/me', async (c) => {
 
     const u = rows[0];
     return c.json({ user: { id: u.id, email: u.email, name: u.name, avatarUrl: u.avatar_url } });
+});
+
+/* ---------- POST /api/auth/name ---------- */
+app.post('/api/auth/name', async (c) => {
+    const payload = verifyJWT(c);
+    if (!payload) return c.json({ error: 'Unauthorized' }, 401);
+
+    const { name } = await c.req.json();
+    if (!name || !name.trim()) return c.json({ error: 'Nama tidak boleh kosong' }, 400);
+
+    await pool.query('UPDATE users SET name = $1 WHERE id = $2', [name.trim(), payload.userId]);
+    return c.json({ success: true, name: name.trim() });
 });
 
 /* ---------- GET /api/projects ---------- */
