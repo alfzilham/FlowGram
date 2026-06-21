@@ -568,6 +568,82 @@
         });
     }
 
+    /* ---------------- Sidebar Profile ---------------- */
+    var profileName = document.getElementById('profile-name');
+    var profileEmail = document.getElementById('profile-email');
+    var profileAvatarImg = document.getElementById('profile-avatar-img');
+    var profileAvatarPlaceholder = document.getElementById('profile-avatar-placeholder');
+    var profileMenuBtn = document.getElementById('profile-menu-btn');
+    var profileDropdown = document.getElementById('profile-dropdown');
+    var profileSettingsAction = document.getElementById('profile-action-settings');
+    var profileAuthAction = document.getElementById('profile-action-auth');
+
+    function renderProfile(user) {
+        if (!profileName) return;
+
+        if (!user || FGAuth.isDemo()) {
+            profileName.textContent = 'Guest';
+            profileEmail.textContent = '—';
+            profileAvatarImg.style.display = 'none';
+            profileAvatarPlaceholder.style.display = 'flex';
+            profileAvatarPlaceholder.textContent = '?';
+            if (profileSettingsAction) profileSettingsAction.classList.add('hidden');
+            if (profileAuthAction) {
+                profileAuthAction.textContent = 'Sign in here';
+                profileAuthAction.className = 'profile-dropdown-item';
+            }
+            return;
+        }
+
+        profileName.textContent = user.name || 'User';
+        profileEmail.textContent = user.email || '—';
+
+        if (user.avatarUrl) {
+            profileAvatarImg.src = user.avatarUrl;
+            profileAvatarImg.style.display = 'block';
+            profileAvatarPlaceholder.style.display = 'none';
+        } else {
+            profileAvatarImg.style.display = 'none';
+            profileAvatarPlaceholder.style.display = 'flex';
+            profileAvatarPlaceholder.textContent = (user.name || '?').charAt(0).toUpperCase();
+        }
+
+        if (profileSettingsAction) profileSettingsAction.classList.remove('hidden');
+        if (profileAuthAction) {
+            profileAuthAction.textContent = 'Keluar';
+            profileAuthAction.className = 'profile-dropdown-item danger';
+        }
+    }
+
+    if (profileMenuBtn) {
+        profileMenuBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('visible');
+        });
+    }
+    document.addEventListener('click', function () {
+        if (profileDropdown) profileDropdown.classList.remove('visible');
+    });
+
+    if (profileSettingsAction) {
+        profileSettingsAction.addEventListener('click', function () {
+            profileDropdown.classList.remove('visible');
+            showToast('Fitur Pengaturan akan datang');
+        });
+    }
+
+    if (profileAuthAction) {
+        profileAuthAction.addEventListener('click', function () {
+            profileDropdown.classList.remove('visible');
+            if (FGAuth.isDemo()) {
+                window.__fgPendingMigration = true;
+                FGAuth.showAuthGate();
+            } else {
+                FGAuth.logout();
+            }
+        });
+    }
+
     /* ---------------- init ---------------- */
     initTheme();
     FG.migrateLegacyIfNeeded();
@@ -582,6 +658,7 @@
     }
 
     function startHome(user) {
+        renderProfile(user);
         if (user && user.id && user.id !== 'demo') {
             showAvatar(user);
             fetchApiData();

@@ -897,6 +897,143 @@ body {
 }
 
 /* ========================================
+   Sidebar Profile (bottom)
+   ======================================== */
+
+#sidebar-profile {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--border);
+    margin-top: auto;
+    position: relative;
+    cursor: default;
+    min-height: 56px;
+}
+
+.profile-avatar {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    background: var(--border);
+}
+
+.profile-avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--border);
+    color: var(--text-muted);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#profile-avatar-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.profile-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.profile-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-email {
+    font-size: 11px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.profile-menu-btn {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.12s, color 0.12s;
+}
+
+.profile-menu-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+
+.profile-menu-btn svg {
+    width: 16px;
+    height: 16px;
+}
+
+.profile-dropdown {
+    position: absolute;
+    bottom: calc(100% + 4px);
+    left: 12px;
+    right: 12px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    padding: 6px;
+    display: none;
+    z-index: 100;
+}
+
+.profile-dropdown.visible {
+    display: block;
+}
+
+.profile-dropdown-item {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text);
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s;
+}
+
+.profile-dropdown-item:hover {
+    background: var(--hover);
+}
+
+.profile-dropdown-item.danger {
+    color: #EF4444;
+}
+
+.profile-dropdown-item.danger:hover {
+    background: rgba(239, 68, 68, 0.08);
+}
+
+.profile-dropdown-item.hidden {
+    display: none;
+}
+
+/* ========================================
    Scrollbar
    ======================================== */
 
