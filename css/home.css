@@ -482,14 +482,8 @@ body {
     border-radius: 7px;
     color: var(--text-muted);
     cursor: pointer;
-    opacity: 0;
     flex: none;
-    transition: opacity .12s ease, background .12s ease, color .12s ease;
-}
-
-.project-card:hover .card-menu-btn,
-.card-menu-btn:focus {
-    opacity: 1;
+    transition: background .12s ease, color .12s ease;
 }
 
 .card-menu-btn:hover {
