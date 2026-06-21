@@ -1063,7 +1063,7 @@ body {
     box-shadow: var(--shadow-lg);
     width: 90%;
     max-width: 720px;
-    max-height: 80vh;
+    height: 80vh;
     display: flex;
     flex-direction: column;
     animation: ctxIn 0.15s ease;
