@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login dengan Google — FlowGram</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background: #f0f0f0;
+            color: #18181B;
+        }
+        .status {
+            text-align: center;
+            padding: 32px;
+        }
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #E4E4E7;
+            border-top-color: #6366F1;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin: 0 auto 16px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .success { color: #22C55E; font-weight: 600; }
+        .error { color: #EF4444; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <div class="status" id="status">
+        <div class="spinner"></div>
+        <div>Memproses login...</div>
+    </div>
+
+    <script>
+        (function () {
+            const params = new URLSearchParams(window.location.hash.replace('#', '?'));
+            const accessToken = params.get('access_token');
+            const error = params.get('error');
+
+            const status = document.getElementById('status');
+
+            if (error) {
+                status.innerHTML = '<div class="error">✗</div><div>Login dibatalkan atau gagal.</div>';
+                setTimeout(() => window.close(), 2000);
+                return;
+            }
+
+            if (accessToken) {
+                if (window.opener && typeof window.opener.__fgAuthCallback === 'function') {
+                    window.opener.__fgAuthCallback(accessToken);
+                    status.innerHTML = '<div class="success">✓</div><div>Login berhasil! Menutup...</div>';
+                    setTimeout(() => window.close(), 1000);
+                } else {
+                    // Fallback: redirect with token in URL
+                    status.innerHTML = '<div class="success">✓</div><div>Mengalihkan...</div>';
+                    window.location.href = '/?google_token=' + encodeURIComponent(accessToken);
+                }
+            } else {
+                status.innerHTML = '<div class="error">✗</div><div>Tidak ada token.</div>';
+                setTimeout(() => window.close(), 2000);
+            }
+        })();
+    </script>
+</body>
+</html>

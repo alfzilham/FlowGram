@@ -1,0 +1,14 @@
+{
+    "name": "flowgram",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "dependencies": {
+        "hono": "^4.7.0",
+        "@neondatabase/serverless": "^0.9.0",
+        "jsonwebtoken": "^9.0.0"
+    },
+    "devDependencies": {
+        "vercel": "^41.0.0"
+    }
+}

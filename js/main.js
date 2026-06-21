@@ -73,25 +73,64 @@
         if (!currentProjectId) return;
         clearTimeout(saveTimer);
         saveTimer = setTimeout(() => {
-            FG.recordProjectSave(currentProjectId, { nodes: state.nodes, connections: state.connections, viewport });
+            var data = { nodes: state.nodes, connections: state.connections, viewport: viewport };
+            if (FGAuth.isLoggedIn()) {
+                FG.api.updateProject(currentProjectId, { data: data }).catch(function () { });
+            } else {
+                FG.recordProjectSave(currentProjectId, data);
+            }
         }, 300);
     }
     function resolveProjectId() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id');
     }
+
+    // load project synchronously for demo, async for logged-in
+    var _pendingLoad = null;
+
     function loadProject() {
         currentProjectId = resolveProjectId();
-        const meta = currentProjectId ? FG.getProject(currentProjectId) : null;
+        if (!currentProjectId) {
+            window.location.href = 'index.html';
+            return false;
+        }
+
+        if (FGAuth.isLoggedIn()) {
+            _pendingLoad = true;
+            FG.api.getProject(currentProjectId).then(function (p) {
+                var raw = p.data || {};
+                state.nodes = raw.nodes || [];
+                state.connections = raw.connections || [];
+                viewport = raw.viewport || { panX: 80, panY: 80, zoom: 1 };
+                _pendingLoad = false;
+                render();
+                fadeOutLoader();
+            }).catch(function () {
+                _pendingLoad = false;
+                window.location.href = 'index.html';
+            });
+            return 'pending';
+        }
+
+        // Demo mode — localStorage
+        var meta = FG.getProject(currentProjectId);
         if (!meta) {
             window.location.href = 'index.html';
             return false;
         }
-        const data = FG.getProjectData(currentProjectId) || FG.emptyProjectData();
+        var data = FG.getProjectData(currentProjectId) || FG.emptyProjectData();
         state.nodes = data.nodes || [];
         state.connections = data.connections || [];
         viewport = data.viewport || { panX: 80, panY: 80, zoom: 1 };
         return true;
+    }
+
+    function fadeOutLoader() {
+        setTimeout(function () {
+            var overlay = document.getElementById('loader-overlay');
+            if (overlay) overlay.classList.add('fade-out');
+        }, 300);
     }
 
     /* ---------------- toast ---------------- */
@@ -1154,12 +1193,31 @@
     /* ---------------- init ---------------- */
     initTheme();
     FG.migrateLegacyIfNeeded();
-    if (loadProject()) {
-        render();
-        setTimeout(function () {
-            var overlay = document.getElementById('loader-overlay');
-            if (overlay) overlay.classList.add('fade-out');
-        }, 600);
+
+    var authStatus = FGAuth.init();
+
+    function builderStart() {
+        var result = loadProject();
+        if (result === 'pending') {
+            // async — wait for fg-auth-ready (already dispatched) or pending resolve
+        } else if (result === true) {
+            render();
+            fadeOutLoader();
+        }
+    }
+
+    if (authStatus === 'needs_login') {
+        window.addEventListener('fg-auth-ready', builderStart);
+    } else if (authStatus === 'validating') {
+        window.addEventListener('fg-auth-ready', builderStart);
+    } else {
+        // demo
+        builderStart();
+    }
+
+    // Also handle if user was already logged in
+    if (authStatus !== 'needs_login' && authStatus !== 'validating') {
+        // Already handled by builderStart above
     }
 
 })();

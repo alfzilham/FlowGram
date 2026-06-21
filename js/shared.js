@@ -194,6 +194,22 @@
         return true;
     }
 
+    function fgToken() { try { return localStorage.getItem('fg_token'); } catch (e) { return null; } }
+
+    async function apiCall(method, path, body) {
+        const token = fgToken();
+        if (!token || token === 'demo') throw new Error('Not logged in');
+        const opts = {
+            method,
+            headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+        };
+        if (body && (method === 'POST' || method === 'PUT')) opts.body = JSON.stringify(body);
+        const res = await fetch('/api' + path, opts);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'API error');
+        return data;
+    }
+
     /* ---------------- export ---------------- */
     global.FG = {
         uid,
@@ -207,7 +223,32 @@
         // folders
         getFolders, saveFolders, createFolder, renameFolder, deleteFolder,
         // migrasi
-        migrateLegacyIfNeeded
+        migrateLegacyIfNeeded,
+
+        // ── Demo mode flag ──
+        isDemoMode: function () {
+            const t = fgToken();
+            return t === 'demo' || window.__fgIsDemo === true;
+        },
+
+        // ── API layer (dipakai saat login) ──
+        api: {
+            // ── Auth ──
+            me: function () { return apiCall('GET', '/auth/me'); },
+
+            // ── Projects ──
+            async projects() { return (await apiCall('GET', '/projects')).projects; },
+            async getProject(id) { return (await apiCall('GET', '/projects/' + id)).project; },
+            async createProject(data) { return (await apiCall('POST', '/projects', data)).project; },
+            async updateProject(id, data) { return apiCall('PUT', '/projects/' + id, data); },
+            async deleteProject(id) { return apiCall('DELETE', '/projects/' + id); },
+
+            // ── Folders ──
+            async folders() { return (await apiCall('GET', '/folders')).folders; },
+            async createFolder(name) { return (await apiCall('POST', '/folders', { name })).folder; },
+            async renameFolder(id, name) { return apiCall('PUT', '/folders/' + id, { name }); },
+            async deleteFolder(id) { return apiCall('DELETE', '/folders/' + id); }
+        }
     };
 
 })(window);

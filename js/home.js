@@ -479,15 +479,19 @@
     });
 
     /* ---------------- new project ---------------- */
-    document.getElementById('btn-new-project').addEventListener('click', () => {
+    document.getElementById('btn-new-project').addEventListener('click', async () => {
         const folderId = (currentFilter !== 'all' && currentFilter !== 'archived') ? currentFilter : null;
-        const meta = FG.createProject({ name: 'Untitled Project', folderId });
+        var meta;
+        if (FGAuth.isLoggedIn()) {
+            meta = await FG.api.createProject({ name: 'Untitled Project', folderId: folderId || null });
+        } else {
+            meta = FG.createProject({ name: 'Untitled Project', folderId });
+        }
         window.location.href = 'builder.html?id=' + meta.id;
     });
 
     /* ---------------- new folder ---------------- */
-    document.getElementById('btn-new-folder').addEventListener('click', () => {
-        // Inline input di sidebar
+    document.getElementById('btn-new-folder').addEventListener('click', async () => {
         const wrap = document.createElement('div');
         wrap.className = 'folder-input-wrap';
 
@@ -500,11 +504,15 @@
         foldersList.insertBefore(wrap, foldersList.firstChild);
         input.focus();
 
-        function confirm() {
+        async function confirm() {
             const name = input.value.trim();
             wrap.remove();
             if (name) {
-                FG.createFolder(name);
+                if (FGAuth.isLoggedIn()) {
+                    await FG.api.createFolder(name);
+                } else {
+                    FG.createFolder(name);
+                }
                 renderFolders();
                 showToast('Folder dibuat');
             }
@@ -517,15 +525,218 @@
         });
     });
 
+    /* ---------------- user avatar / logout ---------------- */
+    const avatarEl = document.getElementById('user-avatar');
+    const dropdown = document.getElementById('user-dropdown');
+    const avatarImg = document.getElementById('avatar-img');
+    const avatarPlaceholder = document.getElementById('avatar-placeholder');
+    const dropdownEmail = document.getElementById('dropdown-email');
+    const btnLogout = document.getElementById('btn-logout');
+
+    function showAvatar(user) {
+        if (!avatarEl) return;
+        avatarEl.style.display = 'block';
+        if (user.name) {
+            avatarPlaceholder.textContent = user.name.charAt(0).toUpperCase();
+        }
+        if (user.avatarUrl) {
+            avatarImg.src = user.avatarUrl;
+            avatarImg.style.display = 'block';
+            avatarPlaceholder.style.display = 'none';
+        } else {
+            avatarImg.style.display = 'none';
+            avatarPlaceholder.style.display = 'flex';
+        }
+        if (dropdownEmail) {
+            dropdownEmail.textContent = user.email || 'Demo';
+        }
+    }
+
+    if (avatarEl) {
+        avatarEl.addEventListener('click', function (e) {
+            e.stopPropagation();
+            dropdown.classList.toggle('visible');
+        });
+        document.addEventListener('click', function () {
+            if (dropdown) dropdown.classList.remove('visible');
+        });
+    }
+
+    if (btnLogout) {
+        btnLogout.addEventListener('click', function () {
+            FGAuth.logout();
+        });
+    }
+
     /* ---------------- init ---------------- */
     initTheme();
     FG.migrateLegacyIfNeeded();
-    renderAll();
 
-    // Loader fade-out
-    setTimeout(() => {
-        const overlay = document.getElementById('loader-overlay');
-        if (overlay) overlay.classList.add('fade-out');
-    }, 600);
+    var user = null;
+
+    function fetchUserFromStorage() {
+        try {
+            var raw = localStorage.getItem('fg_user');
+            return raw ? JSON.parse(raw) : null;
+        } catch (e) { return null; }
+    }
+
+    function startHome(user) {
+        if (user && user.id && user.id !== 'demo') {
+            showAvatar(user);
+            fetchApiData();
+        } else {
+            renderAll();
+            fadeOutLoader();
+        }
+    }
+
+    function normalizeProject(p) {
+        return {
+            id: p.id,
+            name: p.name,
+            folderId: p.folder_id,
+            archived: p.archived,
+            color: p.color,
+            nodeCount: p.node_count,
+            createdAt: new Date(p.created_at).getTime(),
+            updatedAt: new Date(p.updated_at).getTime()
+        };
+    }
+
+    function denormalizeProject(p, data) {
+        return {
+            name: p.name,
+            folderId: p.folderId,
+            color: p.color,
+            data: data || { nodes: [], connections: [] }
+        };
+    }
+
+    var apiProjects = [];
+    var apiFolders = [];
+
+    function setupApiOverrides() {
+        FG.getIndex = function () { return apiProjects; };
+        FG.getFolders = function () { return apiFolders; };
+
+        FG.createProject = function (opts) {
+            opts = opts || {};
+            var data = opts.data || { nodes: [], connections: [] };
+            var meta = {
+                id: FG.uid('p'),
+                name: opts.name || 'Untitled',
+                folderId: opts.folderId || null,
+                archived: false,
+                color: opts.color || null,
+                nodeCount: data.nodes.length,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            apiProjects.push(meta);
+            FG.api.createProject({ name: meta.name, folderId: meta.folderId, data: data }).catch(function () { });
+            return meta;
+        };
+
+        FG.renameProject = function (id, name) {
+            var p = apiProjects.find(function (x) { return x.id === id; });
+            if (p) { p.name = name; p.updatedAt = Date.now(); }
+            FG.api.updateProject(id, { name: name }).catch(function () { });
+        };
+
+        FG.setArchived = function (id, archived) {
+            var p = apiProjects.find(function (x) { return x.id === id; });
+            if (p) { p.archived = archived; p.updatedAt = Date.now(); }
+            FG.api.updateProject(id, { archived: archived }).catch(function () { });
+        };
+
+        FG.deleteProject = function (id) {
+            apiProjects = apiProjects.filter(function (x) { return x.id !== id; });
+            FG.api.deleteProject(id).catch(function () { });
+        };
+
+        FG.duplicateProject = function (id) {
+            var src = apiProjects.find(function (x) { return x.id === id; });
+            if (!src) return null;
+            var meta = {
+                id: FG.uid('p'),
+                name: src.name + ' (Copy)',
+                folderId: src.folderId,
+                archived: false,
+                color: src.color,
+                nodeCount: src.nodeCount,
+                createdAt: Date.now(),
+                updatedAt: Date.now()
+            };
+            apiProjects.push(meta);
+            FG.api.createProject({ name: meta.name, folderId: meta.folderId }).catch(function () { });
+            return meta;
+        };
+
+        FG.moveToFolder = function (id, folderId) {
+            var p = apiProjects.find(function (x) { return x.id === id; });
+            if (p) { p.folderId = folderId; p.updatedAt = Date.now(); }
+            FG.api.updateProject(id, { folderId: folderId }).catch(function () { });
+        };
+
+        FG.createFolder = function (name) {
+            var f = { id: FG.uid('f'), name: name };
+            apiFolders.push(f);
+            FG.api.createFolder(name).catch(function () { });
+            return f;
+        };
+
+        FG.renameFolder = function (id, name) {
+            var f = apiFolders.find(function (x) { return x.id === id; });
+            if (f) f.name = name;
+            FG.api.renameFolder(id, name).catch(function () { });
+        };
+
+        FG.deleteFolder = function (id) {
+            apiFolders = apiFolders.filter(function (x) { return x.id !== id; });
+            apiProjects.forEach(function (p) { if (p.folderId === id) p.folderId = null; });
+            FG.api.deleteFolder(id).catch(function () { });
+        };
+    }
+
+    async function fetchApiData() {
+        try {
+            var rawProjects = await FG.api.projects();
+            var rawFolders = await FG.api.folders();
+            apiProjects = rawProjects.map(normalizeProject);
+            apiFolders = rawFolders;
+
+            setupApiOverrides();
+            renderAll();
+            fadeOutLoader();
+        } catch (e) {
+            showToast('Gagal memuat data: ' + e.message);
+            renderAll();
+            fadeOutLoader();
+        }
+    }
+
+    function fadeOutLoader() {
+        setTimeout(function () {
+            var overlay = document.getElementById('loader-overlay');
+            if (overlay) overlay.classList.add('fade-out');
+        }, 300);
+    }
+
+    var authStatus = FGAuth.init();
+    if (authStatus === 'needs_login') {
+        window.addEventListener('fg-auth-ready', function () {
+            var u = fetchUserFromStorage();
+            startHome(u);
+        });
+    } else if (authStatus === 'validating') {
+        window.addEventListener('fg-auth-ready', function () {
+            var u = fetchUserFromStorage();
+            startHome(u);
+        });
+    } else {
+        // demo — sudah siap
+        startHome(fetchUserFromStorage());
+    }
 
 })();

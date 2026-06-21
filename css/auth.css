@@ -1,0 +1,376 @@
+/* ========================================
+   Auth Gate — Split Page Style
+   Adaptasi dari ZORA AI, warna FlowGram
+   ======================================== */
+
+/* ── Auth Gate Overlay ── */
+#auth-gate {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    background: var(--bg);
+    display: none;
+}
+
+#auth-gate.visible {
+    display: block;
+}
+
+.auth-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+}
+
+/* ── Visual Panel (Left) ── */
+.visual-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+    position: relative;
+    overflow: hidden;
+    gap: 24px;
+}
+
+.visual-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(99, 102, 241, 0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.04) 1px, transparent 1px);
+    background-size: 32px 32px;
+    pointer-events: none;
+}
+
+.visual-panel::after {
+    content: '';
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(99, 102, 241, 0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+.auth-logo-float {
+    width: 100px;
+    height: auto;
+    animation: authFloat 3s ease-in-out infinite;
+    position: relative;
+    z-index: 1;
+}
+
+@keyframes authFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+}
+
+.visual-brand {
+    text-align: center;
+    z-index: 1;
+}
+
+.visual-brand-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+    margin-bottom: 6px;
+}
+
+.visual-brand-sub {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 220px;
+    line-height: 1.6;
+}
+
+/* ── Form Panel (Right) ── */
+.form-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 48px 56px;
+    background: var(--surface);
+    position: relative;
+    z-index: 1;
+    overflow-y: auto;
+}
+
+.form-inner {
+    width: 100%;
+    max-width: 380px;
+}
+
+.form-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 36px;
+}
+
+.form-logo-text {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: -0.3px;
+}
+
+.form-heading {
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 6px;
+    letter-spacing: -0.4px;
+}
+
+.form-subheading {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-bottom: 32px;
+}
+
+/* ── Form Fields ── */
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s ease;
+    box-sizing: border-box;
+}
+
+.form-input::placeholder {
+    color: var(--text-muted);
+}
+
+.form-input:focus {
+    border-color: var(--accent);
+    background: var(--surface);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.10);
+}
+
+/* ── Error ── */
+.error-message {
+    font-size: 13px;
+    color: #EF4444;
+    min-height: 16px;
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+
+/* ── Buttons ── */
+.btn {
+    width: 100%;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 10px;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.18s ease;
+    box-sizing: border-box;
+}
+
+.btn-google {
+    background: var(--surface);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+    margin-bottom: 0;
+}
+
+.btn-google:hover {
+    background: var(--hover);
+    border-color: var(--border-strong);
+}
+
+.google-icon {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+}
+
+.btn-primary {
+    background: var(--accent);
+    color: #FFFFFF;
+}
+
+.btn-primary:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(99, 102, 241, 0.28);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+.btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* ── Divider ── */
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 18px 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+}
+
+.divider-text {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+/* ── Magic Link Hint ── */
+.magic-hint {
+    font-size: 13px;
+    color: var(--accent);
+    text-align: center;
+    margin-top: 12px;
+    font-weight: 500;
+}
+
+.magic-hint.hidden {
+    display: none;
+}
+
+/* ── Demo Button ── */
+.btn-demo {
+    background: transparent;
+    color: var(--text-muted);
+    border: 1.5px dashed var(--border);
+    margin-top: 4px;
+}
+
+.btn-demo:hover {
+    color: var(--text);
+    border-color: var(--border-strong);
+    background: var(--hover);
+}
+
+/* ── User Avatar (topbar) ── */
+.user-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    border: 2px solid var(--border);
+    transition: border-color 0.18s;
+    flex-shrink: 0;
+    overflow: hidden;
+}
+
+.user-avatar:hover {
+    border-color: var(--accent);
+}
+
+.user-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.user-avatar .avatar-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 13px;
+    font-weight: 600;
+}
+
+/* ── User Dropdown ── */
+.user-dropdown {
+    position: absolute;
+    top: 44px;
+    right: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    box-shadow: var(--shadow-md);
+    min-width: 180px;
+    padding: 6px;
+    z-index: 1000;
+    display: none;
+}
+
+.user-dropdown.visible {
+    display: block;
+}
+
+.user-dropdown-item {
+    padding: 10px 12px;
+    font-size: 13px;
+    color: var(--text);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: background 0.12s;
+}
+
+.user-dropdown-item:hover {
+    background: var(--hover);
+}
+
+.user-dropdown-item.danger {
+    color: #EF4444;
+}
+
+.user-dropdown-header {
+    padding: 10px 12px 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 4px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .auth-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .visual-panel {
+        display: none;
+    }
+
+    .form-panel {
+        padding: 40px 24px;
+    }
+}
