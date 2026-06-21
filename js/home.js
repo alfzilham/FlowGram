@@ -222,9 +222,10 @@
                 icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
                 label: meta.archived ? 'Batalkan Arsip' : 'Arsipkan',
                 action: () => {
+                    const wasArchived = meta.archived;
                     FG.setArchived(meta.id, !meta.archived);
                     renderAll();
-                    showToast(meta.archived ? 'Arsip dibatalkan' : 'Project diarsipkan');
+                    showToast(wasArchived ? 'Arsip dibatalkan' : 'Project diarsipkan');
                 }
             },
             'sep',
