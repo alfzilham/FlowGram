@@ -885,6 +885,7 @@ body {
         top: 100%;
         left: 0;
         right: 0;
+        width: auto;
         max-width: none;
         margin: 0;
         padding: 10px 14px;
