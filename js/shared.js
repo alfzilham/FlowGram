@@ -123,6 +123,36 @@
         });
     }
 
+    function archiveFolder(id, archived) {
+        const list = getIndex();
+        list.forEach(p => {
+            if (p.folderId === id) {
+                p.archived = !!archived;
+                p.updatedAt = Date.now();
+            }
+        });
+        saveIndex(list);
+    }
+
+    function duplicateFolder(id) {
+        const folders = getFolders();
+        const src = folders.find(f => f.id === id);
+        if (!src) return null;
+        const newFolder = createFolder(src.name + ' (Copy)');
+        const list = getIndex();
+        const projectsInFolder = list.filter(p => p.folderId === id);
+        projectsInFolder.forEach(p => {
+            const data = getProjectData(p.id) || emptyProjectData();
+            createProject({
+                name: p.name,
+                folderId: newFolder.id,
+                color: p.color,
+                data: JSON.parse(JSON.stringify(data))
+            });
+        });
+        return newFolder;
+    }
+
     // Dipanggil dari builder.html setiap kali auto-save terjadi.
     function recordProjectSave(id, data) {
         saveProjectData(id, data);
@@ -222,6 +252,7 @@
         duplicateProject, recordProjectSave,
         // folders
         getFolders, saveFolders, createFolder, renameFolder, deleteFolder,
+        archiveFolder, duplicateFolder,
         // migrasi
         migrateLegacyIfNeeded,
 
