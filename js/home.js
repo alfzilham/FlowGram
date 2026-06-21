@@ -188,9 +188,103 @@
         if (e.key === 'Escape') closeRenameModal();
     });
 
+    /* ---------------- Move to Folder Modal ---------------- */
+    const moveFolderModal = document.getElementById('move-folder-modal');
+    const moveFolderSearch = document.getElementById('move-folder-search');
+    const moveFolderList = document.getElementById('move-folder-list');
+    const moveFolderClose = document.getElementById('move-folder-close');
+    const moveFolderBd = document.getElementById('move-folder-backdrop');
+
+    let moveFolderTargetMeta = null;
+
+    function openMoveFolderModal(meta) {
+        moveFolderTargetMeta = meta;
+        moveFolderSearch.value = '';
+        renderMoveFolderList('');
+        moveFolderModal.classList.remove('hidden');
+        setTimeout(() => moveFolderSearch.focus(), 50);
+    }
+
+    function closeMoveFolderModal() {
+        moveFolderModal.classList.add('hidden');
+        moveFolderTargetMeta = null;
+    }
+
+    function renderMoveFolderList(query) {
+        moveFolderList.innerHTML = '';
+        const folders = FG.getFolders();
+        const q = query.toLowerCase().trim();
+        const filtered = q ? folders.filter(f => f.name.toLowerCase().includes(q)) : folders;
+
+        // Opsi keluarkan dari folder
+        if (moveFolderTargetMeta && moveFolderTargetMeta.folderId) {
+            const removeItem = document.createElement('div');
+            removeItem.className = 'move-folder-item';
+            removeItem.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') + '<span>Keluarkan dari folder</span>';
+            removeItem.addEventListener('click', () => {
+                FG.moveToFolder(moveFolderTargetMeta.id, null);
+                renderAll();
+                showToast('Project dikeluarkan dari folder');
+                closeMoveFolderModal();
+            });
+            moveFolderList.appendChild(removeItem);
+        }
+
+        // List folder
+        filtered.forEach(f => {
+            const item = document.createElement('div');
+            item.className = 'move-folder-item' + (moveFolderTargetMeta && moveFolderTargetMeta.folderId === f.id ? ' active' : '');
+            item.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') + '<span>' + f.name + '</span>';
+            item.addEventListener('click', () => {
+                FG.moveToFolder(moveFolderTargetMeta.id, f.id);
+                renderAll();
+                showToast('Project dipindah ke ' + f.name);
+                closeMoveFolderModal();
+            });
+            moveFolderList.appendChild(item);
+        });
+
+        // Buat folder baru jika query tidak cocok
+        if (q && !filtered.find(f => f.name.toLowerCase() === q)) {
+            const createItem = document.createElement('div');
+            createItem.className = 'move-folder-item move-folder-item-create';
+            createItem.innerHTML = iconSvg('<path d="M12 5v14M5 12h14"/>') + '<span>Buat folder "<strong>' + query + '</strong>"</span>';
+            createItem.addEventListener('click', async () => {
+                let newFolder;
+                if (FGAuth.isLoggedIn()) {
+                    newFolder = await FG.api.createFolder(query);
+                    apiFolders.push(newFolder);
+                } else {
+                    newFolder = FG.createFolder(query);
+                }
+                FG.moveToFolder(moveFolderTargetMeta.id, newFolder.id);
+                renderAll();
+                showToast('Folder "' + query + '" dibuat & project dipindah');
+                closeMoveFolderModal();
+            });
+            moveFolderList.appendChild(createItem);
+        }
+
+        // Empty state
+        if (filtered.length === 0 && !q) {
+            const empty = document.createElement('div');
+            empty.className = 'move-folder-empty';
+            empty.textContent = 'Belum ada folder. Ketik nama folder untuk membuat baru.';
+            moveFolderList.appendChild(empty);
+        }
+    }
+
+    if (moveFolderClose) moveFolderClose.addEventListener('click', closeMoveFolderModal);
+    if (moveFolderBd) moveFolderBd.addEventListener('click', closeMoveFolderModal);
+    if (moveFolderSearch) {
+        moveFolderSearch.addEventListener('input', () => renderMoveFolderList(moveFolderSearch.value));
+        moveFolderSearch.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeMoveFolderModal();
+        });
+    }
+
     /* ---------------- project card actions ---------------- */
     function buildCardMenuItems(meta) {
-        const folders = FG.getFolders();
         return [
             {
                 icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
@@ -212,11 +306,11 @@
                     showToast('Project diduplikat');
                 }
             },
-            ...(folders.length > 0 ? [{
+            {
                 icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
                 label: meta.folderId ? 'Pindah / Keluarkan dari Folder' : 'Pindah ke Folder',
-                action: () => openMoveToFolderMenu(meta)
-            }] : []),
+                action: () => openMoveFolderModal(meta)
+            },
             'sep',
             {
                 icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
@@ -505,12 +599,17 @@
         foldersList.insertBefore(wrap, foldersList.firstChild);
         input.focus();
 
+        let folderConfirmed = false;
+
         async function confirm() {
+            if (folderConfirmed) return;
+            folderConfirmed = true;
             const name = input.value.trim();
             wrap.remove();
             if (name) {
                 if (FGAuth.isLoggedIn()) {
-                    await FG.api.createFolder(name);
+                    const folder = await FG.api.createFolder(name);
+                    apiFolders.push(folder);
                 } else {
                     FG.createFolder(name);
                 }
@@ -521,8 +620,8 @@
 
         input.addEventListener('blur', confirm);
         input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { input.blur(); }
-            if (e.key === 'Escape') { wrap.remove(); }
+            if (e.key === 'Enter') { folderConfirmed = false; confirm(); }
+            if (e.key === 'Escape') { folderConfirmed = true; wrap.remove(); }
         });
     });
 
@@ -785,7 +884,7 @@
                 var data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Gagal');
                 var u = fetchUserFromStorage();
-                if (u) { u.name = name; try { localStorage.setItem('fg_user', JSON.stringify(u)); } catch (e) {} }
+                if (u) { u.name = name; try { localStorage.setItem('fg_user', JSON.stringify(u)); } catch (e) { } }
                 renderProfile(u);
                 showAvatar(u);
                 if (settingsAvatar) settingsAvatar.textContent = name.charAt(0).toUpperCase();

@@ -14,7 +14,9 @@
   <meta name="google-client-id" content="876191451638-p901bjf4i49flh0ugjmneu1or1lm7dkl.apps.googleusercontent.com">
   <link rel="stylesheet" href="css/auth.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
 </head>
 
 <body>
@@ -22,44 +24,48 @@
 
     <!-- ── Auth Gate ── -->
     <div id="auth-gate">
-        <div class="auth-layout">
-            <div class="visual-panel">
-                <img src="assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
-                <div class="visual-brand">
-                    <div class="visual-brand-title">FlowGram</div>
-                    <p class="visual-brand-sub">Workflow builder visual, simpel, dan powerful.</p>
-                </div>
-            </div>
-            <div class="form-panel">
-                <div class="form-inner">
-                    <div class="form-logo">
-                        <span class="form-logo-text">FlowGram</span>
-                    </div>
-                    <h1 class="form-heading">Mulai membuat alur kerja</h1>
-                    <p class="form-subheading">Masuk untuk menyimpan projectmu di cloud</p>
-
-                    <button id="btn-google-auth" class="btn btn-google">
-                        <svg class="google-icon" viewBox="0 0 24 24">
-                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                        </svg>
-                        Masuk dengan Google
-                    </button>
-
-                    <div class="auth-divider">
-                        <span class="divider-line"></span>
-                        <span class="divider-text">atau</span>
-                        <span class="divider-line"></span>
-                    </div>
-
-                    <p id="auth-error" class="error-message"></p>
-
-                    <button id="btn-demo" class="btn btn-demo">Coba tanpa akun (Demo)</button>
-                </div>
-            </div>
+      <div class="auth-layout">
+        <div class="visual-panel">
+          <img src="assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
+          <div class="visual-brand">
+            <div class="visual-brand-title">FlowGram</div>
+            <p class="visual-brand-sub">Workflow builder visual, simpel, dan powerful.</p>
+          </div>
         </div>
+        <div class="form-panel">
+          <div class="form-inner">
+            <div class="form-logo">
+              <span class="form-logo-text">FlowGram</span>
+            </div>
+            <h1 class="form-heading">Mulai membuat alur kerja</h1>
+            <p class="form-subheading">Masuk untuk menyimpan projectmu di cloud</p>
+
+            <button id="btn-google-auth" class="btn btn-google">
+              <svg class="google-icon" viewBox="0 0 24 24">
+                <path fill="#4285F4"
+                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                <path fill="#34A853"
+                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                <path fill="#FBBC05"
+                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                <path fill="#EA4335"
+                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+              </svg>
+              Masuk dengan Google
+            </button>
+
+            <div class="auth-divider">
+              <span class="divider-line"></span>
+              <span class="divider-text">atau</span>
+              <span class="divider-line"></span>
+            </div>
+
+            <p id="auth-error" class="error-message"></p>
+
+            <button id="btn-demo" class="btn btn-demo">Coba tanpa akun (Demo)</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div id="loader-overlay">
@@ -134,11 +140,17 @@
           <div class="profile-email" id="profile-email">—</div>
         </div>
         <button class="profile-menu-btn" id="profile-menu-btn">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="12" cy="5" r="1" />
+            <circle cx="12" cy="12" r="1" />
+            <circle cx="12" cy="19" r="1" />
+          </svg>
         </button>
         <div class="profile-dropdown" id="profile-dropdown">
           <div class="profile-dropdown-item" id="profile-action-settings"><i class="bi bi-gear"></i> Pengaturan</div>
-          <div class="profile-dropdown-item danger" id="profile-action-auth"><i class="bi bi-box-arrow-in-right"></i> Sign in here</div>
+          <div class="profile-dropdown-item danger" id="profile-action-auth"><i class="bi bi-box-arrow-in-right"></i>
+            Sign in here</div>
         </div>
       </div>
     </aside>
@@ -149,7 +161,10 @@
       <!-- Top bar -->
       <header id="topbar">
         <button id="btn-hamburger" title="Menu">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <path d="M3 12h18M3 6h18M3 18h18" />
+          </svg>
         </button>
         <div id="search-wrap">
           <svg id="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -220,260 +235,342 @@
 
     <!-- Delete modal -->
     <div id="delete-modal" class="hidden">
-        <div id="delete-backdrop"></div>
-        <div id="delete-dialog">
-            <h3 id="delete-title">Hapus Project</h3>
-            <p id="delete-desc">Tindakan ini tidak bisa dibatalkan.</p>
-            <div id="delete-actions">
-                <button id="delete-cancel" class="btn-secondary">Batal</button>
-                <button id="delete-confirm" class="btn-danger">Hapus</button>
-            </div>
+      <div id="delete-backdrop"></div>
+      <div id="delete-dialog">
+        <h3 id="delete-title">Hapus Project</h3>
+        <p id="delete-desc">Tindakan ini tidak bisa dibatalkan.</p>
+        <div id="delete-actions">
+          <button id="delete-cancel" class="btn-secondary">Batal</button>
+          <button id="delete-confirm" class="btn-danger">Hapus</button>
         </div>
+      </div>
     </div>
 
     <!-- Rename modal -->
     <div id="rename-modal" class="hidden">
-        <div id="rename-backdrop"></div>
-        <div id="rename-dialog">
-            <h3 id="rename-title">Rename</h3>
-            <input type="text" id="rename-input" placeholder="Nama baru…">
-            <div id="rename-actions">
-                <button id="rename-cancel" class="btn-secondary">Batal</button>
-                <button id="rename-confirm" class="btn-primary">Simpan</button>
-            </div>
+      <div id="rename-backdrop"></div>
+      <div id="rename-dialog">
+        <h3 id="rename-title">Rename</h3>
+        <input type="text" id="rename-input" placeholder="Nama baru…">
+        <div id="rename-actions">
+          <button id="rename-cancel" class="btn-secondary">Batal</button>
+          <button id="rename-confirm" class="btn-primary">Simpan</button>
         </div>
+      </div>
+    </div>
+
+    <!-- Move to Folder modal -->
+    <div id="move-folder-modal" class="hidden">
+      <div id="move-folder-backdrop"></div>
+      <div id="move-folder-dialog">
+        <div id="move-folder-header">
+          <div>
+            <h3 id="move-folder-title">Pindah ke Folder</h3>
+            <p id="move-folder-desc">Pilih folder untuk menyimpan project ini.</p>
+          </div>
+          <button id="move-folder-close">&times;</button>
+        </div>
+        <div id="move-folder-search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+            stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8" />
+            <path d="m21 21-4.35-4.35" />
+          </svg>
+          <input type="text" id="move-folder-search" placeholder="Cari atau buat folder baru…">
+        </div>
+        <div id="move-folder-list">
+          <!-- dirender oleh home.js -->
+        </div>
+      </div>
     </div>
 
     <!-- Settings modal -->
     <div id="settings-modal" class="hidden">
-        <div id="settings-backdrop"></div>
-        <div id="settings-dialog">
-            <div id="settings-header">
-                <h3 id="settings-title">Pengaturan</h3>
-                <button id="settings-close" class="settings-close-btn">&times;</button>
-            </div>
-            <div id="settings-body" class="settings-two-col">
-
-                <!-- Sidebar nav -->
-                <div id="settings-nav">
-                    <div class="settings-nav-item active" data-tab="general">
-                        <i class="bi bi-gear"></i> General
-                    </div>
-                    <div class="settings-nav-item" data-tab="account">
-                        <i class="bi bi-person"></i> Account
-                    </div>
-                    <div class="settings-nav-item" data-tab="privacy">
-                        <i class="bi bi-shield-lock"></i> Privacy
-                    </div>
-                    <div class="settings-nav-item" data-tab="faq">
-                        <i class="bi bi-question-circle"></i> FAQ
-                    </div>
-                    <div class="settings-nav-item" data-tab="about">
-                        <i class="bi bi-info-circle"></i> About
-                    </div>
-                </div>
-
-                <!-- Content area -->
-                <div id="settings-content">
-
-                    <!-- === TAB: General === -->
-                    <div class="settings-tab active" id="tab-general">
-                        <div class="settings-section">
-                            <div class="settings-section-label">Profile</div>
-                            <div class="settings-row">
-                                <div class="settings-avatar-row">
-                                    <div class="settings-avatar" id="settings-avatar">Z</div>
-                                    <div class="settings-avatar-info">
-                                        <div class="settings-field-label">Nama Tampilan</div>
-                                        <div class="settings-input-row">
-                                            <input type="text" id="settings-name-input" class="settings-input" maxlength="255">
-                                            <button id="settings-name-save" class="settings-btn-primary">Simpan</button>
-                                        </div>
-                                        <p id="settings-name-status" class="settings-status"></p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section-divider"></div>
-
-                        <div class="settings-section">
-                            <div class="settings-section-label">Preferences</div>
-                            <div class="settings-row">
-                                <div class="settings-field-label">Appearance</div>
-                                <div class="settings-appearance-group" id="settings-appearance">
-                                    <button class="settings-appearance-btn" data-theme="system">
-                                        <i class="bi bi-display"></i> System
-                                    </button>
-                                    <button class="settings-appearance-btn" data-theme="light">
-                                        <i class="bi bi-sun"></i> Light
-                                    </button>
-                                    <button class="settings-appearance-btn active" data-theme="dark">
-                                        <i class="bi bi-moon"></i> Dark
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section-divider"></div>
-
-                        <div class="settings-section">
-                            <div class="settings-section-label">Personalize</div>
-                            <div class="settings-row">
-                                <div class="settings-field-label">Font Tampilan</div>
-                                <div class="settings-font-select" id="settings-font-select">
-                                    <button class="settings-font-trigger" id="settings-font-trigger">
-                                        <span id="settings-font-label">System Default</span>
-                                        <i class="bi bi-chevron-down"></i>
-                                    </button>
-                                    <div class="settings-font-dropdown" id="settings-font-dropdown">
-                                        <div class="settings-font-option active" data-font="system">System Default</div>
-                                        <div class="settings-font-option" data-font="Inter">Inter</div>
-                                        <div class="settings-font-option" data-font="Lato">Lato</div>
-                                        <div class="settings-font-option" data-font="Montserrat">Montserrat</div>
-                                        <div class="settings-font-option" data-font="Plus Jakarta Sans">Plus Jakarta Sans</div>
-                                        <div class="settings-font-option" data-font="Poppins">Poppins</div>
-                                        <div class="settings-font-option" data-font="Space Grotesk">Space Grotesk</div>
-                                        <div class="settings-font-option" data-font="JetBrains Mono">JetBrains Mono</div>
-                                        <div class="settings-font-option" data-font="Arial">Arial</div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="settings-row">
-                                <div class="settings-font-preview" id="settings-font-preview">
-                                    FlowGram — Workflow builder visual
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- === TAB: Account === -->
-                    <div class="settings-tab" id="tab-account">
-                        <div class="settings-section">
-                            <div class="settings-section-label">Account Details</div>
-                            <div class="settings-row">
-                                <div class="settings-field-label">Email</div>
-                                <div class="settings-email-display" id="settings-email">user@gmail.com</div>
-                            </div>
-                        </div>
-
-                        <div class="settings-section-divider"></div>
-
-                        <div class="settings-section">
-                            <div class="settings-section-label">Danger Zone</div>
-                            <div class="settings-row">
-                                <div class="settings-field-label">Delete account</div>
-                                <div class="settings-desc">Permanently delete your account and all associated data</div>
-                                <button id="settings-delete-btn" class="settings-btn-danger">Delete account</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- === TAB: Privacy === -->
-                    <div class="settings-tab" id="tab-privacy">
-                        <div class="settings-section">
-                            <div class="settings-section-label">Data Controls</div>
-                            <div class="settings-row">
-                                <button id="settings-export-btn" class="settings-btn-secondary">Ekspor Semua Data</button>
-                            </div>
-                        </div>
-
-                    </div>
-
-                    <!-- === TAB: FAQ === -->
-                    <div class="settings-tab" id="tab-faq">
-                        <div class="settings-section">
-                            <div class="settings-section-label">FAQ</div>
-                            <div class="settings-faq-list">
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Apa itu FlowGram?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja di kanvas tanpa batas.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara login?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik "Masuk dengan Google" di halaman awal, pilih akun Google kamu, dan selesai.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Apa itu demo mode?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Demo mode memungkinkan kamu mencoba FlowGram tanpa login. Data disimpan di localStorage browser kamu.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara migrasi dari demo ke akun?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik "Sign in here" di sidebar (bawah), login dengan Google, data kamu akan otomatis dipindahkan ke cloud.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Apakah data saya aman?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Ya. Data tersimpan di database Neon PostgreSQL dan hanya bisa diakses oleh akun Google kamu.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara menghubungkan node?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik dan tarik dari titik bulat (connector dot) di tepi node ke node lain. Garis kurva akan otomatis terhubung.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara menyisipkan icon di node?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik kanan pada node, pilih "Pilih Icon", lalu pilih icon dari 6 kategori yang tersedia.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara mengubah warna node?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik kanan pada node, pilih "Warna", lalu pilih dari 8 warna (default, merah, oranye, kuning, hijau, biru, ungu, pink).</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara import/export file .json?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Klik "Export" di toolbar untuk menyimpan workflow sebagai file .json. Klik "Import" untuk memuat file .json yang sudah disimpan sebelumnya.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara mengganti font?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Buka Settings &gt; General &gt; Personalize, pilih font favorit kamu dari 9 pilihan yang tersedia.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara mengekspor semua project?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Buka Settings &gt; Privacy, klik "Ekspor Semua Data".</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Bagaimana cara menghapus akun?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Buka Settings &gt; Account, klik "Delete account". Semua data akan dihapus permanen.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Apakah FlowGram punya dark mode?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Ya. Atur di Settings &gt; General &gt; Appearance, atau ikuti preferensi sistem kamu.</div></div>
-                                </div>
-                                <div class="settings-faq-item">
-                                    <div class="settings-faq-q"><span>Apakah FlowGram bisa di HP?</span><span class="settings-faq-icon">+</span></div>
-                                    <div class="settings-faq-a-wrapper"><div class="settings-faq-a">Ya. FlowGram responsif di semua ukuran layar dan mendukung sentuhan, pinch-to-zoom, dan bottom sheet.</div></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-tab" id="tab-about">
-                        <div class="settings-section">
-                            <div class="settings-section-label">About</div>
-                            <div class="settings-about-text">
-                                FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja dengan mudah.
-                            </div>
-                            <div class="settings-about-text" style="margin-top:12px;">
-                                <strong>Fitur:</strong><br>
-                                &bull; Infinite canvas — pan, zoom, atur node bebas<br>
-                                &bull; Node connections — kurva bezier dengan animasi<br>
-                                &bull; Multi-project dashboard — kelola banyak workflow<br>
-                                &bull; Google OAuth — masuk dengan akun Google<br>
-                                &bull; Neon database — project tersimpan di cloud<br>
-                                &bull; Demo mode — coba tanpa login<br>
-                                &bull; Font picker — pilih dari 9 jenis font<br>
-                                &bull; Dark mode — tema terang dan gelap<br>
-                                &bull; Mobile-friendly — sentuhan, pinch-to-zoom
-                            </div>
-                            <div class="settings-about-text" style="margin-top:12px;">
-                                <strong>Tech:</strong> Vanilla JS, Hono.js, Neon PostgreSQL, Google OAuth, Lucide Icons, Bootstrap Icons
-                            </div>
-                            <div class="settings-version" style="margin-top:14px;">FlowGram v1.0.0</div>
-                            <div class="settings-version" style="margin-top:4px;">&copy; 2026 Alfiz Ilham — MIT License</div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
+      <div id="settings-backdrop"></div>
+      <div id="settings-dialog">
+        <div id="settings-header">
+          <h3 id="settings-title">Pengaturan</h3>
+          <button id="settings-close" class="settings-close-btn">&times;</button>
         </div>
+        <div id="settings-body" class="settings-two-col">
+
+          <!-- Sidebar nav -->
+          <div id="settings-nav">
+            <div class="settings-nav-item active" data-tab="general">
+              <i class="bi bi-gear"></i> General
+            </div>
+            <div class="settings-nav-item" data-tab="account">
+              <i class="bi bi-person"></i> Account
+            </div>
+            <div class="settings-nav-item" data-tab="privacy">
+              <i class="bi bi-shield-lock"></i> Privacy
+            </div>
+            <div class="settings-nav-item" data-tab="faq">
+              <i class="bi bi-question-circle"></i> FAQ
+            </div>
+            <div class="settings-nav-item" data-tab="about">
+              <i class="bi bi-info-circle"></i> About
+            </div>
+          </div>
+
+          <!-- Content area -->
+          <div id="settings-content">
+
+            <!-- === TAB: General === -->
+            <div class="settings-tab active" id="tab-general">
+              <div class="settings-section">
+                <div class="settings-section-label">Profile</div>
+                <div class="settings-row">
+                  <div class="settings-avatar-row">
+                    <div class="settings-avatar" id="settings-avatar">Z</div>
+                    <div class="settings-avatar-info">
+                      <div class="settings-field-label">Nama Tampilan</div>
+                      <div class="settings-input-row">
+                        <input type="text" id="settings-name-input" class="settings-input" maxlength="255">
+                        <button id="settings-name-save" class="settings-btn-primary">Simpan</button>
+                      </div>
+                      <p id="settings-name-status" class="settings-status"></p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section-divider"></div>
+
+              <div class="settings-section">
+                <div class="settings-section-label">Preferences</div>
+                <div class="settings-row">
+                  <div class="settings-field-label">Appearance</div>
+                  <div class="settings-appearance-group" id="settings-appearance">
+                    <button class="settings-appearance-btn" data-theme="system">
+                      <i class="bi bi-display"></i> System
+                    </button>
+                    <button class="settings-appearance-btn" data-theme="light">
+                      <i class="bi bi-sun"></i> Light
+                    </button>
+                    <button class="settings-appearance-btn active" data-theme="dark">
+                      <i class="bi bi-moon"></i> Dark
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="settings-section-divider"></div>
+
+              <div class="settings-section">
+                <div class="settings-section-label">Personalize</div>
+                <div class="settings-row">
+                  <div class="settings-field-label">Font Tampilan</div>
+                  <div class="settings-font-select" id="settings-font-select">
+                    <button class="settings-font-trigger" id="settings-font-trigger">
+                      <span id="settings-font-label">System Default</span>
+                      <i class="bi bi-chevron-down"></i>
+                    </button>
+                    <div class="settings-font-dropdown" id="settings-font-dropdown">
+                      <div class="settings-font-option active" data-font="system">System Default</div>
+                      <div class="settings-font-option" data-font="Inter">Inter</div>
+                      <div class="settings-font-option" data-font="Lato">Lato</div>
+                      <div class="settings-font-option" data-font="Montserrat">Montserrat</div>
+                      <div class="settings-font-option" data-font="Plus Jakarta Sans">Plus Jakarta Sans</div>
+                      <div class="settings-font-option" data-font="Poppins">Poppins</div>
+                      <div class="settings-font-option" data-font="Space Grotesk">Space Grotesk</div>
+                      <div class="settings-font-option" data-font="JetBrains Mono">JetBrains Mono</div>
+                      <div class="settings-font-option" data-font="Arial">Arial</div>
+                    </div>
+                  </div>
+                </div>
+                <div class="settings-row">
+                  <div class="settings-font-preview" id="settings-font-preview">
+                    FlowGram — Workflow builder visual
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- === TAB: Account === -->
+            <div class="settings-tab" id="tab-account">
+              <div class="settings-section">
+                <div class="settings-section-label">Account Details</div>
+                <div class="settings-row">
+                  <div class="settings-field-label">Email</div>
+                  <div class="settings-email-display" id="settings-email">user@gmail.com</div>
+                </div>
+              </div>
+
+              <div class="settings-section-divider"></div>
+
+              <div class="settings-section">
+                <div class="settings-section-label">Danger Zone</div>
+                <div class="settings-row">
+                  <div class="settings-field-label">Delete account</div>
+                  <div class="settings-desc">Permanently delete your account and all associated data</div>
+                  <button id="settings-delete-btn" class="settings-btn-danger">Delete account</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- === TAB: Privacy === -->
+            <div class="settings-tab" id="tab-privacy">
+              <div class="settings-section">
+                <div class="settings-section-label">Data Controls</div>
+                <div class="settings-row">
+                  <button id="settings-export-btn" class="settings-btn-secondary">Ekspor Semua Data</button>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- === TAB: FAQ === -->
+            <div class="settings-tab" id="tab-faq">
+              <div class="settings-section">
+                <div class="settings-section-label">FAQ</div>
+                <div class="settings-faq-list">
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Apa itu FlowGram?</span><span class="settings-faq-icon">+</span>
+                    </div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">FlowGram adalah workflow builder visual untuk membuat, menghubungkan,
+                        dan mengelola alur kerja di kanvas tanpa batas.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara login?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik "Masuk dengan Google" di halaman awal, pilih akun Google kamu,
+                        dan selesai.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Apa itu demo mode?</span><span class="settings-faq-icon">+</span>
+                    </div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Demo mode memungkinkan kamu mencoba FlowGram tanpa login. Data
+                        disimpan di localStorage browser kamu.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara migrasi dari demo ke akun?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik "Sign in here" di sidebar (bawah), login dengan Google, data kamu
+                        akan otomatis dipindahkan ke cloud.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Apakah data saya aman?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Ya. Data tersimpan di database Neon PostgreSQL dan hanya bisa diakses
+                        oleh akun Google kamu.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara menghubungkan node?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik dan tarik dari titik bulat (connector dot) di tepi node ke node
+                        lain. Garis kurva akan otomatis terhubung.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara menyisipkan icon di node?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik kanan pada node, pilih "Pilih Icon", lalu pilih icon dari 6
+                        kategori yang tersedia.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara mengubah warna node?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik kanan pada node, pilih "Warna", lalu pilih dari 8 warna (default,
+                        merah, oranye, kuning, hijau, biru, ungu, pink).</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara import/export file .json?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Klik "Export" di toolbar untuk menyimpan workflow sebagai file .json.
+                        Klik "Import" untuk memuat file .json yang sudah disimpan sebelumnya.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara mengganti font?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Buka Settings &gt; General &gt; Personalize, pilih font favorit kamu
+                        dari 9 pilihan yang tersedia.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara mengekspor semua project?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Buka Settings &gt; Privacy, klik "Ekspor Semua Data".</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Bagaimana cara menghapus akun?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Buka Settings &gt; Account, klik "Delete account". Semua data akan
+                        dihapus permanen.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Apakah FlowGram punya dark mode?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Ya. Atur di Settings &gt; General &gt; Appearance, atau ikuti
+                        preferensi sistem kamu.</div>
+                    </div>
+                  </div>
+                  <div class="settings-faq-item">
+                    <div class="settings-faq-q"><span>Apakah FlowGram bisa di HP?</span><span
+                        class="settings-faq-icon">+</span></div>
+                    <div class="settings-faq-a-wrapper">
+                      <div class="settings-faq-a">Ya. FlowGram responsif di semua ukuran layar dan mendukung sentuhan,
+                        pinch-to-zoom, dan bottom sheet.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-tab" id="tab-about">
+              <div class="settings-section">
+                <div class="settings-section-label">About</div>
+                <div class="settings-about-text">
+                  FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja dengan
+                  mudah.
+                </div>
+                <div class="settings-about-text" style="margin-top:12px;">
+                  <strong>Fitur:</strong><br>
+                  &bull; Infinite canvas — pan, zoom, atur node bebas<br>
+                  &bull; Node connections — kurva bezier dengan animasi<br>
+                  &bull; Multi-project dashboard — kelola banyak workflow<br>
+                  &bull; Google OAuth — masuk dengan akun Google<br>
+                  &bull; Neon database — project tersimpan di cloud<br>
+                  &bull; Demo mode — coba tanpa login<br>
+                  &bull; Font picker — pilih dari 9 jenis font<br>
+                  &bull; Dark mode — tema terang dan gelap<br>
+                  &bull; Mobile-friendly — sentuhan, pinch-to-zoom
+                </div>
+                <div class="settings-about-text" style="margin-top:12px;">
+                  <strong>Tech:</strong> Vanilla JS, Hono.js, Neon PostgreSQL, Google OAuth, Lucide Icons, Bootstrap
+                  Icons
+                </div>
+                <div class="settings-version" style="margin-top:14px;">FlowGram v1.0.0</div>
+                <div class="settings-version" style="margin-top:4px;">&copy; 2026 Alfiz Ilham — MIT License</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
