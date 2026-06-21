@@ -882,7 +882,7 @@ body {
 
     #search-input {
         position: fixed;
-        top: 57px;
+        top: 65px;
         left: 50%;
         transform: translateX(-50%);
         width: 80%;
