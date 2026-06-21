@@ -1034,7 +1034,7 @@ body {
 }
 
 /* ========================================
-   Settings Modal
+   Settings Modal — Two-Column (ChatGPT style)
    ======================================== */
 
 #settings-modal {
@@ -1059,10 +1059,10 @@ body {
 #settings-dialog {
     position: relative;
     background: var(--surface);
-    border-radius: 14px;
+    border-radius: 12px;
     box-shadow: var(--shadow-lg);
     width: 90%;
-    max-width: 400px;
+    max-width: 720px;
     max-height: 80vh;
     display: flex;
     flex-direction: column;
@@ -1074,12 +1074,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 20px 12px;
+    padding: 16px 20px;
     border-bottom: 1px solid var(--border);
 }
 
 #settings-title {
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 700;
     color: var(--text);
     margin: 0;
@@ -1090,7 +1090,7 @@ body {
     height: 32px;
     border: none;
     background: transparent;
-    font-size: 22px;
+    font-size: 20px;
     color: var(--text-muted);
     cursor: pointer;
     border-radius: 6px;
@@ -1105,24 +1105,73 @@ body {
     color: var(--text);
 }
 
-#settings-body {
-    padding: 16px 20px;
-    overflow-y: auto;
+/* ── Two-column layout ── */
+.settings-two-col {
+    display: flex;
     flex: 1;
+    overflow: hidden;
 }
 
-#settings-footer {
-    padding: 12px 20px 16px;
-    border-top: 1px solid var(--border);
+/* ── Sidebar nav ── */
+#settings-nav {
+    width: 180px;
+    flex-shrink: 0;
+    background: var(--surface);
+    padding: 8px;
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
 }
 
-#settings-done {
-    width: 100%;
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+    margin-bottom: 2px;
+}
+
+.settings-nav-item i {
+    font-size: 15px;
+    width: 18px;
+    text-align: center;
+}
+
+.settings-nav-item:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+
+.settings-nav-item.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* ── Content area ── */
+#settings-content {
+    flex: 1;
+    padding: 20px 24px;
+    background: var(--bg);
+    overflow-y: auto;
+}
+
+.settings-tab {
+    display: none;
+}
+
+.settings-tab.active {
+    display: block;
 }
 
 /* ── Sections ── */
 .settings-section {
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .settings-section-label {
@@ -1131,11 +1180,17 @@ body {
     color: var(--text-muted);
     text-transform: uppercase;
     letter-spacing: 0.06em;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
+}
+
+.settings-section-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 18px 0;
 }
 
 .settings-row {
-    margin-bottom: 12px;
+    margin-bottom: 6px;
 }
 
 .settings-field-label {
@@ -1146,6 +1201,39 @@ body {
     margin-bottom: 6px;
 }
 
+.settings-desc {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    line-height: 1.5;
+}
+
+/* ── Avatar row ── */
+.settings-avatar-row {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+}
+
+.settings-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 600;
+    flex-shrink: 0;
+}
+
+.settings-avatar-info {
+    flex: 1;
+}
+
+/* ── Input ── */
 .settings-input-row {
     display: flex;
     gap: 8px;
@@ -1169,19 +1257,6 @@ body {
     border-color: var(--accent);
 }
 
-.settings-btn-small {
-    padding: 9px 16px;
-    font-size: 13px;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.settings-btn-full {
-    width: 100%;
-    padding: 10px;
-    font-size: 13px;
-}
-
 .settings-status {
     font-size: 12px;
     color: var(--accent);
@@ -1193,12 +1268,120 @@ body {
     color: #EF4444;
 }
 
-.settings-divider {
-    height: 1px;
-    background: var(--border);
-    margin: 14px 0;
+/* ── Buttons ── */
+.settings-btn-primary {
+    padding: 9px 16px;
+    border: none;
+    border-radius: 8px;
+    background: var(--accent);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    flex-shrink: 0;
+    transition: opacity 0.15s;
 }
 
+.settings-btn-primary:hover {
+    opacity: 0.9;
+}
+
+.settings-btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.settings-btn-secondary {
+    width: 100%;
+    padding: 10px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    background: transparent;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.12s, border-color 0.12s;
+}
+
+.settings-btn-secondary:hover {
+    background: var(--hover);
+    border-color: var(--border-strong);
+}
+
+.settings-btn-danger {
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    background: #e53e3e;
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.15s;
+}
+
+.settings-btn-danger:hover {
+    opacity: 0.9;
+}
+
+.settings-btn-danger:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ── Email display ── */
+.settings-email-display {
+    font-size: 13px;
+    color: var(--text);
+    padding: 9px 0;
+}
+
+/* ── Appearance toggle group ── */
+.settings-appearance-group {
+    display: inline-flex;
+    border-radius: 10px;
+    background: var(--bg);
+    border: 1.5px solid var(--border);
+    overflow: hidden;
+}
+
+.settings-appearance-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border: none;
+    background: transparent;
+    color: var(--text-muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.12s, color 0.12s;
+}
+
+.settings-appearance-btn i {
+    font-size: 14px;
+}
+
+.settings-appearance-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+
+.settings-appearance-btn.active {
+    background: var(--surface);
+    color: var(--accent);
+    font-weight: 600;
+    box-shadow: var(--shadow-sm);
+}
+
+/* ── About ── */
 .settings-about-text {
     font-size: 13px;
     color: var(--text-muted);

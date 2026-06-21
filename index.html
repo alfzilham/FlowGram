@@ -13,6 +13,7 @@
   <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
   <meta name="google-client-id" content="876191451638-p901bjf4i49flh0ugjmneu1or1lm7dkl.apps.googleusercontent.com">
   <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
 </head>
 
 <body>
@@ -135,8 +136,8 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="5" r="1"/><circle cx="12" cy="12" r="1"/><circle cx="12" cy="19" r="1"/></svg>
         </button>
         <div class="profile-dropdown" id="profile-dropdown">
-          <div class="profile-dropdown-item" id="profile-action-settings">&#9881;&#65039; Pengaturan</div>
-          <div class="profile-dropdown-item danger" id="profile-action-auth">&#128273; Sign in here</div>
+          <div class="profile-dropdown-item" id="profile-action-settings"><i class="bi bi-gear"></i> Pengaturan</div>
+          <div class="profile-dropdown-item danger" id="profile-action-auth"><i class="bi bi-box-arrow-in-right"></i> Sign in here</div>
         </div>
       </div>
     </aside>
@@ -175,7 +176,7 @@
             <span id="avatar-placeholder" class="avatar-placeholder"></span>
             <div class="user-dropdown" id="user-dropdown">
               <div class="user-dropdown-header" id="dropdown-email"></div>
-              <div class="user-dropdown-item danger" id="btn-logout">Keluar</div>
+              <div class="user-dropdown-item danger" id="btn-logout"><i class="bi bi-box-arrow-right"></i> Keluar</div>
             </div>
           </div>
           <button id="btn-new-project" class="btn-primary">
@@ -250,55 +251,109 @@
                     <h3 id="settings-title">Pengaturan</h3>
                     <button id="settings-close" class="settings-close-btn">&times;</button>
                 </div>
-                <div id="settings-body">
+                <div id="settings-body" class="settings-two-col">
 
-                    <!-- Profil -->
-                    <div class="settings-section">
-                        <div class="settings-section-label">Profil</div>
-                        <div class="settings-row">
-                            <label class="settings-field-label">Nama Tampilan</label>
-                            <div class="settings-input-row">
-                                <input type="text" id="settings-name-input" class="settings-input" maxlength="255">
-                                <button id="settings-name-save" class="btn-primary settings-btn-small">Simpan</button>
+                    <!-- Sidebar nav -->
+                    <div id="settings-nav">
+                        <div class="settings-nav-item active" data-tab="general">
+                            <i class="bi bi-gear"></i> General
+                        </div>
+                        <div class="settings-nav-item" data-tab="account">
+                            <i class="bi bi-person"></i> Account
+                        </div>
+                        <div class="settings-nav-item" data-tab="privacy">
+                            <i class="bi bi-shield-lock"></i> Privacy
+                        </div>
+                    </div>
+
+                    <!-- Content area -->
+                    <div id="settings-content">
+
+                        <!-- === TAB: General === -->
+                        <div class="settings-tab active" id="tab-general">
+                            <div class="settings-section">
+                                <div class="settings-section-label">Profile</div>
+                                <div class="settings-row">
+                                    <div class="settings-avatar-row">
+                                        <div class="settings-avatar" id="settings-avatar">Z</div>
+                                        <div class="settings-avatar-info">
+                                            <div class="settings-field-label">Nama Tampilan</div>
+                                            <div class="settings-input-row">
+                                                <input type="text" id="settings-name-input" class="settings-input" maxlength="255">
+                                                <button id="settings-name-save" class="settings-btn-primary">Simpan</button>
+                                            </div>
+                                            <p id="settings-name-status" class="settings-status"></p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <p id="settings-name-status" class="settings-status"></p>
+
+                            <div class="settings-section-divider"></div>
+
+                            <div class="settings-section">
+                                <div class="settings-section-label">Preferences</div>
+                                <div class="settings-row">
+                                    <div class="settings-field-label">Appearance</div>
+                                    <div class="settings-appearance-group" id="settings-appearance">
+                                        <button class="settings-appearance-btn" data-theme="system">
+                                            <i class="bi bi-display"></i> System
+                                        </button>
+                                        <button class="settings-appearance-btn" data-theme="light">
+                                            <i class="bi bi-sun"></i> Light
+                                        </button>
+                                        <button class="settings-appearance-btn active" data-theme="dark">
+                                            <i class="bi bi-moon"></i> Dark
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="settings-divider"></div>
+                        <!-- === TAB: Account === -->
+                        <div class="settings-tab" id="tab-account">
+                            <div class="settings-section">
+                                <div class="settings-section-label">Account Details</div>
+                                <div class="settings-row">
+                                    <div class="settings-field-label">Email</div>
+                                    <div class="settings-email-display" id="settings-email">user@gmail.com</div>
+                                </div>
+                            </div>
 
-                    <!-- Data -->
-                    <div class="settings-section">
-                        <div class="settings-section-label">Data</div>
-                        <div class="settings-row">
-                            <button id="settings-export-btn" class="btn-secondary settings-btn-full">Ekspor Semua Data</button>
+                            <div class="settings-section-divider"></div>
+
+                            <div class="settings-section">
+                                <div class="settings-section-label">Danger Zone</div>
+                                <div class="settings-row">
+                                    <div class="settings-field-label">Delete account</div>
+                                    <div class="settings-desc">Permanently delete your account and all associated data</div>
+                                    <button id="settings-delete-btn" class="settings-btn-danger">Delete account</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="settings-divider"></div>
+                        <!-- === TAB: Privacy === -->
+                        <div class="settings-tab" id="tab-privacy">
+                            <div class="settings-section">
+                                <div class="settings-section-label">Data Controls</div>
+                                <div class="settings-row">
+                                    <button id="settings-export-btn" class="settings-btn-secondary">Ekspor Semua Data</button>
+                                </div>
+                            </div>
 
-                    <!-- Akun -->
-                    <div class="settings-section">
-                        <div class="settings-section-label">Akun</div>
-                        <div class="settings-row">
-                            <button id="settings-delete-btn" class="btn-danger settings-btn-full">Hapus Akun &amp; Data</button>
+                            <div class="settings-section-divider"></div>
+
+                            <div class="settings-section">
+                                <div class="settings-section-label">About</div>
+                                <div class="settings-row">
+                                    <div class="settings-about-text">
+                                        FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja dengan mudah. Dibangun dengan teknologi web modern untuk produktivitas maksimal.
+                                    </div>
+                                    <div class="settings-version">FlowGram v1.0.0</div>
+                                </div>
+                            </div>
                         </div>
+
                     </div>
-
-                    <div class="settings-divider"></div>
-
-                    <!-- About -->
-                    <div class="settings-section">
-                        <div class="settings-section-label">About</div>
-                        <div class="settings-about-text">
-                            FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja dengan mudah. Dibangun dengan teknologi web modern untuk produktivitas maksimal.
-                        </div>
-                        <div class="settings-version">FlowGram v1.0.0</div>
-                    </div>
-
-                </div>
-                <div id="settings-footer">
-                    <button id="settings-done" class="btn-primary">Tutup</button>
                 </div>
             </div>
         </div>

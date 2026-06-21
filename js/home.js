@@ -628,12 +628,16 @@
     /* ---------------- Settings Modal ---------------- */
     var settingsModal = document.getElementById('settings-modal');
     var settingsClose = document.getElementById('settings-close');
-    var settingsDone = document.getElementById('settings-done');
+    var settingsNavItems = document.querySelectorAll('.settings-nav-item');
+    var settingsTabs = document.querySelectorAll('.settings-tab');
     var settingsNameInput = document.getElementById('settings-name-input');
     var settingsNameSave = document.getElementById('settings-name-save');
     var settingsNameStatus = document.getElementById('settings-name-status');
+    var settingsEmail = document.getElementById('settings-email');
     var settingsExportBtn = document.getElementById('settings-export-btn');
     var settingsDeleteBtn = document.getElementById('settings-delete-btn');
+    var settingsAvatar = document.getElementById('settings-avatar');
+    var settingsAppearance = document.getElementById('settings-appearance');
 
     function openSettings() {
         if (!settingsModal) return;
@@ -641,10 +645,11 @@
             showToast('Masuk untuk mengakses Pengaturan');
             return;
         }
-        // Pre-fill current name
         var user = fetchUserFromStorage();
         if (settingsNameInput && user) settingsNameInput.value = user.name || '';
         if (settingsNameStatus) settingsNameStatus.textContent = '';
+        if (settingsEmail && user) settingsEmail.textContent = user.email || '—';
+        if (settingsAvatar && user) settingsAvatar.textContent = (user.name || '?').charAt(0).toUpperCase();
         settingsModal.classList.remove('hidden');
     }
 
@@ -653,13 +658,48 @@
     }
 
     if (settingsClose) settingsClose.addEventListener('click', closeSettings);
-    if (settingsDone) settingsDone.addEventListener('click', closeSettings);
     if (settingsModal) {
         settingsModal.addEventListener('click', function (e) {
             if (e.target === settingsModal || e.target.id === 'settings-backdrop') closeSettings();
         });
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape' && !settingsModal.classList.contains('hidden')) closeSettings();
+        });
+    }
+
+    // Tab switching
+    settingsNavItems.forEach(function (item) {
+        item.addEventListener('click', function () {
+            settingsNavItems.forEach(function (el) { el.classList.remove('active'); });
+            item.classList.add('active');
+            settingsTabs.forEach(function (tab) { tab.classList.remove('active'); });
+            var target = document.getElementById('tab-' + item.dataset.tab);
+            if (target) target.classList.add('active');
+        });
+    });
+
+    // Appearance toggle
+    if (settingsAppearance) {
+        settingsAppearance.querySelectorAll('.settings-appearance-btn').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                settingsAppearance.querySelectorAll('.settings-appearance-btn').forEach(function (b) { b.classList.remove('active'); });
+                btn.classList.add('active');
+                var theme = btn.dataset.theme;
+                if (theme === 'system') {
+                    var prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+                    document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+                } else {
+                    document.documentElement.setAttribute('data-theme', theme);
+                }
+                try { localStorage.setItem('wf_builder_theme', document.documentElement.getAttribute('data-theme')); } catch (e) { }
+            });
+        });
+        // Sync active state with current theme
+        var currentTheme = document.documentElement.getAttribute('data-theme');
+        settingsAppearance.querySelectorAll('.settings-appearance-btn').forEach(function (btn) {
+            if (btn.dataset.theme === currentTheme) btn.classList.add('active');
+            // If system, check if it matches
+            if (btn.dataset.theme === 'system' && !currentTheme) btn.classList.add('active');
         });
     }
 
@@ -678,12 +718,11 @@
                 });
                 var data = await res.json();
                 if (!res.ok) throw new Error(data.error || 'Gagal');
-                // Update local user
                 var u = fetchUserFromStorage();
                 if (u) { u.name = name; try { localStorage.setItem('fg_user', JSON.stringify(u)); } catch (e) {} }
-                // Re-render profile
                 renderProfile(u);
                 showAvatar(u);
+                if (settingsAvatar) settingsAvatar.textContent = name.charAt(0).toUpperCase();
                 settingsNameStatus.textContent = 'Nama berhasil disimpan';
                 settingsNameStatus.className = 'settings-status';
             } catch (e) {
@@ -731,7 +770,7 @@
             } catch (e) {
                 showToast('Gagal hapus akun: ' + e.message);
                 settingsDeleteBtn.disabled = false;
-                settingsDeleteBtn.textContent = 'Hapus Akun & Data';
+                settingsDeleteBtn.textContent = 'Delete account';
             }
         });
     }
