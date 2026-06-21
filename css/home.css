@@ -861,13 +861,13 @@ body {
     }
 
     #topbar {
+        position: relative;
         padding: 10px 14px;
         gap: 8px;
     }
 
     #search-wrap {
         max-width: none;
-        position: relative;
         flex: 1;
     }
 
