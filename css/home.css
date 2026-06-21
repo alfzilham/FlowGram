@@ -881,11 +881,11 @@ body {
     }
 
     #search-input {
-        position: absolute;
-        top: 100%;
+        position: fixed;
+        top: 57px;
         left: 0;
         right: 0;
-        width: auto;
+        width: 100%;
         max-width: none;
         margin: 0;
         padding: 10px 14px;
