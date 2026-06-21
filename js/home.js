@@ -860,6 +860,40 @@
         });
     }
 
+    /* ---------------- hamburger (mobile) ---------------- */
+    var sidebar = document.getElementById('sidebar');
+    var sidebarOverlay = document.getElementById('sidebar-overlay');
+    var btnHamburger = document.getElementById('btn-hamburger');
+
+    function openSidebar() {
+        sidebar.classList.add('open');
+        if (sidebarOverlay) sidebarOverlay.classList.add('visible');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('open');
+        if (sidebarOverlay) sidebarOverlay.classList.remove('visible');
+    }
+
+    if (btnHamburger) {
+        btnHamburger.addEventListener('click', function () {
+            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+    }
+
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
+
+    // Tutup sidebar saat filter dipilih di mobile
+    if (sidebar) {
+        document.querySelectorAll('.nav-item').forEach(function (btn) {
+            btn.addEventListener('click', function () {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
+        });
+    }
+
     /* ---------------- init ---------------- */
     initTheme();
     FG.migrateLegacyIfNeeded();
