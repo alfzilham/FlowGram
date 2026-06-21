@@ -1159,12 +1159,14 @@
     const sidebarOverlay = document.getElementById('sidebar-overlay');
 
     function openSidebar() {
+        if (!sidebar || !mainEl || !sidebarOverlay) return;
         sidebar.classList.add('open');
         mainEl.classList.add('pushed');
         sidebarOverlay.classList.add('visible');
     }
 
     function closeSidebar() {
+        if (!sidebar || !mainEl || !sidebarOverlay) return;
         sidebar.classList.remove('open');
         mainEl.classList.remove('pushed');
         sidebarOverlay.classList.remove('visible');

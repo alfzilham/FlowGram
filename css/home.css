@@ -578,13 +578,13 @@ body {
 }
 
 .ctx-menu-item.danger:hover {
-    background: #FEF2F2;
-    color: #EF4444;
+    background: var(--danger-soft);
+    color: var(--danger);
 }
 
 :root[data-theme="dark"] .ctx-menu-item.danger:hover {
-    background: rgba(239, 68, 68, 0.15);
-    color: #F87171;
+    background: var(--danger-soft);
+    color: var(--danger-hover);
 }
 
 .ctx-menu-item svg {
@@ -609,7 +609,7 @@ body {
     left: 50%;
     bottom: 26px;
     transform: translate(-50%, 12px);
-    background: #18181B;
+    background: var(--toast-bg);
     color: #fff;
     font-size: 13px;
     padding: 9px 16px;
@@ -696,7 +696,7 @@ body {
     padding: 0 14px;
     border: none;
     border-radius: 10px;
-    background: #EF4444;
+    background: var(--danger);
     color: #fff;
     font-size: 13px;
     font-weight: 600;
@@ -705,7 +705,7 @@ body {
 }
 
 .btn-danger:hover {
-    background: #DC2626;
+    background: var(--danger-hover);
 }
 
 .btn-danger:active {
@@ -904,7 +904,6 @@ body {
         visibility: visible;
     }
 
-    #btn-new-project span,
     #btn-new-project {
         padding: 0 10px;
         font-size: 12px;
@@ -1051,11 +1050,11 @@ body {
 }
 
 .profile-dropdown-item.danger {
-    color: #EF4444;
+    color: var(--danger);
 }
 
 .profile-dropdown-item.danger:hover {
-    background: rgba(239, 68, 68, 0.08);
+    background: var(--danger-soft);
 }
 
 .profile-dropdown-item.hidden {
@@ -1294,7 +1293,7 @@ body {
 }
 
 .settings-status.error {
-    color: #EF4444;
+    color: var(--danger);
 }
 
 /* ── Buttons ── */
@@ -1345,7 +1344,7 @@ body {
     padding: 10px 16px;
     border: none;
     border-radius: 8px;
-    background: #e53e3e;
+    background: var(--danger);
     color: #fff;
     font-family: inherit;
     font-size: 13px;
@@ -1630,6 +1629,15 @@ body {
 /* ========================================
    Custom Scrollbar
    ======================================== */
+
+/* Firefox */
+#content,
+#sidebar,
+#settings-content,
+.settings-font-dropdown {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+}
 
 #content::-webkit-scrollbar,
 #sidebar::-webkit-scrollbar,

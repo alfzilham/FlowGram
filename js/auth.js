@@ -9,14 +9,6 @@
     const STORAGE_KEY = 'fg_token';
     const USER_KEY = 'fg_user';
 
-    // Handle fallback redirect from Google OAuth popup
-    var googleTokenFromUrl = new URLSearchParams(window.location.search).get('google_token');
-    if (googleTokenFromUrl) {
-        // Clean URL
-        history.replaceState(null, '', window.location.pathname + window.location.hash);
-        window.__fgAuthCallback(googleTokenFromUrl);
-    }
-
     function getConfig() {
         const meta = document.querySelector('meta[name="google-client-id"]');
         return meta ? meta.getAttribute('content') : '';
@@ -114,7 +106,7 @@
                         await FG.migrateDemoToUser(user.id);
                     }
                 } catch (e) {
-                    console.warn('Migration error:', e);
+                    // silent — migration best-effort
                 }
                 window.location.href = '/';
                 return;
@@ -138,6 +130,15 @@
             showAuthError(e.message || 'Gagal login dengan Google');
         }
     };
+
+    // Handle fallback redirect from Google OAuth popup
+    (function () {
+        var t = new URLSearchParams(window.location.search).get('google_token');
+        if (t) {
+            history.replaceState(null, '', window.location.pathname + window.location.hash);
+            window.__fgAuthCallback(t);
+        }
+    }());
 
     /* ---------------- Demo Mode ---------------- */
     function enterDemoMode() {

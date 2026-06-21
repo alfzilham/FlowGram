@@ -208,22 +208,22 @@
     flex-shrink: 0;
 }
 
-.btn-primary {
+.auth-btn-primary {
     background: var(--accent);
     color: #FFFFFF;
 }
 
-.btn-primary:hover {
+.auth-btn-primary:hover {
     opacity: 0.9;
     transform: translateY(-1px);
     box-shadow: 0 4px 16px rgba(99, 102, 241, 0.28);
 }
 
-.btn-primary:active {
+.auth-btn-primary:active {
     transform: translateY(0);
 }
 
-.btn-primary:disabled {
+.auth-btn-primary:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
