@@ -1131,18 +1131,25 @@
         sidebarOverlay.classList.remove('visible');
     }
 
-    document.getElementById('btn-hamburger').addEventListener('click', () => {
-        sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
-    });
+    const btnHamburger = document.getElementById('btn-hamburger');
+    if (btnHamburger) {
+        btnHamburger.addEventListener('click', () => {
+            sidebar.classList.contains('open') ? closeSidebar() : openSidebar();
+        });
+    }
 
-    sidebarOverlay.addEventListener('click', closeSidebar);
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', closeSidebar);
+    }
 
     // Tutup sidebar saat filter dipilih di mobile
-    document.querySelectorAll('.nav-item').forEach(btn => {
-        btn.addEventListener('click', () => {
-            if (window.innerWidth <= 768) closeSidebar();
+    if (sidebar) {
+        document.querySelectorAll('.nav-item').forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (window.innerWidth <= 768) closeSidebar();
+            });
         });
-    });
+    }
 
     /* ---------------- init ---------------- */
     initTheme();
