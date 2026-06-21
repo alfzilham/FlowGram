@@ -1530,6 +1530,69 @@ body {
 }
 
 /* ========================================
+   Settings Modal — Mobile
+   ======================================== */
+
+@media (max-width: 768px) {
+    #settings-dialog {
+        width: 96%;
+        height: 90vh;
+        border-radius: 10px;
+    }
+
+    .settings-two-col {
+        flex-direction: column;
+    }
+
+    #settings-nav {
+        width: 100%;
+        display: flex;
+        gap: 2px;
+        padding: 6px 8px;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        overflow-x: auto;
+        flex-shrink: 0;
+    }
+
+    #settings-nav .settings-nav-item {
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    #settings-content {
+        padding: 14px 16px;
+    }
+
+    .settings-avatar-row {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .settings-input-row {
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .settings-btn-primary {
+        width: 100%;
+    }
+
+    .settings-appearance-group {
+        width: 100%;
+    }
+
+    .settings-appearance-btn {
+        flex: 1;
+        justify-content: center;
+        padding: 8px 8px;
+        font-size: 11px;
+    }
+}
+
+/* ========================================
    Custom Scrollbar
    ======================================== */
 
