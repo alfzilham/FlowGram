@@ -1,5 +1,9 @@
+:root {
+    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
+}
+
 body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--font-family);
     color: var(--text);
     overflow: hidden;
     -webkit-font-smoothing: antialiased;

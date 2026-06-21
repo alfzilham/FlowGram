@@ -703,6 +703,61 @@
         });
     }
 
+    // Font picker
+    var fontTrigger = document.getElementById('settings-font-trigger');
+    var fontDropdown = document.getElementById('settings-font-dropdown');
+    var fontLabel = document.getElementById('settings-font-label');
+    var fontPreview = document.getElementById('settings-font-preview');
+    var fontOptions = document.querySelectorAll('.settings-font-option');
+    var FONT_KEY = 'fg_font';
+
+    var fontToFamily = {
+        'system': '-apple-system, BlinkMacSystemFont, \'Segoe UI\', Inter, Roboto, Helvetica, Arial, sans-serif',
+        'Inter': '\'Inter\', sans-serif',
+        'Lato': '\'Lato\', sans-serif',
+        'Montserrat': '\'Montserrat\', sans-serif',
+        'Plus Jakarta Sans': '\'Plus Jakarta Sans\', sans-serif',
+        'Poppins': '\'Poppins\', sans-serif',
+        'Space Grotesk': '\'Space Grotesk\', sans-serif',
+        'JetBrains Mono': '\'JetBrains Mono\', monospace',
+        'Arial': 'Arial, sans-serif'
+    };
+
+    function applyFont(fontName) {
+        var family = fontToFamily[fontName] || fontToFamily['system'];
+        document.documentElement.style.setProperty('--font-family', family);
+        if (fontLabel) fontLabel.textContent = fontName === 'system' ? 'System Default' : fontName;
+        if (fontPreview) fontPreview.style.fontFamily = family;
+        fontOptions.forEach(function (opt) { opt.classList.toggle('active', opt.dataset.font === fontName); });
+        try { localStorage.setItem(FONT_KEY, fontName); } catch (e) { }
+    }
+
+    function initFont() {
+        var saved = null;
+        try { saved = localStorage.getItem(FONT_KEY); } catch (e) { }
+        applyFont(saved || 'system');
+    }
+
+    if (fontTrigger && fontDropdown) {
+        fontTrigger.addEventListener('click', function (e) {
+            e.stopPropagation();
+            fontDropdown.classList.toggle('visible');
+        });
+        document.addEventListener('click', function () {
+            if (fontDropdown) fontDropdown.classList.remove('visible');
+        });
+    }
+
+    fontOptions.forEach(function (opt) {
+        opt.addEventListener('click', function () {
+            fontDropdown.classList.remove('visible');
+            applyFont(opt.dataset.font);
+        });
+    });
+
+    // Init font on page load
+    initFont();
+
     // Save name
     if (settingsNameSave && settingsNameInput) {
         settingsNameSave.addEventListener('click', async function () {
