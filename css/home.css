@@ -1475,16 +1475,27 @@ body {
 }
 
 /* ========================================
-   Scrollbar
+   Custom Scrollbar
    ======================================== */
 
 #content::-webkit-scrollbar,
-#sidebar::-webkit-scrollbar {
+#sidebar::-webkit-scrollbar,
+#settings-content::-webkit-scrollbar,
+.settings-font-dropdown::-webkit-scrollbar {
     width: 4px;
 }
 
 #content::-webkit-scrollbar-thumb,
-#sidebar::-webkit-scrollbar-thumb {
+#sidebar::-webkit-scrollbar-thumb,
+#settings-content::-webkit-scrollbar-thumb,
+.settings-font-dropdown::-webkit-scrollbar-thumb {
     background: var(--border-strong);
     border-radius: 4px;
+}
+
+#content::-webkit-scrollbar-track,
+#sidebar::-webkit-scrollbar-track,
+#settings-content::-webkit-scrollbar-track,
+.settings-font-dropdown::-webkit-scrollbar-track {
+    background: transparent;
 }
