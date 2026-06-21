@@ -625,10 +625,121 @@
         if (profileDropdown) profileDropdown.classList.remove('visible');
     });
 
+    /* ---------------- Settings Modal ---------------- */
+    var settingsModal = document.getElementById('settings-modal');
+    var settingsClose = document.getElementById('settings-close');
+    var settingsDone = document.getElementById('settings-done');
+    var settingsNameInput = document.getElementById('settings-name-input');
+    var settingsNameSave = document.getElementById('settings-name-save');
+    var settingsNameStatus = document.getElementById('settings-name-status');
+    var settingsExportBtn = document.getElementById('settings-export-btn');
+    var settingsDeleteBtn = document.getElementById('settings-delete-btn');
+
+    function openSettings() {
+        if (!settingsModal) return;
+        if (FGAuth.isDemo()) {
+            showToast('Masuk untuk mengakses Pengaturan');
+            return;
+        }
+        // Pre-fill current name
+        var user = fetchUserFromStorage();
+        if (settingsNameInput && user) settingsNameInput.value = user.name || '';
+        if (settingsNameStatus) settingsNameStatus.textContent = '';
+        settingsModal.classList.remove('hidden');
+    }
+
+    function closeSettings() {
+        if (settingsModal) settingsModal.classList.add('hidden');
+    }
+
+    if (settingsClose) settingsClose.addEventListener('click', closeSettings);
+    if (settingsDone) settingsDone.addEventListener('click', closeSettings);
+    if (settingsModal) {
+        settingsModal.addEventListener('click', function (e) {
+            if (e.target === settingsModal || e.target.id === 'settings-backdrop') closeSettings();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && !settingsModal.classList.contains('hidden')) closeSettings();
+        });
+    }
+
+    // Save name
+    if (settingsNameSave && settingsNameInput) {
+        settingsNameSave.addEventListener('click', async function () {
+            var name = settingsNameInput.value.trim();
+            if (!name) { settingsNameStatus.textContent = 'Nama tidak boleh kosong'; settingsNameStatus.className = 'settings-status error'; return; }
+            settingsNameSave.disabled = true;
+            settingsNameSave.textContent = 'Menyimpan...';
+            try {
+                var res = await fetch('/api/auth/name', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + FGAuth.getToken() },
+                    body: JSON.stringify({ name: name })
+                });
+                var data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Gagal');
+                // Update local user
+                var u = fetchUserFromStorage();
+                if (u) { u.name = name; try { localStorage.setItem('fg_user', JSON.stringify(u)); } catch (e) {} }
+                // Re-render profile
+                renderProfile(u);
+                showAvatar(u);
+                settingsNameStatus.textContent = 'Nama berhasil disimpan';
+                settingsNameStatus.className = 'settings-status';
+            } catch (e) {
+                settingsNameStatus.textContent = e.message;
+                settingsNameStatus.className = 'settings-status error';
+            }
+            settingsNameSave.disabled = false;
+            settingsNameSave.textContent = 'Simpan';
+        });
+    }
+
+    // Export all data
+    if (settingsExportBtn) {
+        settingsExportBtn.addEventListener('click', async function () {
+            try {
+                var projects = await FG.api.projects();
+                var folders = await FG.api.folders();
+                var exportData = { projects: projects, folders: folders, exportedAt: new Date().toISOString() };
+                var blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+                var url = URL.createObjectURL(blob);
+                var a = document.createElement('a');
+                a.href = url; a.download = 'flowgram-export.json'; a.click();
+                URL.revokeObjectURL(url);
+                showToast('Data berhasil diekspor');
+            } catch (e) {
+                showToast('Gagal ekspor: ' + e.message);
+            }
+        });
+    }
+
+    // Delete account
+    if (settingsDeleteBtn) {
+        settingsDeleteBtn.addEventListener('click', async function () {
+            if (!confirm('Yakin ingin menghapus akun dan semua data? Tindakan ini tidak bisa dibatalkan.')) return;
+            settingsDeleteBtn.disabled = true;
+            settingsDeleteBtn.textContent = 'Menghapus...';
+            try {
+                var res = await fetch('/api/auth/account', {
+                    method: 'DELETE',
+                    headers: { 'Authorization': 'Bearer ' + FGAuth.getToken() }
+                });
+                var data = await res.json();
+                if (!res.ok) throw new Error(data.error || 'Gagal');
+                FGAuth.logout();
+            } catch (e) {
+                showToast('Gagal hapus akun: ' + e.message);
+                settingsDeleteBtn.disabled = false;
+                settingsDeleteBtn.textContent = 'Hapus Akun & Data';
+            }
+        });
+    }
+
     if (profileSettingsAction) {
         profileSettingsAction.addEventListener('click', function () {
             profileDropdown.classList.remove('visible');
-            showToast('Fitur Pengaturan akan datang');
+            openSettings();
         });
     }
 

@@ -101,6 +101,17 @@ app.post('/api/auth/name', async (c) => {
     return c.json({ success: true, name: name.trim() });
 });
 
+/* ---------- DELETE /api/auth/account ---------- */
+app.delete('/api/auth/account', async (c) => {
+    const payload = verifyJWT(c);
+    if (!payload) return c.json({ error: 'Unauthorized' }, 401);
+
+    await pool.query('DELETE FROM projects WHERE user_id = $1', [payload.userId]);
+    await pool.query('DELETE FROM folders WHERE user_id = $1', [payload.userId]);
+    await pool.query('DELETE FROM users WHERE id = $1', [payload.userId]);
+    return c.json({ success: true });
+});
+
 /* ---------- GET /api/projects ---------- */
 app.get('/api/projects', async (c) => {
     const payload = verifyJWT(c);

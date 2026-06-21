@@ -242,6 +242,67 @@
             </div>
         </div>
 
+        <!-- Settings modal -->
+        <div id="settings-modal" class="hidden">
+            <div id="settings-backdrop"></div>
+            <div id="settings-dialog">
+                <div id="settings-header">
+                    <h3 id="settings-title">Pengaturan</h3>
+                    <button id="settings-close" class="settings-close-btn">&times;</button>
+                </div>
+                <div id="settings-body">
+
+                    <!-- Profil -->
+                    <div class="settings-section">
+                        <div class="settings-section-label">Profil</div>
+                        <div class="settings-row">
+                            <label class="settings-field-label">Nama Tampilan</label>
+                            <div class="settings-input-row">
+                                <input type="text" id="settings-name-input" class="settings-input" maxlength="255">
+                                <button id="settings-name-save" class="btn-primary settings-btn-small">Simpan</button>
+                            </div>
+                            <p id="settings-name-status" class="settings-status"></p>
+                        </div>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <!-- Data -->
+                    <div class="settings-section">
+                        <div class="settings-section-label">Data</div>
+                        <div class="settings-row">
+                            <button id="settings-export-btn" class="btn-secondary settings-btn-full">Ekspor Semua Data</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <!-- Akun -->
+                    <div class="settings-section">
+                        <div class="settings-section-label">Akun</div>
+                        <div class="settings-row">
+                            <button id="settings-delete-btn" class="btn-danger settings-btn-full">Hapus Akun &amp; Data</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-divider"></div>
+
+                    <!-- About -->
+                    <div class="settings-section">
+                        <div class="settings-section-label">About</div>
+                        <div class="settings-about-text">
+                            FlowGram adalah workflow builder visual untuk membuat, menghubungkan, dan mengelola alur kerja dengan mudah. Dibangun dengan teknologi web modern untuk produktivitas maksimal.
+                        </div>
+                        <div class="settings-version">FlowGram v1.0.0</div>
+                    </div>
+
+                </div>
+                <div id="settings-footer">
+                    <button id="settings-done" class="btn-primary">Tutup</button>
+                </div>
+            </div>
+        </div>
+
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>

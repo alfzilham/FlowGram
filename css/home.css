@@ -1034,6 +1034,185 @@ body {
 }
 
 /* ========================================
+   Settings Modal
+   ======================================== */
+
+#settings-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 5000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#settings-modal.hidden {
+    display: none;
+}
+
+#settings-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+
+#settings-dialog {
+    position: relative;
+    background: var(--surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    width: 90%;
+    max-width: 400px;
+    max-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    animation: ctxIn 0.15s ease;
+    overflow: hidden;
+}
+
+#settings-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 20px 12px;
+    border-bottom: 1px solid var(--border);
+}
+
+#settings-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+}
+
+.settings-close-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 22px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, color 0.12s;
+}
+
+.settings-close-btn:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+
+#settings-body {
+    padding: 16px 20px;
+    overflow-y: auto;
+    flex: 1;
+}
+
+#settings-footer {
+    padding: 12px 20px 16px;
+    border-top: 1px solid var(--border);
+}
+
+#settings-done {
+    width: 100%;
+}
+
+/* ── Sections ── */
+.settings-section {
+    margin-bottom: 4px;
+}
+
+.settings-section-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 10px;
+}
+
+.settings-row {
+    margin-bottom: 12px;
+}
+
+.settings-field-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 6px;
+}
+
+.settings-input-row {
+    display: flex;
+    gap: 8px;
+}
+
+.settings-input {
+    flex: 1;
+    padding: 9px 12px;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--text);
+    background: var(--bg);
+    outline: none;
+    transition: border-color 0.15s;
+    box-sizing: border-box;
+}
+
+.settings-input:focus {
+    border-color: var(--accent);
+}
+
+.settings-btn-small {
+    padding: 9px 16px;
+    font-size: 13px;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.settings-btn-full {
+    width: 100%;
+    padding: 10px;
+    font-size: 13px;
+}
+
+.settings-status {
+    font-size: 12px;
+    color: var(--accent);
+    min-height: 18px;
+    margin: 4px 0 0;
+}
+
+.settings-status.error {
+    color: #EF4444;
+}
+
+.settings-divider {
+    height: 1px;
+    background: var(--border);
+    margin: 14px 0;
+}
+
+.settings-about-text {
+    font-size: 13px;
+    color: var(--text-muted);
+    line-height: 1.6;
+    margin-bottom: 6px;
+}
+
+.settings-version {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 500;
+}
+
+/* ========================================
    Scrollbar
    ======================================== */
 
