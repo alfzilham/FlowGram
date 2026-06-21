@@ -897,7 +897,6 @@
     /* ---------------- search toggle (mobile) ---------------- */
     var searchIcon = document.getElementById('search-icon');
     var searchWrap = document.getElementById('search-wrap');
-    var searchInput = document.getElementById('search-input');
 
     if (searchIcon && searchWrap) {
         searchIcon.addEventListener('click', function (e) {
