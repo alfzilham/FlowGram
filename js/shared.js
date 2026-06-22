@@ -123,17 +123,6 @@
         });
     }
 
-    function archiveFolder(id, archived) {
-        const list = getIndex();
-        list.forEach(p => {
-            if (p.folderId === id) {
-                p.archived = !!archived;
-                p.updatedAt = Date.now();
-            }
-        });
-        saveIndex(list);
-    }
-
     function duplicateFolder(id) {
         const folders = getFolders();
         const src = folders.find(f => f.id === id);
@@ -180,26 +169,6 @@
         if (!f) return null;
         f.name = name;
         saveFolders(list);
-        return f;
-    }
-
-    function setFolderArchived(id, archived) {
-        const list = getFolders();
-        const f = list.find(x => x.id === id);
-        if (!f) return null;
-        f.archived = !!archived;
-        saveFolders(list);
-        // Archive/unarchive semua project di dalamnya
-        const projects = getIndex();
-        let changed = false;
-        projects.forEach(p => {
-            if (p.folderId === id) {
-                p.archived = !!archived;
-                p.updatedAt = Date.now();
-                changed = true;
-            }
-        });
-        if (changed) saveIndex(projects);
         return f;
     }
 
@@ -271,10 +240,7 @@
         duplicateProject, recordProjectSave,
         // folders
         getFolders, saveFolders, createFolder, renameFolder, deleteFolder,
-        archiveFolder, duplicateFolder,
-        setFolderArchived: function (id, archived) {
-            return setFolderArchived(id, archived);
-        },
+        duplicateFolder,
         // migrasi
         migrateLegacyIfNeeded,
 

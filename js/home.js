@@ -459,12 +459,6 @@
 
         if (currentFilter === 'archived') {
             list = list.filter(p => p.archived);
-        } else if (currentFilter === 'archived-folders') {
-            // Tampilkan project dari folder yang diarsipkan
-            const archivedFolderIds = new Set(
-                FG.getFolders().filter(f => f.archived).map(f => f.id)
-            );
-            list = list.filter(p => archivedFolderIds.has(p.folderId));
         } else if (currentFilter === 'all') {
             list = list.filter(p => !p.archived);
         } else {
@@ -479,83 +473,8 @@
         return list;
     }
 
-    function buildArchivedFolderCard(f, projects) {
-        const card = document.createElement('div');
-        card.className = 'project-card folder-archived-card';
-
-        const thumb = document.createElement('div');
-        thumb.className = 'card-thumb';
-
-        const thumbIcon = document.createElement('div');
-        thumbIcon.className = 'card-thumb-icon';
-        thumbIcon.innerHTML = iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>');
-        thumb.appendChild(thumbIcon);
-
-        const thumbCount = document.createElement('div');
-        thumbCount.className = 'card-thumb-count';
-        thumbCount.textContent = projects.length + ' project';
-        thumb.appendChild(thumbCount);
-
-        const badge = document.createElement('div');
-        badge.className = 'card-archived-badge';
-        badge.textContent = 'Arsip';
-        thumb.appendChild(badge);
-
-        card.appendChild(thumb);
-
-        const body = document.createElement('div');
-        body.className = 'card-body';
-
-        const info = document.createElement('div');
-        info.className = 'card-info';
-
-        const name = document.createElement('div');
-        name.className = 'card-name';
-        name.textContent = f.name;
-        info.appendChild(name);
-
-        body.appendChild(info);
-
-        const menuBtn = document.createElement('button');
-        menuBtn.className = 'card-menu-btn';
-        menuBtn.title = 'Opsi';
-        menuBtn.innerHTML = iconSvg('<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>');
-        menuBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            const r = menuBtn.getBoundingClientRect();
-            openCtxMenu(getFolderMenuItems(f), r.right, r.bottom + 4);
-        });
-        body.appendChild(menuBtn);
-        card.appendChild(body);
-
-        card.addEventListener('contextmenu', (e) => {
-            e.preventDefault();
-            openCtxMenu(getFolderMenuItems(f), e.clientX, e.clientY);
-        });
-
-        return card;
-    }
-
     function renderProjects() {
         projectsGrid.innerHTML = '';
-
-        if (currentFilter === 'archived-folders') {
-            const archivedFolders = FG.getFolders().filter(f => f.archived);
-            const allProjects = FG.getIndex();
-
-            if (archivedFolders.length === 0) {
-                emptyHome.classList.remove('hidden');
-                projectsGrid.classList.add('hidden');
-            } else {
-                emptyHome.classList.add('hidden');
-                projectsGrid.classList.remove('hidden');
-                archivedFolders.forEach(f => {
-                    const projects = allProjects.filter(p => p.folderId === f.id);
-                    projectsGrid.appendChild(buildArchivedFolderCard(f, projects));
-                });
-            }
-            return;
-        }
 
         const list = getFilteredProjects();
         if (list.length === 0) {
@@ -572,50 +491,6 @@
 
     /* ---------------- render folders sidebar ---------------- */
     function getFolderMenuItems(f) {
-        if (f.archived) {
-            return [
-                {
-                    icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
-                    label: 'Batalkan Arsip Folder',
-                    action: () => {
-                        if (FGAuth.isLoggedIn()) {
-                            var folder = apiFolders.find(function (x) { return x.id === f.id; });
-                            if (folder) folder.archived = false;
-                            apiProjects.forEach(function (p) {
-                                if (p.folderId === f.id) {
-                                    p.archived = false;
-                                    FG.api.updateProject(p.id, { archived: false }).catch(function () { });
-                                }
-                            });
-                            FG.api.updateFolder(f.id, { archived: false }).catch(function () { });
-                        } else {
-                            FG.setFolderArchived(f.id, false);
-                        }
-                        renderAll();
-                        showToast('Folder dipulihkan dari arsip');
-                    }
-                },
-                'sep',
-                {
-                    icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
-                    label: 'Hapus Folder',
-                    danger: true,
-                    action: () => {
-                        openDeleteModal(
-                            'Hapus Folder',
-                            'Hapus folder "' + f.name + '"? Project di dalamnya tidak akan ikut terhapus.',
-                            () => {
-                                if (currentFilter === f.id) setFilter('all', 'Semua Project');
-                                FG.deleteFolder(f.id);
-                                renderAll();
-                                showToast('Folder dihapus');
-                            }
-                        );
-                    }
-                }
-            ];
-        }
-
         return [
             {
                 icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
@@ -642,36 +517,6 @@
                     if (!FGAuth.isLoggedIn()) renderAll();
                 }
             },
-            {
-                icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
-                label: 'Arsipkan Folder',
-                action: () => {
-                    openDeleteModal(
-                        'Arsipkan Folder',
-                        'Arsipkan folder "' + f.name + '" beserta semua project di dalamnya?',
-                        () => {
-                            if (FGAuth.isLoggedIn()) {
-                                var folder = apiFolders.find(function (x) { return x.id === f.id; });
-                                if (folder) folder.archived = true;
-                                apiProjects.forEach(function (p) {
-                                    if (p.folderId === f.id) {
-                                        p.archived = true;
-                                        FG.api.updateProject(p.id, { archived: true }).catch(function () { });
-                                    }
-                                });
-                                FG.api.updateFolder(f.id, { archived: true }).catch(function () { });
-                            } else {
-                                FG.setFolderArchived(f.id, true);
-                            }
-                            if (currentFilter === f.id) setFilter('all', 'Semua Project');
-                            renderAll();
-                            showToast('Folder diarsipkan');
-                        },
-                        'Arsipkan',
-                        'btn-primary'
-                    );
-                }
-            },
             'sep',
             {
                 icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
@@ -693,14 +538,11 @@
         ];
     }
 
-    let archivedFolderSectionExpanded = false;
-
     function renderFolders() {
         foldersList.innerHTML = '';
         const folders = FG.getFolders();
         const allProjects = FG.getIndex();
-        const activeFolders = folders.filter(f => !f.archived);
-        const archivedFolders = folders.filter(f => !!f.archived);
+        const activeFolders = folders;
 
         activeFolders.forEach(f => {
             const isExpanded = expandedFolders.has(f.id);
@@ -801,63 +643,6 @@
             foldersList.appendChild(wrap);
         });
 
-        if (archivedFolders.length > 0) {
-            const section = document.createElement('div');
-            section.className = 'folder-archived-section';
-
-            const header = document.createElement('div');
-            header.className = 'folder-archived-header';
-
-            const arrow = document.createElement('span');
-            arrow.className = 'folder-archived-arrow' + (archivedFolderSectionExpanded ? ' open' : '');
-            arrow.innerHTML = iconSvg('<path d="M9 18l6-6-6-6"/>');
-
-            const label = document.createElement('span');
-            label.className = 'folder-archived-label';
-            label.textContent = 'Folder Diarsipkan';
-
-            const countBadge = document.createElement('span');
-            countBadge.className = 'folder-archived-count';
-            countBadge.textContent = archivedFolders.length;
-
-            header.appendChild(arrow);
-            header.appendChild(label);
-            header.appendChild(countBadge);
-
-            header.addEventListener('click', () => {
-                archivedFolderSectionExpanded = !archivedFolderSectionExpanded;
-                renderFolders();
-            });
-
-            section.appendChild(header);
-
-            if (archivedFolderSectionExpanded) {
-                archivedFolders.forEach(f => {
-                    const folderRow = document.createElement('div');
-                    folderRow.className = 'folder-item folder-item-archived';
-
-                    const folderIcon = document.createElement('span');
-                    folderIcon.className = 'folder-icon';
-                    folderIcon.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>');
-
-                    const nameSpan = document.createElement('span');
-                    nameSpan.className = 'folder-item-name';
-                    nameSpan.textContent = f.name;
-
-                    folderRow.appendChild(folderIcon);
-                    folderRow.appendChild(nameSpan);
-
-                    folderRow.addEventListener('click', () => {
-                        setFilter('archived-folders', 'Folder Diarsipkan');
-                    });
-
-                    section.appendChild(folderRow);
-                });
-            }
-
-            foldersList.appendChild(section);
-        }
-
     }
 
     /* ---------------- render all ---------------- */
@@ -886,7 +671,6 @@
             const filter = btn.dataset.filter;
             let title = 'Semua Project';
             if (filter === 'archived') title = 'Project Diarsipkan';
-            else if (filter === 'archived-folders') title = 'Folder Diarsipkan';
             setFilter(filter, title);
         });
     });
@@ -1471,29 +1255,6 @@
             apiFolders = apiFolders.filter(function (x) { return x.id !== id; });
             apiProjects.forEach(function (p) { if (p.folderId === id) p.folderId = null; });
             FG.api.deleteFolder(id).catch(function () { });
-        };
-
-        FG.archiveFolder = function (id, archived) {
-            apiProjects.forEach(function (p) {
-                if (p.folderId === id) {
-                    p.archived = !!archived;
-                    p.updatedAt = Date.now();
-                    FG.api.updateProject(p.id, { archived: !!archived }).catch(function () { });
-                }
-            });
-        };
-
-        FG.setFolderArchived = function (id, archived) {
-            var f = apiFolders.find(function (x) { return x.id === id; });
-            if (f) f.archived = !!archived;
-            apiProjects.forEach(function (p) {
-                if (p.folderId === id) {
-                    p.archived = !!archived;
-                    p.updatedAt = Date.now();
-                    FG.api.updateProject(p.id, { archived: !!archived }).catch(function () { });
-                }
-            });
-            FG.api.updateFolder(id, { archived: !!archived }).catch(function () { });
         };
 
         FG.duplicateFolder = function (id) {

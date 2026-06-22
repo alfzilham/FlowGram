@@ -238,7 +238,6 @@ app.put('/api/folders/:id', async (c) => {
     let idx = 1;
 
     if (body.name !== undefined) { updates.push('name = $' + idx++); vals.push(body.name); }
-    if (body.archived !== undefined) { updates.push('archived = $' + idx++); vals.push(body.archived); }
 
     if (updates.length === 0) return c.json({ success: true });
 
