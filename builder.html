@@ -206,9 +206,32 @@
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+        <div id="shortcuts-modal" class="hidden">
+            <div id="shortcuts-backdrop"></div>
+            <div id="shortcuts-dialog">
+                <div id="shortcuts-header">
+                    <h3>Keyboard Shortcuts</h3>
+                    <button id="shortcuts-close">&times;</button>
+                </div>
+                <div id="shortcuts-list">
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Z</kbd></span><span class="shortcut-desc">Undo</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>Z</kbd></span><span class="shortcut-desc">Redo</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>C</kbd></span><span class="shortcut-desc">Copy node(s)</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>V</kbd></span><span class="shortcut-desc">Paste node(s)</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>D</kbd></span><span class="shortcut-desc">Duplikat node(s)</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>N</kbd></span><span class="shortcut-desc">Tambah node baru</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>A</kbd></span><span class="shortcut-desc">Pilih semua node</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Ctrl</kbd> + <kbd>S</kbd></span><span class="shortcut-desc">Simpan project</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Delete</kbd> / <kbd>Backspace</kbd></span><span class="shortcut-desc">Hapus node terpilih</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>+</kbd> / <kbd>-</kbd></span><span class="shortcut-desc">Zoom in / out</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>0</kbd></span><span class="shortcut-desc">Reset zoom</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>Escape</kbd></span><span class="shortcut-desc">Tutup menu / modal</span></div>
+                    <div class="shortcut-row"><span class="shortcut-keys"><kbd>?</kbd></span><span class="shortcut-desc">Tampilkan shortcut ini</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="js/shared.js"></script>
     <script src="js/auth.js"></script>
     <script src="js/main.js"></script>

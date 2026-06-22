@@ -201,6 +201,102 @@
     transform: scale(.97);
 }
 
+/* ---------- Shortcuts modal ---------- */
+#shortcuts-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+#shortcuts-backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+}
+#shortcuts-dialog {
+    position: relative;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    width: 380px;
+    max-height: 80vh;
+    animation: ctxIn .15s ease;
+    overflow: hidden;
+}
+#shortcuts-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border);
+}
+#shortcuts-header h3 {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+#shortcuts-close {
+    width: 32px;
+    height: 32px;
+    border: none;
+    background: transparent;
+    font-size: 20px;
+    color: var(--text-muted);
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.12s, color 0.12s;
+}
+#shortcuts-close:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+#shortcuts-list {
+    padding: 12px 20px 20px;
+    overflow-y: auto;
+}
+.shortcut-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--border);
+}
+.shortcut-row:last-child {
+    border-bottom: none;
+}
+.shortcut-keys {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.shortcut-keys kbd {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 26px;
+    height: 24px;
+    padding: 0 6px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--text);
+    line-height: 1;
+}
+.shortcut-desc {
+    font-size: 13px;
+    color: var(--text-muted);
+}
+
 .node-menu-btn {
     position: absolute;
     top: 2px;

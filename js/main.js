@@ -30,6 +30,95 @@
     let currentProjectId = null;
     let multiSelectActive = false;
 
+    /* ---------------- history (undo/redo) ---------------- */
+    let history = [];
+    let historyIndex = -1;
+    const MAX_HISTORY = 50;
+    let clipboard = null;
+
+    function cloneState() {
+        return {
+            nodes: JSON.parse(JSON.stringify(state.nodes)),
+            connections: JSON.parse(JSON.stringify(state.connections))
+        };
+    }
+
+    function pushHistory() {
+        const snap = cloneState();
+        history = history.slice(0, historyIndex + 1);
+        history.push(snap);
+        if (history.length > MAX_HISTORY) history.shift();
+        historyIndex = history.length - 1;
+    }
+
+    function undo() {
+        if (historyIndex <= 0) return;
+        historyIndex--;
+        var snap = history[historyIndex];
+        state.nodes = JSON.parse(JSON.stringify(snap.nodes));
+        state.connections = JSON.parse(JSON.stringify(snap.connections));
+        clearSelection();
+        render();
+        scheduleSave();
+    }
+
+    function redo() {
+        if (historyIndex >= history.length - 1) return;
+        historyIndex++;
+        var snap = history[historyIndex];
+        state.nodes = JSON.parse(JSON.stringify(snap.nodes));
+        state.connections = JSON.parse(JSON.stringify(snap.connections));
+        clearSelection();
+        render();
+        scheduleSave();
+    }
+
+    /* ---------------- clipboard (copy/paste) ---------------- */
+    function copySelected() {
+        if (selectedNodeIds.size === 0) return;
+        var ids = [...selectedNodeIds];
+        var copiedNodes = state.nodes.filter(function (n) { return ids.indexOf(n.id) !== -1; });
+        var copiedIds = new Set(copiedNodes.map(function (n) { return n.id; }));
+        var copiedConns = state.connections.filter(function (c) {
+            return copiedIds.has(c.from.nodeId) && copiedIds.has(c.to.nodeId);
+        });
+        clipboard = {
+            nodes: JSON.parse(JSON.stringify(copiedNodes)),
+            connections: JSON.parse(JSON.stringify(copiedConns))
+        };
+        showToast(ids.length + ' node disalin');
+    }
+
+    function pasteClipboard() {
+        if (!clipboard || clipboard.nodes.length === 0) return;
+        pushHistory();
+        var idMap = {};
+        clipboard.nodes.forEach(function (n) {
+            var newId = uid('n');
+            idMap[n.id] = newId;
+            var copy = makeNode(n.x + 30, n.y + 30, n.text, n.color, n.icon);
+            copy.id = newId;
+            state.nodes.push(copy);
+        });
+        clipboard.connections.forEach(function (c) {
+            var newFromId = idMap[c.from.nodeId];
+            var newToId = idMap[c.to.nodeId];
+            if (newFromId && newToId) {
+                state.connections.push({
+                    id: uid('c'),
+                    from: { nodeId: newFromId, side: c.from.side },
+                    to: { nodeId: newToId, side: c.to.side }
+                });
+            }
+        });
+        clearSelection();
+        Object.keys(idMap).forEach(function (k) { selectedNodeIds.add(idMap[k]); });
+        render();
+        updateSelectionVisuals();
+        scheduleSave();
+        showToast('Node ditempel');
+    }
+
     /* ---------------- dom refs ---------------- */
     const wrapper = document.getElementById('canvas-wrapper');
     const world = document.getElementById('world');
@@ -156,12 +245,14 @@
     function colorDef(name) { return COLORS.find(c => c.name === name) || COLORS[0]; }
 
     function deleteNodes(ids) {
+        pushHistory();
         const idSet = new Set(ids);
         state.nodes = state.nodes.filter(n => !idSet.has(n.id));
         state.connections = state.connections.filter(c => !idSet.has(c.from.nodeId) && !idSet.has(c.to.nodeId));
         ids.forEach(id => selectedNodeIds.delete(id));
     }
     function duplicateNodes(ids) {
+        pushHistory();
         const copies = [];
         ids.forEach(id => {
             const n = getNode(id);
@@ -323,7 +414,8 @@
     function finishEditing(id, textEl) {
         textEl.contentEditable = 'false';
         const n = getNode(id);
-        if (n) {
+        if (n && n.text !== textEl.textContent) {
+            pushHistory();
             n.text = textEl.textContent;
             scheduleSave();
         }
@@ -615,6 +707,7 @@
                 if (el) el.classList.remove('dragging');
             });
             if (dragState.moved) {
+                pushHistory();
                 scheduleSave();
             } else if (dragState.items.length > 1) {
                 selectOnly(dragState.clickedId);
@@ -630,6 +723,7 @@
                 const toNodeId = dot.dataset.nodeId, toSide = dot.dataset.side;
                 const isSameDot = toNodeId === draggingConn.fromNodeId && toSide === draggingConn.fromSide;
                 if (!isSameDot) {
+                    pushHistory();
                     state.connections.push({
                         id: uid('c'),
                         from: { nodeId: draggingConn.fromNodeId, side: draggingConn.fromSide },
@@ -649,7 +743,7 @@
                 const el = nodesLayer.querySelector('.node[data-id="' + it.id + '"]');
                 if (el) el.classList.remove('dragging');
             });
-            if (dragState.moved) { scheduleSave(); }
+            if (dragState.moved) { pushHistory(); scheduleSave(); }
             else if (dragState.items.length > 1) { selectOnly(dragState.clickedId); }
             dragState = null;
         }
@@ -662,6 +756,7 @@
                 const toNodeId = dot.dataset.nodeId, toSide = dot.dataset.side;
                 const isSameDot = toNodeId === draggingConn.fromNodeId && toSide === draggingConn.fromSide;
                 if (!isSameDot) {
+                    pushHistory();
                     state.connections.push({
                         id: uid('c'),
                         from: { nodeId: draggingConn.fromNodeId, side: draggingConn.fromSide },
@@ -760,6 +855,7 @@
 
     /* ---------------- add node ---------------- */
     function addNodeAt(x, y, text, color) {
+        pushHistory();
         const n = makeNode(x, y, text || 'Node baru', color || 'default');
         state.nodes.push(n);
         render();
@@ -809,6 +905,7 @@
             try {
                 const data = JSON.parse(reader.result);
                 if (!Array.isArray(data.nodes)) throw new Error('invalid');
+                pushHistory();
                 state.nodes = data.nodes;
                 state.connections = Array.isArray(data.connections) ? data.connections : [];
                 clearSelection();
@@ -832,6 +929,7 @@
     });
 
     clearConfirm.addEventListener('click', function () {
+        pushHistory();
         state.nodes = []; state.connections = []; clearSelection();
         render(); scheduleSave();
         clearModal.classList.add('hidden');
@@ -843,6 +941,20 @@
     clearBackdrop.addEventListener('click', function () {
         clearModal.classList.add('hidden');
     });
+
+    var shortcutsModal = document.getElementById('shortcuts-modal');
+    var shortcutsClose = document.getElementById('shortcuts-close');
+    var shortcutsBackdrop = document.getElementById('shortcuts-backdrop');
+    if (shortcutsClose) {
+        shortcutsClose.addEventListener('click', function () {
+            shortcutsModal.classList.add('hidden');
+        });
+    }
+    if (shortcutsBackdrop) {
+        shortcutsBackdrop.addEventListener('click', function () {
+            shortcutsModal.classList.add('hidden');
+        });
+    }
 
     document.getElementById('btn-multi-select').addEventListener('click', () => {
         multiSelectActive = !multiSelectActive;
@@ -870,20 +982,99 @@
         }
     });
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') { closeMenus(); }
-        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNodeIds.size > 0) {
-            const active = document.activeElement;
-            if (active && active.isContentEditable) return;
-            const ids = [...selectedNodeIds];
+        var isEditing = document.activeElement && document.activeElement.isContentEditable;
+
+        if (e.key === 'Escape') {
+            closeMenus();
+            var scModal = document.getElementById('shortcuts-modal');
+            if (scModal && !scModal.classList.contains('hidden')) {
+                scModal.classList.add('hidden');
+            }
+            return;
+        }
+
+        if ((e.key === 'Delete' || e.key === 'Backspace') && selectedNodeIds.size > 0 && !isEditing) {
+            var ids = [...selectedNodeIds];
             deleteNodes(ids);
             render(); scheduleSave();
+            return;
         }
-        if ((e.key === 'a' || e.key === 'A') && (e.ctrlKey || e.metaKey)) {
-            const active = document.activeElement;
-            if (active && active.isContentEditable) return;
-            e.preventDefault();
-            selectedNodeIds = new Set(state.nodes.map(n => n.id));
-            updateSelectionVisuals();
+
+        var isCtrl = e.ctrlKey || e.metaKey;
+
+        if (isCtrl && !isEditing) {
+            switch (e.key.toLowerCase()) {
+                case 'a':
+                    e.preventDefault();
+                    selectedNodeIds = new Set(state.nodes.map(function (n) { return n.id; }));
+                    updateSelectionVisuals();
+                    return;
+                case 'z':
+                    e.preventDefault();
+                    if (e.shiftKey) { redo(); }
+                    else { undo(); }
+                    return;
+                case 'y':
+                    e.preventDefault();
+                    redo();
+                    return;
+                case 'c':
+                    e.preventDefault();
+                    copySelected();
+                    return;
+                case 'v':
+                    e.preventDefault();
+                    pasteClipboard();
+                    return;
+                case 'd':
+                    e.preventDefault();
+                    if (selectedNodeIds.size > 0) {
+                        var targetIds = [...selectedNodeIds];
+                        var copies = duplicateNodes(targetIds);
+                        render();
+                        selectedNodeIds = new Set(copies.map(function (c) { return c.id; }));
+                        updateSelectionVisuals();
+                        scheduleSave();
+                    }
+                    return;
+                case 'n':
+                    e.preventDefault();
+                    var r = wrapper.getBoundingClientRect();
+                    var w = screenToWorld(r.left + r.width / 2, r.top + r.height / 2);
+                    addNodeAt(w.x - 90, w.y - 24);
+                    return;
+                case 's':
+                    e.preventDefault();
+                    scheduleSave();
+                    showToast('Project disimpan');
+                    return;
+            }
+        }
+
+        if (!isEditing) {
+            switch (e.key) {
+                case '+':
+                case '=':
+                    e.preventDefault();
+                    zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1.2);
+                    return;
+                case '-':
+                    e.preventDefault();
+                    zoomAt(window.innerWidth / 2, window.innerHeight / 2, 1 / 1.2);
+                    return;
+                case '0':
+                    e.preventDefault();
+                    viewport.panX = 80; viewport.panY = 80; viewport.zoom = 1;
+                    applyTransform(); scheduleSave();
+                    return;
+                case '?':
+                    e.preventDefault();
+                    var shortcutsModal = document.getElementById('shortcuts-modal');
+                    if (shortcutsModal) {
+                        shortcutsModal.classList.remove('hidden');
+                    }
+                    return;
+            }
         }
     });
 
@@ -975,6 +1166,7 @@
             sw.style.background = c.sw;
             sw.title = c.name;
             sw.addEventListener('click', () => {
+                pushHistory();
                 targetIds.forEach(id => {
                     const tn = getNode(id);
                     if (tn) tn.color = c.name;
@@ -1059,6 +1251,7 @@
                 cell.innerHTML = '<i data-lucide="' + name + '"></i>';
                 cell.title = name;
                 cell.addEventListener('click', () => {
+                    pushHistory();
                     n.icon = name;
                     renderNodes();
                     updateSelectionVisuals();
@@ -1077,6 +1270,7 @@
             removeItem.innerHTML = iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>') + '<span>Hapus icon</span>';
             removeItem.addEventListener('click', () => {
                 closeMenus();
+                pushHistory();
                 n.icon = null;
                 renderNodes();
                 updateSelectionVisuals();
@@ -1111,6 +1305,7 @@
         delItem.innerHTML = iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>') + '<span>Hapus koneksi</span>';
         delItem.addEventListener('click', () => {
             closeMenus();
+            pushHistory();
             state.connections = state.connections.filter(c => c.id !== connId);
             renderConnections();
             scheduleSave();
