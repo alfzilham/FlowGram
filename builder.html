@@ -193,6 +193,19 @@
 
         <input type="file" id="file-input" accept="application/json" hidden>
         <div id="toast"></div>
+
+        <div id="clear-modal" class="hidden">
+            <div id="clear-backdrop"></div>
+            <div id="clear-dialog">
+                <h3 id="clear-title">Hapus Semua</h3>
+                <p id="clear-desc">Hapus semua node dan koneksi? Tindakan ini tidak bisa dibatalkan.</p>
+                <p id="clear-summary"></p>
+                <div id="clear-actions">
+                    <button id="clear-cancel" class="btn-secondary">Batal</button>
+                    <button id="clear-confirm" class="btn-danger">Hapus Semua</button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>

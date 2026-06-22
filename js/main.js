@@ -40,6 +40,11 @@
     const zoomLabel = document.getElementById('zoom-label');
     const fileInput = document.getElementById('file-input');
     const toastEl = document.getElementById('toast');
+    const clearModal = document.getElementById('clear-modal');
+    const clearBackdrop = document.getElementById('clear-backdrop');
+    const clearConfirm = document.getElementById('clear-confirm');
+    const clearCancel = document.getElementById('clear-cancel');
+    const clearSummary = document.getElementById('clear-summary');
     const btnHome = document.getElementById('btn-home');
     if (btnHome) {
         btnHome.addEventListener('click', () => { window.location.href = 'index.html'; });
@@ -820,11 +825,23 @@
 
     document.getElementById('btn-clear').addEventListener('click', () => {
         if (state.nodes.length === 0 && state.connections.length === 0) return;
-        if (confirm('Hapus semua node dan koneksi? Tindakan ini tidak bisa dibatalkan.')) {
-            state.nodes = []; state.connections = []; clearSelection();
-            render(); scheduleSave();
-            showToast('Kanvas dikosongkan');
-        }
+        var nodeCount = state.nodes.length;
+        var connCount = state.connections.length;
+        clearSummary.textContent = nodeCount + ' node dan ' + connCount + ' koneksi akan dihapus.';
+        clearModal.classList.remove('hidden');
+    });
+
+    clearConfirm.addEventListener('click', function () {
+        state.nodes = []; state.connections = []; clearSelection();
+        render(); scheduleSave();
+        clearModal.classList.add('hidden');
+        showToast('Kanvas dikosongkan');
+    });
+    clearCancel.addEventListener('click', function () {
+        clearModal.classList.add('hidden');
+    });
+    clearBackdrop.addEventListener('click', function () {
+        clearModal.classList.add('hidden');
     });
 
     document.getElementById('btn-multi-select').addEventListener('click', () => {
