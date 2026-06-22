@@ -1409,8 +1409,14 @@
         FG.setFolderArchived = function (id, archived) {
             var f = apiFolders.find(function (x) { return x.id === id; });
             if (f) f.archived = !!archived;
+            apiProjects.forEach(function (p) {
+                if (p.folderId === id) {
+                    p.archived = !!archived;
+                    p.updatedAt = Date.now();
+                    FG.api.updateProject(p.id, { archived: !!archived }).catch(function () { });
+                }
+            });
             FG.api.updateFolder(id, { archived: !!archived }).catch(function () { });
-            FG.archiveFolder(id, archived);
         };
 
         FG.duplicateFolder = function (id) {
