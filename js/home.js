@@ -1407,8 +1407,12 @@
         };
 
         FG.setFolderArchived = function (id, archived) {
+            console.log('[setFolderArchived] id:', id, 'archived:', archived);
+            console.log('[setFolderArchived] apiFolders:', JSON.stringify(apiFolders));
             var f = apiFolders.find(function (x) { return x.id === id; });
+            console.log('[setFolderArchived] folder found:', f);
             if (f) f.archived = !!archived;
+            console.log('[setFolderArchived] after update:', JSON.stringify(apiFolders));
             apiProjects.forEach(function (p) {
                 if (p.folderId === id) {
                     p.archived = !!archived;
