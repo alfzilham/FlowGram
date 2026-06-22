@@ -151,8 +151,8 @@
     }
 
     deleteConfirm.addEventListener('click', () => {
-        if (deleteCb) { deleteCb(); }
         closeDeleteModal();
+        if (deleteCb) { deleteCb(); }
     });
     deleteCancel.addEventListener('click', closeDeleteModal);
     deleteBd.addEventListener('click', closeDeleteModal);
@@ -680,7 +680,7 @@
         const folders = FG.getFolders();
         const allProjects = FG.getIndex();
         const activeFolders = folders.filter(f => !f.archived);
-        const archivedFolders = folders.filter(f => f.archived);
+        const archivedFolders = folders.filter(f => !!f.archived);
 
         activeFolders.forEach(f => {
             const isExpanded = expandedFolders.has(f.id);
@@ -1286,11 +1286,19 @@
             id: p.id,
             name: p.name,
             folderId: p.folder_id,
-            archived: p.archived,
+            archived: !!p.archived,
             color: p.color,
             nodeCount: p.node_count,
             createdAt: new Date(p.created_at).getTime(),
             updatedAt: new Date(p.updated_at).getTime()
+        };
+    }
+
+    function normalizeFolder(f) {
+        return {
+            id: f.id,
+            name: f.name,
+            archived: !!f.archived
         };
     }
 
@@ -1438,7 +1446,7 @@
             var rawProjects = await FG.api.projects();
             var rawFolders = await FG.api.folders();
             apiProjects = rawProjects.map(normalizeProject);
-            apiFolders = rawFolders;
+            apiFolders = rawFolders.map(normalizeFolder);
 
             setupApiOverrides();
             renderAll();
