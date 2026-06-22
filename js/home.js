@@ -136,10 +136,12 @@
     const deleteBd = document.getElementById('delete-backdrop');
     let deleteCb = null;
 
-    function openDeleteModal(title, desc, cb) {
+    function openDeleteModal(title, desc, cb, confirmLabel, confirmClass) {
         deleteTitle.textContent = title;
         deleteDesc.textContent = desc;
         deleteCb = cb;
+        deleteConfirm.textContent = confirmLabel || 'Hapus';
+        deleteConfirm.className = confirmClass || 'btn-danger';
         deleteModal.classList.remove('hidden');
     }
 
@@ -149,7 +151,7 @@
     }
 
     deleteConfirm.addEventListener('click', () => {
-        if (deleteCb) deleteCb();
+        if (deleteCb) { deleteCb(); }
         closeDeleteModal();
     });
     deleteCancel.addEventListener('click', closeDeleteModal);
@@ -457,10 +459,15 @@
 
         if (currentFilter === 'archived') {
             list = list.filter(p => p.archived);
+        } else if (currentFilter === 'archived-folders') {
+            // Tampilkan project dari folder yang diarsipkan
+            const archivedFolderIds = new Set(
+                FG.getFolders().filter(f => f.archived).map(f => f.id)
+            );
+            list = list.filter(p => archivedFolderIds.has(p.folderId));
         } else if (currentFilter === 'all') {
             list = list.filter(p => !p.archived);
         } else {
-            // folder id
             list = list.filter(p => !p.archived && p.folderId === currentFilter);
         }
 
@@ -472,10 +479,85 @@
         return list;
     }
 
+    function buildArchivedFolderCard(f, projects) {
+        const card = document.createElement('div');
+        card.className = 'project-card folder-archived-card';
+
+        const thumb = document.createElement('div');
+        thumb.className = 'card-thumb';
+
+        const thumbIcon = document.createElement('div');
+        thumbIcon.className = 'card-thumb-icon';
+        thumbIcon.innerHTML = iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>');
+        thumb.appendChild(thumbIcon);
+
+        const thumbCount = document.createElement('div');
+        thumbCount.className = 'card-thumb-count';
+        thumbCount.textContent = projects.length + ' project';
+        thumb.appendChild(thumbCount);
+
+        const badge = document.createElement('div');
+        badge.className = 'card-archived-badge';
+        badge.textContent = 'Arsip';
+        thumb.appendChild(badge);
+
+        card.appendChild(thumb);
+
+        const body = document.createElement('div');
+        body.className = 'card-body';
+
+        const info = document.createElement('div');
+        info.className = 'card-info';
+
+        const name = document.createElement('div');
+        name.className = 'card-name';
+        name.textContent = f.name;
+        info.appendChild(name);
+
+        body.appendChild(info);
+
+        const menuBtn = document.createElement('button');
+        menuBtn.className = 'card-menu-btn';
+        menuBtn.title = 'Opsi';
+        menuBtn.innerHTML = iconSvg('<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>');
+        menuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const r = menuBtn.getBoundingClientRect();
+            openCtxMenu(getFolderMenuItems(f), r.right, r.bottom + 4);
+        });
+        body.appendChild(menuBtn);
+        card.appendChild(body);
+
+        card.addEventListener('contextmenu', (e) => {
+            e.preventDefault();
+            openCtxMenu(getFolderMenuItems(f), e.clientX, e.clientY);
+        });
+
+        return card;
+    }
+
     function renderProjects() {
         projectsGrid.innerHTML = '';
-        const list = getFilteredProjects();
 
+        if (currentFilter === 'archived-folders') {
+            const archivedFolders = FG.getFolders().filter(f => f.archived);
+            const allProjects = FG.getIndex();
+
+            if (archivedFolders.length === 0) {
+                emptyHome.classList.remove('hidden');
+                projectsGrid.classList.add('hidden');
+            } else {
+                emptyHome.classList.add('hidden');
+                projectsGrid.classList.remove('hidden');
+                archivedFolders.forEach(f => {
+                    const projects = allProjects.filter(p => p.folderId === f.id);
+                    projectsGrid.appendChild(buildArchivedFolderCard(f, projects));
+                });
+            }
+            return;
+        }
+
+        const list = getFilteredProjects();
         if (list.length === 0) {
             emptyHome.classList.remove('hidden');
             projectsGrid.classList.add('hidden');
@@ -560,15 +642,13 @@
                         'Arsipkan Folder',
                         'Arsipkan folder "' + f.name + '" beserta semua project di dalamnya?',
                         () => {
-                            if (FGAuth.isLoggedIn()) {
-                                FG.setFolderArchived(f.id, true);
-                            } else {
-                                FG.setFolderArchived(f.id, true);
-                            }
+                            FG.setFolderArchived(f.id, true);
                             if (currentFilter === f.id) setFilter('all', 'Semua Project');
                             renderAll();
                             showToast('Folder diarsipkan');
-                        }
+                        },
+                        'Arsipkan',
+                        'btn-primary'
                     );
                 }
             },
@@ -701,102 +781,6 @@
             foldersList.appendChild(wrap);
         });
 
-        // ── Section Folder Diarsipkan ──
-        if (archivedFolders.length > 0) {
-            const archSection = document.createElement('div');
-            archSection.className = 'folder-archived-section';
-
-            const archHeader = document.createElement('div');
-            archHeader.className = 'folder-archived-header';
-            archHeader.innerHTML =
-                '<span class="folder-archived-arrow' + (archivedFolderSectionExpanded ? ' open' : '') + '">' +
-                iconSvg('<path d="M9 18l6-6-6-6"/>') + '</span>' +
-                '<span class="folder-archived-label">Folder Diarsipkan</span>' +
-                '<span class="folder-archived-count">' + archivedFolders.length + '</span>';
-
-            archHeader.addEventListener('click', () => {
-                archivedFolderSectionExpanded = !archivedFolderSectionExpanded;
-                renderFolders();
-            });
-
-            archSection.appendChild(archHeader);
-
-            if (archivedFolderSectionExpanded) {
-                archivedFolders.forEach(f => {
-                    const projectsInFolder = allProjects.filter(p => p.folderId === f.id);
-                    const isExpanded = expandedFolders.has(f.id);
-
-                    const wrap = document.createElement('div');
-                    wrap.className = 'folder-wrap';
-
-                    const row = document.createElement('div');
-                    row.className = 'folder-item folder-item-archived';
-                    row.dataset.folderId = f.id;
-
-                    const arrow = document.createElement('span');
-                    arrow.className = 'folder-arrow' + (isExpanded ? ' open' : '');
-                    arrow.innerHTML = iconSvg('<path d="M9 18l6-6-6-6"/>');
-                    arrow.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (expandedFolders.has(f.id)) expandedFolders.delete(f.id);
-                        else expandedFolders.add(f.id);
-                        renderFolders();
-                    });
-
-                    const folderIcon = document.createElement('span');
-                    folderIcon.className = 'folder-icon';
-                    folderIcon.innerHTML = iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>');
-
-                    const nameSpan = document.createElement('span');
-                    nameSpan.className = 'folder-item-name';
-                    nameSpan.textContent = f.name;
-
-                    const menuBtn = document.createElement('button');
-                    menuBtn.className = 'folder-menu-btn';
-                    menuBtn.title = 'Opsi folder';
-                    menuBtn.innerHTML = iconSvg('<circle cx="12" cy="5" r="1.2" fill="currentColor"/><circle cx="12" cy="12" r="1.2" fill="currentColor"/><circle cx="12" cy="19" r="1.2" fill="currentColor"/>');
-                    menuBtn.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        const r = menuBtn.getBoundingClientRect();
-                        openCtxMenu(getFolderMenuItems(f), r.right, r.bottom + 4);
-                    });
-
-                    row.appendChild(arrow);
-                    row.appendChild(folderIcon);
-                    row.appendChild(nameSpan);
-                    row.appendChild(menuBtn);
-                    wrap.appendChild(row);
-
-                    if (isExpanded) {
-                        if (projectsInFolder.length > 0) {
-                            const projectList = document.createElement('div');
-                            projectList.className = 'folder-project-list';
-                            projectsInFolder.forEach(p => {
-                                const pItem = document.createElement('div');
-                                pItem.className = 'folder-project-item';
-                                pItem.innerHTML = iconSvg('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>') +
-                                    '<span class="folder-project-name">' + p.name + '</span>';
-                                pItem.addEventListener('click', (e) => {
-                                    e.stopPropagation();
-                                    window.location.href = 'builder.html?id=' + p.id;
-                                });
-                                projectList.appendChild(pItem);
-                            });
-                            wrap.appendChild(projectList);
-                        } else {
-                            const emptyEl = document.createElement('div');
-                            emptyEl.className = 'folder-project-empty';
-                            emptyEl.textContent = 'Folder kosong';
-                            wrap.appendChild(emptyEl);
-                        }
-                    }
-
-                    archSection.appendChild(wrap);
-                });
-            }
-
-            foldersList.appendChild(archSection);
-        }
     }
 
     /* ---------------- render all ---------------- */
@@ -823,7 +807,9 @@
     document.querySelectorAll('.nav-item').forEach(btn => {
         btn.addEventListener('click', () => {
             const filter = btn.dataset.filter;
-            const title = filter === 'all' ? 'Semua Project' : 'Diarsipkan';
+            let title = 'Semua Project';
+            if (filter === 'archived') title = 'Project Diarsipkan';
+            else if (filter === 'archived-folders') title = 'Folder Diarsipkan';
             setFilter(filter, title);
         });
     });
