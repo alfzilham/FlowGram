@@ -168,7 +168,7 @@
 
     function createFolder(name) {
         const list = getFolders();
-        const folder = { id: uid('f'), name: name || 'New Folder' };
+        const folder = { id: uid('f'), name: name || 'New Folder', archived: false };
         list.push(folder);
         saveFolders(list);
         return folder;
@@ -183,9 +183,28 @@
         return f;
     }
 
+    function setFolderArchived(id, archived) {
+        const list = getFolders();
+        const f = list.find(x => x.id === id);
+        if (!f) return null;
+        f.archived = !!archived;
+        saveFolders(list);
+        // Archive/unarchive semua project di dalamnya
+        const projects = getIndex();
+        let changed = false;
+        projects.forEach(p => {
+            if (p.folderId === id) {
+                p.archived = !!archived;
+                p.updatedAt = Date.now();
+                changed = true;
+            }
+        });
+        if (changed) saveIndex(projects);
+        return f;
+    }
+
     function deleteFolder(id) {
         saveFolders(getFolders().filter(f => f.id !== id));
-        // Project yang ada di folder ini dikembalikan ke "tanpa folder", bukan ikut terhapus.
         const list = getIndex();
         let changed = false;
         list.forEach(p => { if (p.folderId === id) { p.folderId = null; changed = true; } });
@@ -252,7 +271,7 @@
         duplicateProject, recordProjectSave,
         // folders
         getFolders, saveFolders, createFolder, renameFolder, deleteFolder,
-        archiveFolder, duplicateFolder,
+        archiveFolder, duplicateFolder, setFolderArchived,
         // migrasi
         migrateLegacyIfNeeded,
 

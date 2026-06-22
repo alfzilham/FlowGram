@@ -138,7 +138,7 @@ app.post('/api/projects', async (c) => {
         `INSERT INTO projects (id, user_id, name, folder_id, archived, color, node_count, data, created_at, updated_at)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
         [id, payload.userId, body.name || 'Untitled', body.folderId || null, false, body.color || null,
-         body.data?.nodes?.length || 0, JSON.stringify(body.data || {}), now, now]
+            body.data?.nodes?.length || 0, JSON.stringify(body.data || {}), now, now]
     );
 
     return c.json({ project: { id, name: body.name || 'Untitled', folder_id: body.folderId || null, archived: false, color: body.color || null, node_count: body.data?.nodes?.length || 0, created_at: now, updated_at: now } });
@@ -207,7 +207,7 @@ app.get('/api/folders', async (c) => {
     if (!payload) return c.json({ error: 'Unauthorized' }, 401);
 
     const { rows } = await pool.query(
-        'SELECT id, name FROM folders WHERE user_id = $1 ORDER BY name',
+        'SELECT id, name, archived FROM folders WHERE user_id = $1 ORDER BY name',
         [payload.userId]
     );
     return c.json({ folders: rows });
@@ -221,10 +221,10 @@ app.post('/api/folders', async (c) => {
     const body = await c.req.json();
     const id = uid('f');
     await pool.query(
-        'INSERT INTO folders (id, user_id, name) VALUES ($1,$2,$3)',
-        [id, payload.userId, body.name || 'New Folder']
+        'INSERT INTO folders (id, user_id, name, archived) VALUES ($1,$2,$3,$4)',
+        [id, payload.userId, body.name || 'New Folder', false]
     );
-    return c.json({ folder: { id, name: body.name || 'New Folder' } });
+    return c.json({ folder: { id, name: body.name || 'New Folder', archived: false } });
 });
 
 /* ---------- PUT /api/folders/:id ---------- */
@@ -233,9 +233,19 @@ app.put('/api/folders/:id', async (c) => {
     if (!payload) return c.json({ error: 'Unauthorized' }, 401);
 
     const body = await c.req.json();
+    const updates = [];
+    const vals = [];
+    let idx = 1;
+
+    if (body.name !== undefined) { updates.push('name = $' + idx++); vals.push(body.name); }
+    if (body.archived !== undefined) { updates.push('archived = $' + idx++); vals.push(body.archived); }
+
+    if (updates.length === 0) return c.json({ success: true });
+
+    vals.push(c.req.param('id'), payload.userId);
     await pool.query(
-        'UPDATE folders SET name = $1 WHERE id = $2 AND user_id = $3',
-        [body.name, c.req.param('id'), payload.userId]
+        `UPDATE folders SET ${updates.join(', ')} WHERE id = $${idx++} AND user_id = $${idx}`,
+        vals
     );
     return c.json({ success: true });
 });
