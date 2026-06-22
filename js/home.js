@@ -579,7 +579,15 @@
                     label: 'Batalkan Arsip Folder',
                     action: () => {
                         if (FGAuth.isLoggedIn()) {
-                            FG.setFolderArchived(f.id, false);
+                            var folder = apiFolders.find(function (x) { return x.id === f.id; });
+                            if (folder) folder.archived = false;
+                            apiProjects.forEach(function (p) {
+                                if (p.folderId === f.id) {
+                                    p.archived = false;
+                                    FG.api.updateProject(p.id, { archived: false }).catch(function () { });
+                                }
+                            });
+                            FG.api.updateFolder(f.id, { archived: false }).catch(function () { });
                         } else {
                             FG.setFolderArchived(f.id, false);
                         }
@@ -642,7 +650,19 @@
                         'Arsipkan Folder',
                         'Arsipkan folder "' + f.name + '" beserta semua project di dalamnya?',
                         () => {
-                            FG.setFolderArchived(f.id, true);
+                            if (FGAuth.isLoggedIn()) {
+                                var folder = apiFolders.find(function (x) { return x.id === f.id; });
+                                if (folder) folder.archived = true;
+                                apiProjects.forEach(function (p) {
+                                    if (p.folderId === f.id) {
+                                        p.archived = true;
+                                        FG.api.updateProject(p.id, { archived: true }).catch(function () { });
+                                    }
+                                });
+                                FG.api.updateFolder(f.id, { archived: true }).catch(function () { });
+                            } else {
+                                FG.setFolderArchived(f.id, true);
+                            }
                             if (currentFilter === f.id) setFilter('all', 'Semua Project');
                             renderAll();
                             showToast('Folder diarsipkan');
@@ -1407,12 +1427,8 @@
         };
 
         FG.setFolderArchived = function (id, archived) {
-            console.log('[setFolderArchived] id:', id, 'archived:', archived);
-            console.log('[setFolderArchived] apiFolders:', JSON.stringify(apiFolders));
             var f = apiFolders.find(function (x) { return x.id === id; });
-            console.log('[setFolderArchived] folder found:', f);
             if (f) f.archived = !!archived;
-            console.log('[setFolderArchived] after update:', JSON.stringify(apiFolders));
             apiProjects.forEach(function (p) {
                 if (p.folderId === id) {
                     p.archived = !!archived;

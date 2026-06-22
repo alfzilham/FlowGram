@@ -271,7 +271,10 @@
         duplicateProject, recordProjectSave,
         // folders
         getFolders, saveFolders, createFolder, renameFolder, deleteFolder,
-        archiveFolder, duplicateFolder, setFolderArchived,
+        archiveFolder, duplicateFolder,
+        setFolderArchived: function (id, archived) {
+            return setFolderArchived(id, archived);
+        },
         // migrasi
         migrateLegacyIfNeeded,
 
