@@ -801,6 +801,63 @@
             foldersList.appendChild(wrap);
         });
 
+        if (archivedFolders.length > 0) {
+            const section = document.createElement('div');
+            section.className = 'folder-archived-section';
+
+            const header = document.createElement('div');
+            header.className = 'folder-archived-header';
+
+            const arrow = document.createElement('span');
+            arrow.className = 'folder-archived-arrow' + (archivedFolderSectionExpanded ? ' open' : '');
+            arrow.innerHTML = iconSvg('<path d="M9 18l6-6-6-6"/>');
+
+            const label = document.createElement('span');
+            label.className = 'folder-archived-label';
+            label.textContent = 'Folder Diarsipkan';
+
+            const countBadge = document.createElement('span');
+            countBadge.className = 'folder-archived-count';
+            countBadge.textContent = archivedFolders.length;
+
+            header.appendChild(arrow);
+            header.appendChild(label);
+            header.appendChild(countBadge);
+
+            header.addEventListener('click', () => {
+                archivedFolderSectionExpanded = !archivedFolderSectionExpanded;
+                renderFolders();
+            });
+
+            section.appendChild(header);
+
+            if (archivedFolderSectionExpanded) {
+                archivedFolders.forEach(f => {
+                    const folderRow = document.createElement('div');
+                    folderRow.className = 'folder-item folder-item-archived';
+
+                    const folderIcon = document.createElement('span');
+                    folderIcon.className = 'folder-icon';
+                    folderIcon.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>');
+
+                    const nameSpan = document.createElement('span');
+                    nameSpan.className = 'folder-item-name';
+                    nameSpan.textContent = f.name;
+
+                    folderRow.appendChild(folderIcon);
+                    folderRow.appendChild(nameSpan);
+
+                    folderRow.addEventListener('click', () => {
+                        setFilter('archived-folders', 'Folder Diarsipkan');
+                    });
+
+                    section.appendChild(folderRow);
+                });
+            }
+
+            foldersList.appendChild(section);
+        }
+
     }
 
     /* ---------------- render all ---------------- */
