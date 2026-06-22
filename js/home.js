@@ -151,8 +151,9 @@
     }
 
     deleteConfirm.addEventListener('click', () => {
+        const cb = deleteCb;
         closeDeleteModal();
-        if (deleteCb) { deleteCb(); }
+        if (cb) { cb(); }
     });
     deleteCancel.addEventListener('click', closeDeleteModal);
     deleteBd.addEventListener('click', closeDeleteModal);
