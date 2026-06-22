@@ -321,6 +321,7 @@
             async folders() { return (await apiCall('GET', '/folders')).folders; },
             async createFolder(name) { return (await apiCall('POST', '/folders', { name })).folder; },
             async renameFolder(id, name) { return apiCall('PUT', '/folders/' + id, { name }); },
+            async updateFolder(id, data) { return apiCall('PUT', '/folders/' + id, data); },
             async deleteFolder(id) { return apiCall('DELETE', '/folders/' + id); }
         }
     };
