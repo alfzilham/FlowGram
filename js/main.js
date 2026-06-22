@@ -28,6 +28,7 @@
     let viewport = { panX: 80, panY: 80, zoom: 1 };
     let selectedNodeIds = new Set();
     let currentProjectId = null;
+    let multiSelectActive = false;
 
     /* ---------------- dom refs ---------------- */
     const wrapper = document.getElementById('canvas-wrapper');
@@ -493,7 +494,7 @@
         e.stopPropagation();
         closeMenus();
 
-        if (e.shiftKey) {
+        if (e.shiftKey || multiSelectActive) {
             toggleSelection(id);
             return;
         }
@@ -824,6 +825,12 @@
             render(); scheduleSave();
             showToast('Kanvas dikosongkan');
         }
+    });
+
+    document.getElementById('btn-multi-select').addEventListener('click', () => {
+        multiSelectActive = !multiSelectActive;
+        document.getElementById('btn-multi-select').classList.toggle('active', multiSelectActive);
+        showToast(multiSelectActive ? 'Mode multi select aktif' : 'Mode multi select nonaktif');
     });
 
     /* ---------------- context menus ---------------- */

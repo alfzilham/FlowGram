@@ -122,6 +122,11 @@
     transform: scale(.96);
 }
 
+.tb-btn.active {
+    background: var(--accent-soft);
+    color: var(--accent);
+}
+
 .tb-btn.primary {
     background: var(--accent);
     color: #fff;
