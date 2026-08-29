@@ -1,89 +1,37 @@
-# FlowGram — Architecture
+# FlowGram Architecture
 
-## Ringkasan
+FlowGram is a static HTML/vanilla JavaScript workflow builder with a Hono serverless API on Vercel and Neon PostgreSQL persistence.
 
-FlowGram adalah aplikasi web workflow builder tanpa framework frontend dan tanpa build step. Browser menyajikan halaman HTML statis, JavaScript mengelola state/UI, dan Vercel Functions menjalankan API Hono yang menyimpan data akun ke Neon PostgreSQL.
+## Runtime
 
 ```text
-Browser
-  ├─ index.html       dashboard project/folder
-  ├─ builder.html     editor canvas
-  ├─ onboarding.html  nama pengguna baru
-  └─ auth/...         OAuth callback
-       │
-       ├─ Demo mode ───── localStorage
-       └─ Login mode ──── /api/* ── Hono ── Neon PostgreSQL
-                              └─ Google userinfo + JWT
+Browser pages -> frontend IIFE modules -> /api/* -> Hono -> services -> repositories -> Neon
+      |                  |                                  |
+ localStorage       demo/login modes                    Google userinfo + JWT
 ```
 
-## Modul frontend
+Active pages are `index.html`, `builder.html`, `onboarding.html`, and `auth/google-callback.html`. Active browser code is under `frontend/`; CSS and images are served from `public/`.
 
-- `js/auth.js`: token `fg_token`, user cache `fg_user`, Google OAuth popup, auth gate, demo mode, dan event `fg-auth-ready`.
-- `js/shared.js`: facade `window.FG`; CRUD project/folder, serialisasi localStorage, migrasi format lama, API wrapper, dan migrasi demo ke akun.
-- `js/home.js`: dashboard, filter/search, folder, context menu, settings, theme/font, dan adapter data API.
-- `js/main.js`: editor canvas; node, koneksi, selection, drag/pan/zoom, undo/redo, clipboard, import/export, shortcut, dan autosave.
-- `js/onboarding.js`: satu langkah pengisian nama dan update `/api/auth/name`.
+## Frontend modules
 
-Urutan script penting: `shared.js` → `auth.js` → halaman controller (`home.js` atau `main.js`). `FG` harus tersedia sebelum controller memulai.
+- `frontend/core/auth/auth.js`: token/cache handling, demo mode, auth gate, OAuth popup and one-time state validation.
+- `frontend/core/persistence/shared.js`: `window.FG`, localStorage CRUD, API wrapper, legacy migration, and demo migration.
+- `frontend/dashboard/dashboard.controller.js`: project/folder dashboard, search, settings, profile, and optimistic API adapter.
+- `frontend/builder/builder.controller.js`: canvas, nodes, connections, viewport, history, import/export, and autosave.
+- `frontend/onboarding/onboarding.controller.js`: display-name submission.
 
-## Alur startup
+Scripts are loaded in dependency order: persistence, auth, then page controller.
 
-1. Controller halaman memanggil `FGAuth.init()`.
-2. Token tidak ada → auth gate ditampilkan.
-3. Token `demo` → UI langsung aktif menggunakan localStorage.
-4. Token JWT → `/api/auth/me` divalidasi; user cache diperbarui; event `fg-auth-ready` dipancarkan.
-5. Dashboard memuat project/folder API pada mode login. Builder mengambil `id` dari query string lalu memuat data project.
-6. Loader di-fade setelah data tersedia.
+## Backend MVC
 
-## Persistence dan adapter
+`api/index.js` only composes routes. Controllers translate HTTP requests, services enforce business rules, repositories contain parameterized SQL, models normalize/validate data, and middleware handles JWT, CORS, request limits, and errors.
 
-### Demo/localStorage
+Authenticated queries use the verified JWT `userId` and ownership predicates. Project folder references are checked against the same user before writes. Workflow JSON is validated server-side and request `Content-Length` is limited to 4 MiB.
 
-- Index metadata: `wf_projects_index`.
-- Folder: `wf_folders`.
-- Data workflow per project: `wf_project_<id>`.
-- Format lama: `wf_builder_state_v1`; dimigrasikan sekali menjadi `Project 1`.
+## Persistence modes
 
-### Login/API
+Demo mode uses the `demo` sentinel and localStorage keys such as `wf_projects_index`, `wf_folders`, and `wf_project_<id>`. Login mode uses a 30-day application JWT in `fg_token`, API calls, and Neon. JWT localStorage remains a known hardening item; CSP/SRI and cookie-session migration are not yet implemented.
 
-Dashboard mengganti operasi metadata `FG` dengan adapter in-memory (`apiProjects`, `apiFolders`) yang melakukan request API secara optimistic. Builder membaca dan menyimpan workflow langsung melalui `FG.api`.
+## Deployment
 
-Autosave builder di-debounce 300 ms. Pada demo ia menulis localStorage; pada login ia mengirim `PUT /api/projects/:id`.
-
-## Backend
-
-`api/index.js` adalah Hono app yang di-rewrite oleh `vercel.json` untuk seluruh `/api/*`.
-
-- Auth: `POST /auth/google`, `GET /auth/me`, `POST /auth/name`, `DELETE /auth/account`.
-- Project: `GET/POST /projects`, `GET/PUT/DELETE /projects/:id`.
-- Folder: `GET/POST /folders`, `PUT/DELETE /folders/:id`.
-- Semua route selain login memverifikasi Bearer JWT dan membatasi query berdasarkan `user_id`.
-- `api/_db.js` membuat Neon `Pool` dari `DATABASE_URL`; ID dibuat lokal dengan prefix, timestamp, dan random suffix.
-
-## Model data workflow
-
-```json
-{
-  "nodes": [{ "id": "n_*", "x": 120, "y": 80, "text": "", "color": "default", "icon": null }],
-  "connections": [{
-    "id": "c_*",
-    "from": { "nodeId": "n_*", "side": "right" },
-    "to": { "nodeId": "n_*", "side": "left" }
-  }],
-  "viewport": { "panX": 80, "panY": 80, "zoom": 1 }
-}
-```
-
-Project metadata menyimpan nama, folder, archive flag, warna, jumlah node, dan timestamp. Data workflow disimpan sebagai JSON di kolom `projects.data`.
-
-## Deployment/runtime
-
-Frontend adalah static assets yang cocok disajikan Vercel atau static server. Backend memerlukan Node.js/Vercel Functions, `DATABASE_URL`, `JWT_SECRET`, dan kredensial Google. Tidak ada test suite atau migration/schema SQL yang tersimpan di repository ini; struktur database diasumsikan sudah tersedia di Neon.
-
-## Risiko arsitektural yang terlihat
-
-- Operasi dashboard login bersifat optimistic dan beberapa error sengaja diabaikan; UI dapat berbeda dari server sampai reload.
-- Migrasi demo mengirim folder dan project tanpa mapping ID folder lama ke ID baru, sehingga relasi folder dapat hilang.
-- Import JSON hanya memvalidasi `nodes` sebagai array dan tidak memvalidasi referensi koneksi, tipe field, atau ukuran payload.
-- CORS dikonfigurasi `origin: '*'` bersama `credentials: true`; konfigurasi produksi sebaiknya memakai origin yang eksplisit.
-- JWT disimpan di localStorage; mitigasi XSS dan rotasi/revokasi token belum terlihat dalam codebase.
+`vercel.json` rewrites `/api/(.*)` to `api/index.js` and adds baseline security headers. Runtime secrets are `DATABASE_URL`, `JWT_SECRET`, Google credentials, and optional `ALLOWED_ORIGINS`. No database schema or automated test suite is stored in the repository.

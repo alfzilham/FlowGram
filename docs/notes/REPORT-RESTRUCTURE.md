@@ -3,6 +3,8 @@
 **Tanggal:** 2026-08-29
 **Model:** Mimo v2.5
 
+**Post-review update (2026-08-29):** Struktur aktif diverifikasi ulang. File `js/*.js` legacy dihapus setelah tidak ditemukan referensi aktif; request API kini memiliki guard `Content-Length` 4 MiB; mode development CORS hanya menerima hostname localhost yang tepat; dan error internal tidak diteruskan ke client.
+
 ---
 
 ## 1. Directory Structure Final
@@ -351,8 +353,8 @@ Export format preserved: `{ nodes, connections }` (no viewport).
 3. **JWT storage** — Still localStorage; XSS impact amplified until cookies migration.
 4. **Optimistic UI** — Dashboard login mode may drift from server state on error.
 5. **No test suite** — No automated tests exist; validation was manual/syntax-based.
-6. **Old files preserved** — `js/`, `css/`, `assets/` directories kept for backward compatibility; should be removed after deployment verification.
-7. **Frontend files are copies** — `frontend/` contains copies of `js/` files. Future changes should be made in `frontend/` only.
+6. **JWT storage** — Still localStorage; cookie migration requires a separate CSRF/session redesign.
+7. **Frontend remains IIFE-based** — script load order must be preserved until a module/build migration is intentionally validated.
 
 ---
 

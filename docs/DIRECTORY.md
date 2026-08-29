@@ -1,44 +1,25 @@
-**Root Path:** `d:\2026\Workspace\PersonalApps\FlowGram`
+# Directory Map
 
+```text
+api/
+  index.js, _db.js
+  config/index.js
+  middleware/{auth,cors,error,request-limit}.middleware.js
+  controllers/{auth,project,folder}.controller.js
+  services/{auth,project,folder}.service.js
+  repositories/{user,project,folder}.repository.js
+  models/{user,project,folder,workflow}.model.js
+  validators/{auth,project,folder}.validator.js
+frontend/
+  core/auth/auth.js
+  core/persistence/shared.js
+  dashboard/dashboard.controller.js
+  builder/builder.controller.js
+  onboarding/onboarding.controller.js
+public/{css,assets}/
+auth/google-callback.html
+{index,builder,onboarding}.html
+vercel.json, package.json, README.md
 ```
-├── api
-│   ├── _db.js
-│   └── index.js
-├── assets
-│   ├── favicon
-│   │   └── favicon.ico
-│   └── images
-│       ├── brand
-│       │   └── Brand.png
-│       └── logo
-│           └── Logo.png
-├── auth
-│   └── google-callback.html
-├── css
-│   ├── auth.css
-│   ├── base.css
-│   ├── components.css
-│   ├── home.css
-│   ├── layout.css
-│   ├── loader.css
-│   ├── onboarding.css
-│   ├── reset.css
-│   ├── responsive.css
-│   └── variable.css
-├── docs
-├── js
-│   ├── auth.js
-│   ├── home.js
-│   ├── main.js
-│   ├── onboarding.js
-│   └── shared.js
-├── .gitignore
-├── LICENSE
-├── README.md
-├── builder.html
-├── index.html
-├── onboarding.html
-├── package-lock.json
-├── package.json
-└── vercel.json
-```
+
+The old `js/` runtime copies were removed after repository-wide reference checks. Root `css/` and `assets/` remain as compatibility static paths; active pages use `public/`.

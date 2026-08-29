@@ -2,7 +2,7 @@
 
 Visual workflow builder — create, connect, and organize nodes on an infinite canvas. Multi-project dashboard, folders, Google OAuth, Neon database, dark mode, and mobile-friendly.
 
-![FlowGram](assets/images/brand/Brand.png)
+![FlowGram](public/assets/images/brand/Brand.png)
 
 ## Features
 
@@ -81,17 +81,20 @@ JWT_SECRET=your_random_jwt_secret
 ## Project Structure
 
 ```
-├── api/                # Hono.js backend (Vercel Functions)
+├── api/                # Hono MVC backend (Vercel Functions)
 │   ├── _db.js          # Neon connection pool
-│   └── index.js        # App routes (auth, projects, folders)
-├── assets/
+│   ├── index.js        # Thin route composition
+│   ├── controllers/ services/ repositories/
+│   └── middleware/ models/ validators/ config/
+├── public/             # Active CSS and static assets
 │   ├── favicon/
 │   └── images/
 │       ├── brand/
 │       └── logo/
 ├── auth/
 │   └── google-callback.html   # Google OAuth callback
-├── css/
+├── frontend/           # Active browser core and page controllers
+├── css/                # Compatibility static copy
 │   ├── auth.css        # Auth gate split-page style
 │   ├── base.css
 │   ├── components.css
@@ -102,12 +105,6 @@ JWT_SECRET=your_random_jwt_secret
 │   ├── reset.css
 │   ├── responsive.css
 │   └── variable.css
-├── js/
-│   ├── auth.js         # Client-side auth (Google OAuth, token, demo)
-│   ├── home.js         # Homepage logic (dashboard, folders, project actions)
-│   ├── main.js         # Builder logic (canvas, nodes, connections)
-│   ├── onboarding.js   # Onboarding name input
-│   └── shared.js       # Shared data layer (localStorage + API)
 ├── onboarding.html     # Onboarding page (input name)
 ├── builder.html        # Canvas / workflow editor
 ├── index.html          # Homepage / project dashboard
