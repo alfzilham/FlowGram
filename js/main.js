@@ -1248,7 +1248,9 @@
             cat.icons.forEach(name => {
                 const cell = document.createElement('div');
                 cell.className = 'ctx-icon-cell' + (n.icon === name ? ' selected' : '');
-                cell.innerHTML = '<i data-lucide="' + name + '"></i>';
+                var iconEl = document.createElement('i');
+                iconEl.setAttribute('data-lucide', name);
+                cell.appendChild(iconEl);
                 cell.title = name;
                 cell.addEventListener('click', () => {
                     pushHistory();

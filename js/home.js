@@ -73,6 +73,51 @@
         return `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">${path}</svg>`;
     }
 
+    function createSvgIcon(path) {
+        var SVG_NS = 'http://www.w3.org/2000/svg';
+        var svg = document.createElementNS(SVG_NS, 'svg');
+        svg.setAttribute('viewBox', '0 0 24 24');
+        svg.setAttribute('fill', 'none');
+        svg.setAttribute('stroke', 'currentColor');
+        svg.setAttribute('stroke-width', '2');
+        svg.setAttribute('stroke-linecap', 'round');
+        svg.setAttribute('stroke-linejoin', 'round');
+        svg.innerHTML = path;
+        return svg;
+    }
+
+    function safeMenuBtn(iconPath, label) {
+        var btn = document.createElement('button');
+        btn.className = 'ctx-menu-item';
+        btn.appendChild(createSvgIcon(iconPath));
+        btn.appendChild(document.createTextNode(label));
+        return btn;
+    }
+
+    function safeMoveItem(iconPath, text) {
+        var item = document.createElement('div');
+        item.className = 'move-folder-item';
+        item.appendChild(createSvgIcon(iconPath));
+        item.appendChild(document.createTextNode(text));
+        return item;
+    }
+
+    function safeCreateMoveItem(iconPath, prefixText, strongText) {
+        var item = document.createElement('div');
+        item.className = 'move-folder-item move-folder-item-create';
+        item.appendChild(createSvgIcon(iconPath));
+        var span = document.createElement('span');
+        span.appendChild(document.createTextNode(prefixText));
+        var strong = document.createElement('strong');
+        strong.textContent = strongText;
+        span.appendChild(strong);
+        span.appendChild(document.createTextNode('"'));
+        item.appendChild(span);
+        return item;
+    }
+
+    var FOLDER_ICON_PATH = '<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>';
+
     /* ---------------- context menu ---------------- */
     let ctxVisible = false;
 
@@ -94,10 +139,11 @@
                 ctxMenu.appendChild(sep);
                 return;
             }
-            const btn = document.createElement('button');
-            btn.className = 'ctx-menu-item' + (item.danger ? ' danger' : '');
-            btn.innerHTML = item.icon + '<span>' + item.label + '</span>';
-            btn.addEventListener('click', (e) => {
+        const btn = document.createElement('button');
+        btn.className = 'ctx-menu-item' + (item.danger ? ' danger' : '');
+        btn.appendChild(createSvgIcon(item._iconPath));
+        btn.appendChild(document.createTextNode(item.label));
+        btn.addEventListener('click', (e) => {
                 e.stopPropagation();
                 closeCtxMenu();
                 item.action();
@@ -222,9 +268,7 @@
 
         // Opsi keluarkan dari folder
         if (moveFolderTargetMeta && moveFolderTargetMeta.folderId) {
-            const removeItem = document.createElement('div');
-            removeItem.className = 'move-folder-item';
-            removeItem.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') + '<span>Keluarkan dari folder</span>';
+            const removeItem = safeMoveItem(FOLDER_ICON_PATH, 'Keluarkan dari folder');
             removeItem.addEventListener('click', () => {
                 FG.moveToFolder(moveFolderTargetMeta.id, null);
                 renderAll();
@@ -236,9 +280,10 @@
 
         // List folder
         filtered.forEach(f => {
-            const item = document.createElement('div');
-            item.className = 'move-folder-item' + (moveFolderTargetMeta && moveFolderTargetMeta.folderId === f.id ? ' active' : '');
-            item.innerHTML = iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>') + '<span>' + f.name + '</span>';
+            const item = safeMoveItem(FOLDER_ICON_PATH, f.name);
+            if (moveFolderTargetMeta && moveFolderTargetMeta.folderId === f.id) {
+                item.className += ' active';
+            }
             item.addEventListener('click', () => {
                 FG.moveToFolder(moveFolderTargetMeta.id, f.id);
                 renderAll();
@@ -250,9 +295,7 @@
 
         // Buat folder baru jika query tidak cocok
         if (q && !filtered.find(f => f.name.toLowerCase() === q)) {
-            const createItem = document.createElement('div');
-            createItem.className = 'move-folder-item move-folder-item-create';
-            createItem.innerHTML = iconSvg('<path d="M12 5v14M5 12h14"/>') + '<span>Buat folder "<strong>' + query + '</strong>"</span>';
+            const createItem = safeCreateMoveItem('<path d="M12 5v14M5 12h14"/>', 'Buat folder "', query);
             createItem.addEventListener('click', async () => {
                 let newFolder;
                 if (FGAuth.isLoggedIn()) {
@@ -291,7 +334,7 @@
     function buildCardMenuItems(meta) {
         return [
             {
-                icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+                _iconPath: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
                 label: 'Rename',
                 action: () => {
                     openRenameModal('Rename Project', meta.name, (newName) => {
@@ -302,7 +345,7 @@
                 }
             },
             {
-                icon: iconSvg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+                _iconPath: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
                 label: 'Duplikat',
                 action: () => {
                     FG.duplicateProject(meta.id);
@@ -311,13 +354,13 @@
                 }
             },
             {
-                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                _iconPath: FOLDER_ICON_PATH,
                 label: meta.folderId ? 'Pindah / Keluarkan dari Folder' : 'Pindah ke Folder',
                 action: () => openMoveFolderModal(meta)
             },
             'sep',
             {
-                icon: iconSvg('<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>'),
+                _iconPath: '<path d="M21 8v13H3V8"/><path d="M1 3h22v5H1z"/><path d="M10 12h4"/>',
                 label: meta.archived ? 'Batalkan Arsip' : 'Arsipkan',
                 action: () => {
                     const wasArchived = meta.archived;
@@ -328,7 +371,7 @@
             },
             'sep',
             {
-                icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
+                _iconPath: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>',
                 label: 'Hapus',
                 danger: true,
                 action: () => {
@@ -352,7 +395,7 @@
 
         if (meta.folderId) {
             items.push({
-                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                _iconPath: FOLDER_ICON_PATH,
                 label: 'Keluarkan dari folder',
                 action: () => {
                     FG.moveToFolder(meta.id, null);
@@ -366,7 +409,7 @@
         folders.forEach(f => {
             if (f.id === meta.folderId) return;
             items.push({
-                icon: iconSvg('<path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>'),
+                _iconPath: FOLDER_ICON_PATH,
                 label: f.name,
                 action: () => {
                     FG.moveToFolder(meta.id, f.id);
@@ -494,7 +537,7 @@
     function getFolderMenuItems(f) {
         return [
             {
-                icon: iconSvg('<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>'),
+                _iconPath: '<path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.1 2.1 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>',
                 label: 'Rename Folder',
                 action: () => {
                     openRenameModal('Rename Folder', f.name, (newName) => {
@@ -505,7 +548,7 @@
                 }
             },
             {
-                icon: iconSvg('<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>'),
+                _iconPath: '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
                 label: 'Duplikat Folder',
                 action: () => {
                     if (FGAuth.isLoggedIn()) {
@@ -520,7 +563,7 @@
             },
             'sep',
             {
-                icon: iconSvg('<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>'),
+                _iconPath: '<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/>',
                 label: 'Hapus Folder',
                 danger: true,
                 action: () => {
@@ -624,8 +667,11 @@
                 projectsInFolder.forEach(p => {
                     const pItem = document.createElement('div');
                     pItem.className = 'folder-project-item';
-                    pItem.innerHTML = iconSvg('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>') +
-                        '<span class="folder-project-name">' + p.name + '</span>';
+                    pItem.appendChild(createSvgIcon('<path d="M3 11l9-8 9 8"/><path d="M5 10v10h14V10"/>'));
+                    var nameSpan = document.createElement('span');
+                    nameSpan.className = 'folder-project-name';
+                    nameSpan.textContent = p.name;
+                    pItem.appendChild(nameSpan);
                     pItem.addEventListener('click', (e) => {
                         e.stopPropagation();
                         window.location.href = 'builder.html?id=' + p.id;
