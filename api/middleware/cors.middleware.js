@@ -5,7 +5,10 @@ export function createCors() {
     return cors({
         origin: function (origin) {
             if (!origin) return undefined;
-            if (config.isDev && origin.includes('localhost')) return origin;
+            let parsed;
+            try { parsed = new URL(origin); } catch { return undefined; }
+            const localHost = ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname);
+            if (config.isDev && localHost) return origin;
             if (config.allowedOrigins.includes(origin)) return origin;
             return undefined;
         },

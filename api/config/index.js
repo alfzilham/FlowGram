@@ -5,7 +5,7 @@ const config = {
     googleClientId: process.env.GOOGLE_CLIENT_ID,
     allowedOrigins: (process.env.ALLOWED_ORIGINS || '').split(',').map(o => o.trim()).filter(Boolean),
     get isDev() {
-        return !this.allowedOrigins.length || this.allowedOrigins.some(o => o.includes('localhost'));
+        return !this.allowedOrigins.length;
     }
 };
 

@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { createCors } from './middleware/cors.middleware.js';
 import { errorHandler } from './middleware/error.middleware.js';
+import { enforceRequestLimit } from './middleware/request-limit.middleware.js';
 import { requireAuth } from './middleware/auth.middleware.js';
 import * as authController from './controllers/auth.controller.js';
 import * as projectController from './controllers/project.controller.js';
@@ -9,7 +10,8 @@ import * as folderController from './controllers/folder.controller.js';
 const app = new Hono();
 
 app.use('/*', createCors());
-app.onError(errorHandler());
+app.use('/api/*', enforceRequestLimit);
+app.onError(errorHandler);
 
 /* ---------- Auth ---------- */
 app.post('/api/auth/google', (c) => authController.handleGoogleLogin(c));

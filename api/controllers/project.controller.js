@@ -23,7 +23,8 @@ export async function handleCreateProject(c, payload) {
         const project = await projectService.createProject(payload.userId, body);
         return c.json({ project });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal membuat project' }, 400);
+        if (e && e.status === 400) return c.json({ error: e.message }, 400);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }
 
@@ -38,7 +39,8 @@ export async function handleUpdateProject(c, payload) {
         await projectService.updateProject(c.req.param('id'), payload.userId, body);
         return c.json({ success: true });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal update project' }, 400);
+        if (e && e.status === 400) return c.json({ error: e.message }, 400);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }
 

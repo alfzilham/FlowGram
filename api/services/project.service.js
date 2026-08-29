@@ -14,10 +14,14 @@ export async function createProject(userId, body) {
     const folderId = body.folderId || null;
     if (folderId) {
         const valid = await folderRepo.findFolderByIdAndUser(folderId, userId);
-        if (!valid) throw new Error('Folder tidak ditemukan atau bukan milik Anda');
+        if (!valid) {
+            const error = new Error('Folder tidak ditemukan atau bukan milik Anda');
+            error.status = 400;
+            throw error;
+        }
     }
     const id = uid('p');
-    const project = await projectRepo.createProject(id, userId, body.name || 'Untitled', folderId, body.data || {});
+    const project = await projectRepo.createProject(id, userId, body.name || 'Untitled', folderId, body.color || null, body.data || {});
     return project;
 }
 
@@ -25,7 +29,11 @@ export async function updateProject(id, userId, body) {
     if (body.folderId !== undefined) {
         if (body.folderId !== null && body.folderId !== '') {
             const valid = await folderRepo.findFolderByIdAndUser(body.folderId, userId);
-            if (!valid) throw new Error('Folder tidak ditemukan atau bukan milik Anda');
+            if (!valid) {
+                const error = new Error('Folder tidak ditemukan atau bukan milik Anda');
+                error.status = 400;
+                throw error;
+            }
         }
     }
     await projectRepo.updateProject(id, userId, body);

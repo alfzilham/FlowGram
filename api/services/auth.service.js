@@ -7,11 +7,20 @@ export async function exchangeGoogleToken(googleToken) {
     const resp = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
         headers: { Authorization: 'Bearer ' + googleToken }
     });
-    if (!resp.ok) throw new Error('Token Google tidak valid');
+    if (!resp.ok) {
+        const error = new Error('Token Google tidak valid');
+        error.status = 401;
+        throw error;
+    }
 
     const profile = await resp.json();
     if (!profile.sub || typeof profile.sub !== 'string') throw new Error('Google profile tidak valid');
     if (!profile.email || typeof profile.email !== 'string') throw new Error('Google profile tidak valid');
+    if (profile.email_verified !== true) {
+        const error = new Error('Email Google belum terverifikasi');
+        error.status = 401;
+        throw error;
+    }
 
     const googleId = profile.sub;
     const email = profile.email;

@@ -12,6 +12,7 @@ export async function handleGoogleLogin(c) {
         return c.json(result);
     } catch (e) {
         console.error('Auth google error:', e);
+        if (e && e.status === 401) return c.json({ error: e.message }, 401);
         return c.json({ error: 'Internal server error' }, 500);
     }
 }
@@ -31,7 +32,7 @@ export async function handleUpdateName(c, payload) {
         const name = await authService.updateName(payload.userId, body.name);
         return c.json({ success: true, name });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal update nama' }, 500);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }
 
@@ -40,6 +41,6 @@ export async function handleDeleteAccount(c, payload) {
         await authService.deleteAccount(payload.userId);
         return c.json({ success: true });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal hapus akun' }, 500);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }

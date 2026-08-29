@@ -1,4 +1,5 @@
 import * as folderService from '../services/folder.service.js';
+import { validateFolderName } from '../validators/folder.validator.js';
 
 export async function handleListFolders(c, payload) {
     const folders = await folderService.listFolders(payload.userId);
@@ -8,21 +9,24 @@ export async function handleListFolders(c, payload) {
 export async function handleCreateFolder(c, payload) {
     try {
         const body = await c.req.json();
+        const nameErr = validateFolderName(body);
+        if (nameErr) return c.json({ error: nameErr }, 400);
         const folder = await folderService.createFolder(payload.userId, body.name);
         return c.json({ folder });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal membuat folder' }, 500);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }
 
 export async function handleRenameFolder(c, payload) {
     try {
         const body = await c.req.json();
-        if (!body.name || !body.name.trim()) return c.json({ error: 'Nama tidak boleh kosong' }, 400);
+        const nameErr = validateFolderName(body);
+        if (nameErr) return c.json({ error: nameErr }, 400);
         await folderService.renameFolder(c.req.param('id'), payload.userId, body.name.trim());
         return c.json({ success: true });
     } catch (e) {
-        return c.json({ error: e.message || 'Gagal update folder' }, 500);
+        return c.json({ error: 'Internal server error' }, 500);
     }
 }
 

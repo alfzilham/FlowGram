@@ -18,15 +18,15 @@ export async function findProjectByIdAndUser(id, userId) {
     return rows.length > 0 ? normalizeProjectWithData(rows[0]) : null;
 }
 
-export async function createProject(id, userId, name, folderId, data) {
+export async function createProject(id, userId, name, folderId, color, data) {
     const now = new Date().toISOString();
     const nodeCount = data?.nodes?.length || 0;
     await pool.query(
         `INSERT INTO projects (id, user_id, name, folder_id, archived, color, node_count, data, created_at, updated_at)
          VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)`,
-        [id, userId, name, folderId, false, null, nodeCount, JSON.stringify(data || {}), now, now]
+        [id, userId, name, folderId, false, color, nodeCount, JSON.stringify(data || {}), now, now]
     );
-    return { id, name, folder_id: folderId, archived: false, color: null, node_count: nodeCount, created_at: now, updated_at: now };
+    return { id, name, folder_id: folderId, archived: false, color, node_count: nodeCount, created_at: now, updated_at: now };
 }
 
 export async function updateProject(id, userId, fields) {
