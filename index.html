@@ -5,14 +5,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>FlowGram</title>
-  <link rel="stylesheet" href="css/variable.css">
-  <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/base.css">
-  <link rel="stylesheet" href="css/loader.css">
-  <link rel="stylesheet" href="css/home.css">
-  <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
+  <link rel="stylesheet" href="public/css/variable.css">
+  <link rel="stylesheet" href="public/css/reset.css">
+  <link rel="stylesheet" href="public/css/base.css">
+  <link rel="stylesheet" href="public/css/loader.css">
+  <link rel="stylesheet" href="public/css/home.css">
+  <link rel="icon" type="image/x-icon" href="public/assets/favicon/favicon.ico">
   <meta name="google-client-id" content="485205658725-sv25f4nov2k0kjbpbdsllt03uu3cgm7u.apps.googleusercontent.com">
-  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="public/css/auth.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap"
@@ -26,7 +26,7 @@
     <div id="auth-gate">
       <div class="auth-layout">
         <div class="visual-panel">
-          <img src="assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
+          <img src="public/assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
           <div class="visual-brand">
             <div class="visual-brand-title">FlowGram</div>
             <p class="visual-brand-sub">Workflow builder visual, simpel, dan powerful.</p>
@@ -88,7 +88,7 @@
     <!-- Sidebar -->
     <aside id="sidebar">
       <div id="sidebar-logo">
-        <img src="assets/images/logo/Logo.png" alt="FlowGram" id="home-logo">
+        <img src="public/assets/images/logo/Logo.png" alt="FlowGram" id="home-logo">
         <span id="home-title">Flow<span style="color: var(--accent)">Gram</span></span>
       </div>
 
@@ -577,9 +577,9 @@
   </div>
 
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-  <script src="js/shared.js"></script>
-  <script src="js/auth.js"></script>
-  <script src="js/home.js"></script>
+  <script src="frontend/core/persistence/shared.js"></script>
+  <script src="frontend/core/auth/auth.js"></script>
+  <script src="frontend/dashboard/dashboard.controller.js"></script>
 </body>
 
 </html>

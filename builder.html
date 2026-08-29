@@ -5,15 +5,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Workflow Builder</title>
-    <link rel="stylesheet" href="css/variable.css">
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/base.css">
-    <link rel="stylesheet" href="css/layout.css">
-    <link rel="stylesheet" href="css/components.css">
-    <link rel="stylesheet" href="css/responsive.css">
-    <link rel="icon" type="image/x-icon" href="assets/favicon/favicon.ico">
-    <link rel="stylesheet" href="css/loader.css">
-    <link rel="stylesheet" href="css/auth.css">
+    <link rel="stylesheet" href="public/css/variable.css">
+    <link rel="stylesheet" href="public/css/reset.css">
+    <link rel="stylesheet" href="public/css/base.css">
+    <link rel="stylesheet" href="public/css/layout.css">
+    <link rel="stylesheet" href="public/css/components.css">
+    <link rel="stylesheet" href="public/css/responsive.css">
+    <link rel="icon" type="image/x-icon" href="public/assets/favicon/favicon.ico">
+    <link rel="stylesheet" href="public/css/loader.css">
+    <link rel="stylesheet" href="public/css/auth.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Lato:wght@400;500;600;700&family=Montserrat:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Poppins:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <meta name="google-client-id" content="485205658725-sv25f4nov2k0kjbpbdsllt03uu3cgm7u.apps.googleusercontent.com">
 </head>
@@ -25,7 +25,7 @@
     <div id="auth-gate">
         <div class="auth-layout">
             <div class="visual-panel">
-                <img src="assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
+                <img src="public/assets/images/logo/Logo.png" alt="FlowGram" class="auth-logo-float">
                 <div class="visual-brand">
                     <div class="visual-brand-title">FlowGram</div>
                     <p class="visual-brand-sub">Sesi berakhir. Silakan masuk kembali.</p>
@@ -72,7 +72,7 @@
         </div>
 
         <div id="toolbar">
-            <img src="assets/images/logo/Logo.png" alt="FlowGram" class="tb-logo">
+            <img src="public/assets/images/logo/Logo.png" alt="FlowGram" class="tb-logo">
             <button class="tb-btn" id="btn-home" title="Kembali ke Home">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
                     stroke-linejoin="round">
@@ -233,9 +233,9 @@
         </div>
     </div>
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
-    <script src="js/shared.js"></script>
-    <script src="js/auth.js"></script>
-    <script src="js/main.js"></script>
+    <script src="frontend/core/persistence/shared.js"></script>
+    <script src="frontend/core/auth/auth.js"></script>
+    <script src="frontend/builder/builder.controller.js"></script>
 </body>
 
 </html>
