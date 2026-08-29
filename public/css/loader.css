@@ -1,0 +1,86 @@
+/* ========================================
+   Loading Overlay
+   ======================================== */
+
+#loader-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+}
+
+#loader-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+/* ---------- Peg-top spinner (3 layers) ---------- */
+.loader-spinner {
+    position: relative;
+    width: 60px;
+    height: 60px;
+}
+
+.loader-spinner svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+}
+
+.loader-spinner svg:nth-child(1) {
+    width: 60px;
+    height: 60px;
+    margin-top: -30px;
+    margin-left: -30px;
+    animation: loaderSpin1 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+}
+
+.loader-spinner svg:nth-child(2) {
+    width: 44px;
+    height: 44px;
+    margin-top: -22px;
+    margin-left: -22px;
+    animation: loaderSpin2 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: -0.18s;
+}
+
+.loader-spinner svg:nth-child(3) {
+    width: 28px;
+    height: 28px;
+    margin-top: -14px;
+    margin-left: -14px;
+    animation: loaderSpin1 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: -0.36s;
+}
+
+@keyframes loaderSpin1 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes loaderSpin2 {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(-360deg);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .loader-spinner svg {
+        animation-duration: 3s;
+    }
+}
