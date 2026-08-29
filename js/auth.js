@@ -69,6 +69,28 @@
         return data;
     }
 
+    /* ---------------- Google OAuth state correlation ---------------- */
+    const oauthStates = new Map();
+    const OAUTH_STATE_TTL = 600000; // 10 minutes
+
+    function generateState() {
+        var arr = new Uint8Array(24);
+        crypto.getRandomValues(arr);
+        return Array.from(arr, function(b) { return b.toString(16).padStart(2, '0'); }).join('');
+    }
+
+    function storeState(state) {
+        oauthStates.set(state, Date.now());
+    }
+
+    function verifyState(state) {
+        if (!state || !oauthStates.has(state)) return false;
+        var ts = oauthStates.get(state);
+        oauthStates.delete(state);
+        if (Date.now() - ts > OAUTH_STATE_TTL) return false;
+        return true;
+    }
+
     /* ---------------- Google OAuth ---------------- */
     let authResolve = null;
 
@@ -80,12 +102,16 @@
         }
 
         const redirectUri = window.location.origin + '/auth/google-callback.html';
+        const state = generateState();
+        storeState(state);
+
         const url = 'https://accounts.google.com/o/oauth2/v2/auth?' +
             'client_id=' + encodeURIComponent(clientId) +
             '&redirect_uri=' + encodeURIComponent(redirectUri) +
             '&response_type=token' +
             '&scope=email%20profile' +
-            '&include_granted_scopes=true';
+            '&include_granted_scopes=true' +
+            '&state=' + encodeURIComponent(state);
 
         return new Promise((resolve) => {
             authResolve = resolve;
@@ -93,7 +119,12 @@
         });
     }
 
-    window.__fgAuthCallback = async function (googleToken) {
+    window.__fgAuthCallback = async function (googleToken, state) {
+        if (!verifyState(state)) {
+            showAuthError('Login gagal: state tidak valid atau sudah kedaluwarsa.');
+            return;
+        }
+
         try {
             const data = await exchangeGoogleToken(googleToken);
             var user = data.user;
@@ -131,14 +162,10 @@
         }
     };
 
-    // Handle fallback redirect from Google OAuth popup
-    (function () {
-        var t = new URLSearchParams(window.location.search).get('google_token');
-        if (t) {
-            history.replaceState(null, '', window.location.pathname + window.location.hash);
-            window.__fgAuthCallback(t);
-        }
-    }());
+    // FG-003: Removed google_token query string fallback.
+    // The popup callback now uses postMessage with state validation.
+    // If opener is unavailable, the callback page shows an error instead of
+    // placing the bearer token in a URL query parameter.
 
     /* ---------------- Demo Mode ---------------- */
     function enterDemoMode() {

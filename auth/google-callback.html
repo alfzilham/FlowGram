@@ -41,31 +41,34 @@
 
     <script>
         (function () {
-            const params = new URLSearchParams(window.location.hash.replace('#', '?'));
-            const accessToken = params.get('access_token');
-            const error = params.get('error');
+            var params = new URLSearchParams(window.location.hash.replace('#', '?'));
+            var accessToken = params.get('access_token');
+            var state = params.get('state');
+            var error = params.get('error');
 
-            const status = document.getElementById('status');
+            var status = document.getElementById('status');
 
             if (error) {
                 status.innerHTML = '<div class="error">✗</div><div>Login dibatalkan atau gagal.</div>';
-                setTimeout(() => window.close(), 2000);
+                setTimeout(function () { window.close(); }, 2000);
                 return;
             }
 
-            if (accessToken) {
-                if (window.opener && typeof window.opener.__fgAuthCallback === 'function') {
-                    window.opener.__fgAuthCallback(accessToken);
-                    status.innerHTML = '<div class="success">✓</div><div>Login berhasil! Menutup...</div>';
-                    setTimeout(() => window.close(), 1000);
-                } else {
-                    // Fallback: redirect with token in URL
-                    status.innerHTML = '<div class="success">✓</div><div>Mengalihkan...</div>';
-                    window.location.href = '/?google_token=' + encodeURIComponent(accessToken);
-                }
+            if (!accessToken || !state) {
+                status.innerHTML = '<div class="error">✗</div><div>Parameter tidak lengkap.</div>';
+                setTimeout(function () { window.close(); }, 2000);
+                return;
+            }
+
+            if (window.opener && typeof window.opener.__fgAuthCallback === 'function') {
+                window.opener.__fgAuthCallback(accessToken, state);
+                status.innerHTML = '<div class="success">✓</div><div>Login berhasil! Menutup...</div>';
+                setTimeout(function () { window.close(); }, 1000);
             } else {
-                status.innerHTML = '<div class="error">✗</div><div>Tidak ada token.</div>';
-                setTimeout(() => window.close(), 2000);
+                // Opener not available (popup blocker, cross-origin, or page was navigated).
+                // Do NOT place the bearer token in a URL query parameter (FG-003).
+                status.innerHTML = '<div class="error">✗</div><div>Popup tidak tersedia. Silakan coba login lagi dari halaman utama.</div>';
+                setTimeout(function () { window.close(); }, 3000);
             }
         })();
     </script>
