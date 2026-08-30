@@ -1,7 +1,7 @@
-/*
- * FlowGram - Onboarding Styles
- * Adaptasi dari ZORA AI, warna FlowGram Indigo
- */
+/* ========================================
+   FlowGram - Onboarding Styles (UI/UX Revamp)
+   Modern Glass & Ambient Glow
+   ======================================== */
 
 *,
 *::before,
@@ -9,40 +9,14 @@
     box-sizing: border-box;
 }
 
-* {
-    scrollbar-width: thin;
-    scrollbar-color: #DDDDDD transparent;
-}
-
-*::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
-}
-
-*::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-*::-webkit-scrollbar-thumb {
-    background: #DDDDDD;
-    border-radius: 99px;
-}
-
-*::-webkit-scrollbar-thumb:hover {
-    background: #BBBBBB;
-}
-
-*::-webkit-scrollbar-corner {
-    background: transparent;
-}
-
 html,
 body {
     margin: 0;
     height: 100%;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    background: var(--bg, #f0f0f0);
-    color: #18181B;
+    font-family: var(--font-family, 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif);
+    background: var(--bg, #F6F8FB);
+    color: var(--text, #0F172A);
+    transition: background-color var(--duration-normal) var(--ease-out);
 }
 
 /* ─── SHELL ─────────────────────────────────────────── */
@@ -54,40 +28,66 @@ body {
 
 /* ─── LEFT PANEL ─────────────────────────────────────── */
 .ob-left {
-    width: 420px;
+    width: 440px;
     flex-shrink: 0;
-    background: #ffffff;
+    background: var(--surface-glass-heavy, #FFFFFF);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
+    border-right: 1px solid var(--border, #E2E8F0);
     display: flex;
     flex-direction: column;
-    padding: 40px 48px;
+    padding: 48px 52px;
     position: relative;
-    z-index: 1;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.06);
+    z-index: 2;
+    box-shadow: var(--shadow-xl);
     overflow-y: auto;
-}
-
-@media (prefers-color-scheme: dark) {
-    .ob-left {
-        background: #212126;
-    }
 }
 
 .ob-brand {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-bottom: 48px;
+    gap: 12px;
+    margin-bottom: 40px;
 }
 
 .ob-brand img {
     width: 32px;
     height: 32px;
+    filter: drop-shadow(0 2px 8px var(--accent-glow));
+    transition: transform var(--duration-normal) var(--ease-spring);
+}
+
+.ob-brand:hover img {
+    transform: rotate(8deg) scale(1.1);
 }
 
 .ob-brand-name {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--accent, #6366F1);
+    font-size: 1.2rem;
+    font-weight: 800;
+    background: var(--accent-gradient, linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+/* Progress bar */
+.ob-progress {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 28px;
+}
+
+.ob-progress-dot {
+    height: 4px;
+    flex: 1;
+    border-radius: var(--radius-full);
+    background: var(--border, #E2E8F0);
+    transition: background var(--duration-normal) var(--ease-out);
+}
+
+.ob-progress-dot.active {
+    background: var(--accent-gradient, #6366F1);
+    box-shadow: 0 0 10px var(--accent-glow);
 }
 
 .ob-step {
@@ -96,92 +96,77 @@ body {
     color: var(--accent, #6366F1);
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
 }
 
 .ob-title {
     font-size: 2rem;
     font-weight: 800;
-    color: #111111;
+    color: var(--text, #0F172A);
     line-height: 1.2;
-    margin: 0 0 10px;
+    margin: 0 0 8px;
     letter-spacing: -0.03em;
 }
 
 .ob-desc {
-    font-size: 0.9rem;
-    color: #777777;
-    line-height: 1.7;
+    font-size: 0.92rem;
+    color: var(--text-muted, #64748B);
+    line-height: 1.65;
     margin: 0 0 32px;
-}
-
-/* Progress bar */
-.ob-progress {
-    display: flex;
-    gap: 6px;
-    margin-bottom: 36px;
-}
-
-.ob-progress-dot {
-    height: 4px;
-    flex: 1;
-    border-radius: 999px;
-    background: #e5e5e5;
-    transition: background 0.3s ease;
-}
-
-.ob-progress-dot.active {
-    background: var(--accent, #6366F1);
 }
 
 /* Form */
 .ob-label {
     display: block;
-    font-size: 0.82rem;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #555555;
+    color: var(--text, #0F172A);
     margin-bottom: 8px;
 }
 
 .ob-input {
     width: 100%;
-    padding: 14px 16px;
-    border: 1.5px solid #e5e5e5;
-    border-radius: 12px;
+    padding: 14px 18px;
+    border: 1px solid var(--border, #CBD5E1);
+    border-radius: var(--radius-md, 12px);
     font-size: 1rem;
-    color: #111111;
+    font-family: inherit;
+    color: var(--text, #0F172A);
     outline: none;
-    background: #fafafa;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    margin-bottom: 8px;
+    background: var(--surface, #FFFFFF);
+    transition: all var(--duration-fast) var(--ease-out);
+    margin-bottom: 6px;
     box-sizing: border-box;
+    box-shadow: var(--shadow-xs);
 }
 
 .ob-input:focus {
     border-color: var(--accent, #6366F1);
-    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-    background: #ffffff;
+    box-shadow: 0 0 0 3.5px var(--accent-glow);
+    background: var(--surface);
 }
 
 .ob-input::placeholder {
-    color: #bbbbbb;
+    color: var(--text-muted, #94A3B8);
 }
 
 .ob-error {
-    font-size: 0.82rem;
-    color: #EF4444;
+    font-size: 0.85rem;
+    color: var(--danger, #EF4444);
     min-height: 20px;
     margin-bottom: 16px;
+    font-weight: 500;
 }
 
 /* CTA Button */
 .ob-btn {
     width: 100%;
-    padding: 15px;
+    padding: 14px 22px;
     border: none;
-    border-radius: 12px;
-    background: var(--accent, #6366F1);
+    border-radius: var(--radius-md, 12px);
+    background: var(--accent-gradient, linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%));
     color: #ffffff;
+    font-family: inherit;
     font-size: 1rem;
     font-weight: 700;
     cursor: pointer;
@@ -189,26 +174,41 @@ body {
     align-items: center;
     justify-content: center;
     gap: 10px;
-    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: var(--shadow-sm), 0 4px 14px var(--accent-glow);
+    transition: all var(--duration-fast) var(--ease-out);
     margin-top: 8px;
     box-sizing: border-box;
 }
 
+.ob-btn span {
+    transition: transform var(--duration-fast) var(--ease-spring);
+}
+
 .ob-btn:hover:not(:disabled) {
-    background: #4F46E5;
+    background: var(--accent-gradient-hover);
     transform: translateY(-1px);
-    box-shadow: 0 8px 24px rgba(99, 102, 241, 0.25);
+    box-shadow: var(--shadow-md), 0 6px 20px var(--accent-glow);
+}
+
+.ob-btn:hover:not(:disabled) span {
+    transform: translateX(4px);
+}
+
+.ob-btn:active:not(:disabled) {
+    transform: translateY(0) scale(0.98);
 }
 
 .ob-btn:disabled {
     opacity: 0.45;
     cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
 }
 
 /* ─── RIGHT PANEL ────────────────────────────────────── */
 .ob-right {
     flex: 1;
-    background: linear-gradient(135deg, #EEF0FF 0%, #f5f5f5 50%, #f0f0f8 100%);
+    background: radial-gradient(circle at 50% 50%, var(--surface-hover) 0%, var(--bg) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -222,21 +222,32 @@ body {
     content: '';
     position: absolute;
     inset: 0;
-    background-image:
-        linear-gradient(rgba(99, 102, 241, 0.06) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(99, 102, 241, 0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image: radial-gradient(var(--dot, #D6DCE7) 1.5px, transparent 1.5px);
+    background-size: 32px 32px;
+    opacity: 0.7;
     pointer-events: none;
+}
+
+.ob-right::after {
+    content: '';
+    position: absolute;
+    width: 480px;
+    height: 480px;
+    border-radius: var(--radius-full);
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    pointer-events: none;
+    animation: floatOrb 6s ease-in-out infinite;
 }
 
 .ob-orb-wrap {
     position: relative;
     width: 160px;
     height: 160px;
-    margin-bottom: 32px;
+    margin-bottom: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 1;
 }
 
 .ob-logo-img {
@@ -244,36 +255,39 @@ body {
     height: auto;
     position: relative;
     z-index: 1;
+    filter: drop-shadow(0 12px 24px var(--accent-glow));
 }
 
 .ob-orb-float {
-    animation: obFloat 3s ease-in-out infinite;
+    animation: obFloat 3.5s ease-in-out infinite;
 }
 
 @keyframes obFloat {
-    0%,
-    100% {
-        transform: translateY(0);
+    0%, 100% {
+        transform: translateY(0) scale(1);
     }
     50% {
-        transform: translateY(-12px);
+        transform: translateY(-12px) scale(1.03);
     }
 }
 
 .ob-right-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    background: rgba(99, 102, 241, 0.1);
-    border: 1px solid rgba(99, 102, 241, 0.2);
-    border-radius: 999px;
-    padding: 6px 14px;
+    gap: 8px;
+    background: var(--surface-glass);
+    backdrop-filter: var(--blur-sm);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    padding: 6px 16px;
     font-size: 0.75rem;
     font-weight: 700;
     color: var(--accent, #6366F1);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     margin-bottom: 16px;
+    box-shadow: var(--shadow-xs);
+    z-index: 1;
 }
 
 .ob-right-badge::before {
@@ -282,24 +296,27 @@ body {
     height: 6px;
     border-radius: 50%;
     background: var(--accent, #6366F1);
+    box-shadow: 0 0 6px var(--accent);
 }
 
 .ob-right-title {
-    font-size: 1.6rem;
+    font-size: 1.8rem;
     font-weight: 800;
-    color: #111111;
+    color: var(--text, #0F172A);
     text-align: center;
-    margin: 0 0 8px;
-    letter-spacing: -0.03em;
+    margin: 0 0 10px;
+    letter-spacing: -0.02em;
+    z-index: 1;
 }
 
 .ob-right-desc {
-    font-size: 0.9rem;
-    color: #777777;
+    font-size: 0.95rem;
+    color: var(--text-secondary, #475569);
     text-align: center;
-    max-width: 280px;
-    line-height: 1.7;
+    max-width: 300px;
+    line-height: 1.65;
     margin: 0;
+    z-index: 1;
 }
 
 /* ─── RESPONSIVE ──────────────────────────────────────── */
@@ -310,8 +327,9 @@ body {
 
     .ob-left {
         width: 100%;
-        padding: 32px 24px;
+        padding: 40px 24px;
         box-shadow: none;
+        border-right: none;
     }
 
     .ob-right {
