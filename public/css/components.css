@@ -135,8 +135,7 @@
 /* ---------- Node (Modern Rounded & Depth) ---------- */
 .node {
     position: absolute;
-    min-width: 190px;
-    max-width: 280px;
+    width: auto;
     user-select: none;
 }
 

@@ -31,10 +31,6 @@
     .tb-logo {
         height: 24px;
     }
-
-    .node {
-        max-width: 240px;
-    }
 }
 
 /* ---------- Mobile (≤768px) ---------- */
@@ -104,10 +100,6 @@
         line-height: 1.5;
         top: 38%;
         padding: 20px 24px;
-    }
-
-    .node {
-        max-width: 210px;
     }
 
     /* --- Modern Glass Bottom Sheet --- */
