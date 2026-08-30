@@ -93,7 +93,20 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
 
 ---
 
-### 6. Keamanan & Integritas Data
+### 6. Backend, API & Security Hardening (`api/`, `vercel.json`, `package-lock.json`)
+- Backend Hono direstrukturisasi menjadi lapisan MVC: `controllers/`, `services/`, `repositories/`, `models/`, `validators/`, dan `middleware/`.
+- Ownership project dan folder diverifikasi berdasarkan `user_id` dari JWT pada operasi baca maupun perubahan data.
+- `folderId` divalidasi agar project hanya dapat menggunakan folder milik user yang sedang login.
+- Workflow JSON divalidasi server-side sebelum disimpan, termasuk tipe data, jumlah node/koneksi, ID unik, referensi koneksi, connector side, koordinat, warna, panjang teks, dan ukuran payload.
+- Request API dengan `Content-Length` di atas 4 MiB ditolak untuk membatasi input berukuran berlebihan.
+- CORS menggunakan allowlist `ALLOWED_ORIGINS`; saat konfigurasi kosong, mode development hanya menerima origin localhost yang tepat.
+- Error internal ditangani secara generik agar detail implementasi tidak bocor ke client.
+- Validasi Google profile diperketat dengan pemeriksaan `sub`, `email`, dan `email_verified`.
+- Security headers ditambahkan melalui `vercel.json`.
+- Endpoint, HTTP method, response contract, format workflow, dan perilaku demo/login tetap dipertahankan.
+- `package-lock.json` ditambahkan untuk menjaga dependency dan deployment tetap reproducible.
+
+### 7. Keamanan & Integritas Data
 - Tidak ada data input pengguna (*project name*, *node text*, *folder name*, *user name*) yang dirender menggunakan `innerHTML`.
 - Semua manipulasi teks menggunakan DOM API aman (`textContent` / `document.createTextNode`).
-- Kontrak penyimpanan `localStorage` (`wf_builder_theme`, `wf_font_pref`) dan API backend tetap dipertahankan 100% tanpa perubahan logika bisnis.
+- Perubahan UI/UX tidak mengubah kontrak penyimpanan `localStorage` (`wf_builder_theme`, `wf_font_pref`) maupun kontrak endpoint API. Backend tetap mempertahankan kontrak tersebut dengan tambahan validasi keamanan dan kontrol ownership.
