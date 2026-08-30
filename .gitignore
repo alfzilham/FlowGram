@@ -17,3 +17,7 @@ node_modules/
 
 # Graphify
 graphify-out/
+
+# Logs
+logs/
+*.log
