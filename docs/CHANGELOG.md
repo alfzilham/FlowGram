@@ -20,6 +20,7 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 - Neon PostgreSQL Pool kini dikonfigurasi dengan `ws` WebSocket constructor agar koneksi database bekerja pada runtime Node/Docker.
 - Ditambahkan `db/schema.sql` dan `scripts/init-db.js` untuk inisialisasi idempotent tabel `users`, `folders`, `projects`, serta index ownership.
+- Dependency `hono` diperbarui dan runtime JWT dibatasi secara eksplisit ke algoritma `HS256`; CORS tidak lagi mengaktifkan credential cookies yang tidak digunakan.
 - Login sekarang membuka popup secara synchronous sebelum request konfigurasi agar tidak mudah diblokir browser.
 - Hasil callback menunggu proses exchange token selesai sebelum menampilkan status berhasil.
 - Reload halaman hanya dilakukan setelah login sukses; error backend tetap terlihat dan tombol login dapat digunakan kembali.

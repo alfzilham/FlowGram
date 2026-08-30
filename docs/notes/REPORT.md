@@ -619,6 +619,22 @@ FlowGram has a reasonable baseline for a small application: authenticated API ro
 
 Before any MVC restructuring, fix or explicitly track FG-001 through FG-003, define the intended OAuth/session model, and record the database ownership invariant for project-folder relationships. The codebase can be restructured incrementally, but security behavior must be regression-tested at each move. In particular, the future structure must not hide authorization in frontend adapters, move JWT verification out of the API boundary, or accidentally reintroduce HTML concatenation during view extraction.
 
+## Post-Deployment Security Re-Audit — 2026-08-30
+
+### Findings and verification
+
+- **Confirmed operational issue resolved:** Docker login initially returned HTTP 500 because the Neon database had no `users` relation (`SQLSTATE 42P01`). `db/schema.sql` and `scripts/init-db.js` were added; the idempotent initializer was executed against the configured Neon database and the public health/API smoke tests passed.
+- **Confirmed dependency issue resolved:** `npm audit --omit=dev` identified a moderate Hono advisory. Hono was updated to `4.13.5`; a subsequent audit reported zero vulnerabilities.
+- **Hardening applied:** JWT verification and signing explicitly use `HS256`; CORS no longer enables credential cookies because the application authenticates with the `Authorization` header.
+- **Previously fixed controls rechecked:** server-side ownership predicates, folder ownership validation, workflow validation, OAuth state correlation, removal of token query fallback, generic API errors, request-size guard, and security headers remain present.
+- **Remaining security limitations:** JWT is still stored in `localStorage`; OAuth still uses the implicit browser flow; CSP/SRI and automated tests are not implemented. These remain separate hardening tasks and were not silently changed during this re-audit.
+
+### Browser/runtime observations
+
+- `Tracking Prevention blocked access to storage` is a browser privacy warning, not a backend failure.
+- `Cross-Origin-Opener-Policy policy would block the window.closed call` is caused by popup close polling after navigation to Google. It does not explain the HTTP 500; popup-blocked and popup-closed outcomes are handled by the login flow.
+- No destructive, load, brute-force, or third-party testing was performed.
+
 # Appendix A Codex Prompt for MVC Restructuring
 
 Copy and give the following prompt to a future Codex session only after reviewing this audit:

@@ -12,7 +12,8 @@ export function createCors() {
             if (config.allowedOrigins.includes(origin)) return origin;
             return undefined;
         },
-        credentials: true,
+        // Authentication uses the Authorization header, not cookies.
+        credentials: false,
         allowMethods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
         allowHeaders: ['Content-Type', 'Authorization']
     });

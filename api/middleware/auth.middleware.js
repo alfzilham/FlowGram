@@ -6,7 +6,7 @@ export function verifyJWT(c) {
     if (!auth || !auth.startsWith('Bearer ')) return null;
     const token = auth.slice(7);
     try {
-        return jwt.verify(token, config.jwtSecret);
+        return jwt.verify(token, config.jwtSecret, { algorithms: ['HS256'] });
     } catch {
         return null;
     }

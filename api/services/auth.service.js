@@ -42,7 +42,7 @@ export async function exchangeGoogleToken(googleToken) {
     const token = jwt.sign(
         { userId: user.id, email: user.email },
         config.jwtSecret,
-        { expiresIn: config.jwtExpiresIn }
+        { expiresIn: config.jwtExpiresIn, algorithm: 'HS256' }
     );
 
     return {
