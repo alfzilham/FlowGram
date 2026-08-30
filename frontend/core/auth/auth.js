@@ -9,9 +9,15 @@
     const STORAGE_KEY = 'fg_token';
     const USER_KEY = 'fg_user';
 
-    function getConfig() {
-        const meta = document.querySelector('meta[name="google-client-id"]');
-        return meta ? meta.getAttribute('content') : '';
+    async function getConfig() {
+        try {
+            const response = await fetch('/api/config', { cache: 'no-store' });
+            if (!response.ok) return '';
+            const data = await response.json();
+            return typeof data.googleClientId === 'string' ? data.googleClientId : '';
+        } catch (e) {
+            return '';
+        }
     }
 
     /* ---------------- Token Management ---------------- */
@@ -94,8 +100,8 @@
     /* ---------------- Google OAuth ---------------- */
     let authResolve = null;
 
-    function handleGoogleAuth() {
-        const clientId = getConfig();
+    async function handleGoogleAuth() {
+        const clientId = await getConfig();
         if (!clientId) {
             showAuthError('Google Sign-In tidak dikonfigurasi.');
             return;

@@ -6,12 +6,16 @@ import { requireAuth } from './middleware/auth.middleware.js';
 import * as authController from './controllers/auth.controller.js';
 import * as projectController from './controllers/project.controller.js';
 import * as folderController from './controllers/folder.controller.js';
+import config from './config/index.js';
 
 const app = new Hono();
 
 app.use('/*', createCors());
 app.use('/api/*', enforceRequestLimit);
 app.onError(errorHandler);
+
+// The OAuth client ID is public configuration. Secrets are never exposed here.
+app.get('/api/config', (c) => c.json({ googleClientId: config.googleClientId || null }));
 
 /* ---------- Auth ---------- */
 app.post('/api/auth/google', (c) => authController.handleGoogleLogin(c));

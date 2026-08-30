@@ -114,7 +114,8 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
 - CORS menggunakan allowlist `ALLOWED_ORIGINS`; saat konfigurasi kosong, mode development hanya menerima origin localhost yang tepat.
 - Error internal ditangani secara generik agar detail implementasi tidak bocor ke client.
 - Validasi Google profile diperketat dengan pemeriksaan `sub`, `email`, dan `email_verified`.
-- Security headers ditambahkan melalui `vercel.json`.
+- Google OAuth Client ID frontend kini dibaca dari environment server melalui `GET /api/config`; tidak lagi diduplikasi sebagai nilai hardcoded pada HTML.
+- Security headers disediakan oleh middleware server Node.
 - Endpoint, HTTP method, response contract, format workflow, dan perilaku demo/login tetap dipertahankan.
 - `package-lock.json` ditambahkan untuk menjaga dependency dan deployment tetap reproducible.
 
