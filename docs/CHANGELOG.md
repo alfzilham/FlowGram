@@ -82,6 +82,7 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
 - **Floating Glass Toolbar**:
   - Toolbar mengambang di bagian atas canvas dengan latar kaca *frosted glass* (`backdrop-filter: var(--blur-md)`), sudut membulat 22px (`var(--radius-xl)`), dan multi-tier drop shadow.
   - Tombol toolbar dengan efek hover *elevation* dan *active spring scale*.
+  - Pembaruan ikon Reset Tampilan (`#btn-reset-view`) menggunakan ikon Lucide `rotate-ccw` yang lebih modern, bersih, dan proporsional.
   - Badge zoom level dengan angka tabular (*monospaced tabular numbers*).
 - **Modern Canvas & Grid**:
   - Latar kanvas dengan pola *radial dot grid* yang halus dan bersih.
