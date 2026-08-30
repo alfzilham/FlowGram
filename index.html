@@ -118,7 +118,7 @@
       <div id="sidebar-folders">
         <div id="folders-header">
           <span id="folders-label">Folder</span>
-          <button id="btn-new-folder" title="Folder baru">
+          <button id="btn-new-folder" title="Folder baru" aria-label="Buat folder baru">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round">
               <path d="M12 5v14M5 12h14" />
@@ -133,14 +133,14 @@
       <!-- Sidebar Profile -->
       <div id="sidebar-profile">
         <div class="profile-avatar" id="profile-avatar">
-          <img id="profile-avatar-img" src="" alt="" style="display:none">
+          <img id="profile-avatar-img" src="" alt="Foto profil" style="display:none">
           <span id="profile-avatar-placeholder" class="profile-avatar-placeholder"></span>
         </div>
         <div class="profile-info">
           <div class="profile-name" id="profile-name">Guest</div>
           <div class="profile-email" id="profile-email">—</div>
         </div>
-        <button class="profile-menu-btn" id="profile-menu-btn">
+        <button class="profile-menu-btn" id="profile-menu-btn" aria-label="Menu profil" title="Opsi profil">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
             <circle cx="12" cy="5" r="1" />
@@ -161,7 +161,7 @@
 
       <!-- Top bar -->
       <header id="topbar">
-        <button id="btn-hamburger" title="Menu">
+        <button id="btn-hamburger" title="Menu" aria-label="Buka navigasi menu">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
             stroke-linejoin="round">
             <path d="M3 12h18M3 6h18M3 18h18" />
@@ -173,10 +173,10 @@
             <circle cx="11" cy="11" r="8" />
             <path d="m21 21-4.35-4.35" />
           </svg>
-          <input type="text" id="search-input" placeholder="Cari project…">
+          <input type="text" id="search-input" placeholder="Cari project…" aria-label="Cari project">
         </div>
         <div id="topbar-actions">
-          <button id="btn-theme-home" title="Ganti tema">
+          <button id="btn-theme-home" title="Ganti tema" aria-label="Ganti tema gelap dan terang">
             <svg class="tb-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
               stroke-linecap="round" stroke-linejoin="round">
               <circle cx="12" cy="12" r="4" />
@@ -189,14 +189,14 @@
             </svg>
           </button>
           <div class="user-avatar" id="user-avatar" title="Akun" style="display:none">
-            <img id="avatar-img" src="" alt="" style="display:none">
+            <img id="avatar-img" src="" alt="Avatar" style="display:none">
             <span id="avatar-placeholder" class="avatar-placeholder"></span>
             <div class="user-dropdown" id="user-dropdown">
               <div class="user-dropdown-header" id="dropdown-email"></div>
               <div class="user-dropdown-item danger" id="btn-logout"><i class="bi bi-box-arrow-right"></i> Keluar</div>
             </div>
           </div>
-          <button id="btn-new-project" class="btn-primary">
+          <button id="btn-new-project" class="btn-primary" aria-label="Buat project baru">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
               <path d="M12 5v14M5 12h14" />
             </svg>
