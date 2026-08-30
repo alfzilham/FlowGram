@@ -8,6 +8,14 @@
     box-sizing: border-box;
 }
 
+html,
+body {
+    height: 100%;
+    height: 100dvh;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: var(--font-family);
     color: var(--text);
@@ -21,8 +29,9 @@ body {
 
 #app {
     position: relative;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    height: 100%;
+    height: 100dvh;
     overflow: hidden;
 }
 

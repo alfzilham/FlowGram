@@ -38,11 +38,14 @@
 
     /* --- Toolbar → Floating Glass Bottom Bar --- */
     #toolbar {
-        top: auto;
-        bottom: 16px;
-        left: 12px;
-        right: 12px;
-        transform: none;
+        position: fixed !important;
+        top: auto !important;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px)) !important;
+        left: 12px !important;
+        right: 12px !important;
+        transform: none !important;
+        z-index: 100 !important;
+        display: flex !important;
         border-radius: var(--radius-xl);
         background: var(--surface-glass-heavy);
         backdrop-filter: var(--blur-lg);
@@ -261,9 +264,14 @@
 /* ---------- Small Mobile (≤480px) ---------- */
 @media (max-width: 480px) {
     #toolbar {
-        bottom: 12px;
-        left: 8px;
-        right: 8px;
+        position: fixed !important;
+        top: auto !important;
+        bottom: calc(10px + env(safe-area-inset-bottom, 0px)) !important;
+        left: 8px !important;
+        right: 8px !important;
+        transform: none !important;
+        z-index: 100 !important;
+        display: flex !important;
         padding: 5px 6px;
         border-radius: var(--radius-lg);
     }
