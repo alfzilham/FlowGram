@@ -57,7 +57,21 @@ FlowGram runs in the browser for the frontend, with a serverless backend on Verc
    npm start
    ```
 
-5. Open `http://localhost:3000` in your browser.
+5. Open `http://localhost:3001` in your browser.
+
+If this is a new Neon database, initialize the schema once before login:
+
+```bash
+node --env-file=.env.local scripts/init-db.js
+```
+
+When using Docker:
+
+```bash
+docker compose -p flowgram exec app node scripts/init-db.js
+```
+
+The initializer is idempotent and does not drop or delete existing data.
 
 ### Docker
 

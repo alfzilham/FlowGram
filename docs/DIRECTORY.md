@@ -10,6 +10,8 @@ api/
   repositories/{user,project,folder}.repository.js
   models/{user,project,folder,workflow}.model.js
   validators/{auth,project,folder}.validator.js
+db/schema.sql
+scripts/init-db.js
 frontend/
   core/auth/auth.js
   core/persistence/shared.js

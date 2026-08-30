@@ -14,4 +14,6 @@ Demo mode is local-only through localStorage and the `demo` sentinel. Login mode
 
 Required backend configuration: `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `DATABASE_URL`, `JWT_SECRET`; `ALLOWED_ORIGINS` is recommended in deployment. The frontend and API are served together by `server/index.js`, `npm start`, or Docker.
 
+For a new Neon database, run `node --env-file=.env.local scripts/init-db.js` once, or execute the equivalent command through the Docker container. The schema initializer is idempotent and creates `users`, `folders`, `projects`, and ownership indexes without dropping data.
+
 Security invariants: never trust client user IDs; preserve JWT ownership predicates; validate workflow data before persistence; preserve OAuth state validation, CORS allowlisting, and the request-size guard.

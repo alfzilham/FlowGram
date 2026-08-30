@@ -19,6 +19,7 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 ## [OAuth Login Flow Fixes] — 2026-08-30
 
 - Neon PostgreSQL Pool kini dikonfigurasi dengan `ws` WebSocket constructor agar koneksi database bekerja pada runtime Node/Docker.
+- Ditambahkan `db/schema.sql` dan `scripts/init-db.js` untuk inisialisasi idempotent tabel `users`, `folders`, `projects`, serta index ownership.
 - Login sekarang membuka popup secara synchronous sebelum request konfigurasi agar tidak mudah diblokir browser.
 - Hasil callback menunggu proses exchange token selesai sebelum menampilkan status berhasil.
 - Reload halaman hanya dilakukan setelah login sukses; error backend tetap terlihat dan tombol login dapat digunakan kembali.
