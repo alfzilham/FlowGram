@@ -67,7 +67,7 @@ With Docker installed and `.env.local` configured:
 docker compose up --build
 ```
 
-The application and Hono API are served together at `http://localhost:3000`. Neon remains the database provider.
+The application and Hono API are served together at `http://localhost:3001` by default. The host port can be changed with `FLOWGRAM_HOST_PORT`; the container port remains `3000`. Neon remains the database provider.
 
 > ⚠️ Do not open `index.html` directly via `file://` — localStorage may be blocked by the browser's tracking prevention.
 
