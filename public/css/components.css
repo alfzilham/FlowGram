@@ -132,10 +132,12 @@
     fill: var(--connection-stroke-active);
 }
 
-/* ---------- Node (Modern Rounded & Depth) ---------- */
+/* ---------- Node (Modern Rounded & Dynamic Sizing) ---------- */
 .node {
     position: absolute;
-    width: auto;
+    width: max-content;
+    min-width: 120px;
+    max-width: 360px;
     user-select: none;
 }
 
@@ -174,7 +176,8 @@
     line-height: 1.55;
     color: var(--text);
     outline: none;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: break-word;
     white-space: pre-wrap;
     min-height: 22px;
     text-align: center;

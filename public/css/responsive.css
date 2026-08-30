@@ -102,6 +102,10 @@
         padding: 20px 24px;
     }
 
+    .node {
+        max-width: 280px;
+    }
+
     /* --- Modern Glass Bottom Sheet --- */
     .ctx-menu {
         position: fixed !important;
@@ -267,6 +271,10 @@
     .tb-btn {
         height: 34px;
         min-width: 34px;
+    }
+
+    .node {
+        max-width: 220px;
     }
 
     .tb-logo {
