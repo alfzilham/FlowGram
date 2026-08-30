@@ -1,16 +1,18 @@
 /* ========================================
-   Loading Overlay
+   Loading Overlay — Modern Glass & Glow
    ======================================== */
 
 #loader-overlay {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: var(--bg);
+    background: var(--surface-glass-heavy);
+    backdrop-filter: var(--blur-lg);
+    -webkit-backdrop-filter: var(--blur-lg);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.35s ease, visibility 0.35s ease;
+    transition: opacity var(--duration-slow) var(--ease-out), visibility var(--duration-slow) var(--ease-out);
 }
 
 #loader-overlay.fade-out {
@@ -19,11 +21,12 @@
     pointer-events: none;
 }
 
-/* ---------- Peg-top spinner (3 layers) ---------- */
+/* ---------- Modern Glowing Spinner (3 layers) ---------- */
 .loader-spinner {
     position: relative;
-    width: 60px;
-    height: 60px;
+    width: 64px;
+    height: 64px;
+    filter: drop-shadow(0 0 16px var(--accent-glow));
 }
 
 .loader-spinner svg {
@@ -34,20 +37,20 @@
 }
 
 .loader-spinner svg:nth-child(1) {
-    width: 60px;
-    height: 60px;
-    margin-top: -30px;
-    margin-left: -30px;
-    animation: loaderSpin1 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    width: 64px;
+    height: 64px;
+    margin-top: -32px;
+    margin-left: -32px;
+    animation: loaderSpin1 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
 }
 
 .loader-spinner svg:nth-child(2) {
-    width: 44px;
-    height: 44px;
-    margin-top: -22px;
-    margin-left: -22px;
-    animation: loaderSpin2 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    animation-delay: -0.18s;
+    width: 46px;
+    height: 46px;
+    margin-top: -23px;
+    margin-left: -23px;
+    animation: loaderSpin2 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: -0.15s;
 }
 
 .loader-spinner svg:nth-child(3) {
@@ -55,15 +58,14 @@
     height: 28px;
     margin-top: -14px;
     margin-left: -14px;
-    animation: loaderSpin1 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
-    animation-delay: -0.36s;
+    animation: loaderSpin1 1.2s cubic-bezier(0.45, 0.05, 0.55, 0.95) infinite;
+    animation-delay: -0.3s;
 }
 
 @keyframes loaderSpin1 {
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(360deg);
     }
@@ -73,7 +75,6 @@
     0% {
         transform: rotate(0deg);
     }
-
     100% {
         transform: rotate(-360deg);
     }

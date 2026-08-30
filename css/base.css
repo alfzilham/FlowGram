@@ -1,5 +1,11 @@
 :root {
-    --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Inter, Roboto, Helvetica, Arial, sans-serif;
+    --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
 }
 
 body {
@@ -7,8 +13,10 @@ body {
     color: var(--text);
     overflow: hidden;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     background: var(--bg);
-    transition: background-color .2s ease, color .2s ease;
+    line-height: 1.5;
+    transition: background-color var(--duration-normal) var(--ease-out), color var(--duration-normal) var(--ease-out);
 }
 
 #app {
@@ -16,4 +24,40 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
+}
+
+/* ── Custom Scrollbars ── */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--border-strong);
+    border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--text-muted);
+}
+
+/* ── Accessible Focus Rings ── */
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px var(--surface), 0 0 0 4px var(--accent-glow) !important;
+    border-color: var(--accent) !important;
+}
+
+/* ── Selection Color ── */
+::selection {
+    background: var(--accent-soft);
+    color: var(--accent);
 }
