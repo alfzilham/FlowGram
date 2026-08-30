@@ -1,4 +1,9 @@
-import { Pool } from '@neondatabase/serverless';
+import { neonConfig, Pool } from '@neondatabase/serverless';
+import ws from 'ws';
+
+// Neon Pool uses WebSockets in Node.js. The browser WebSocket global is not
+// available in every supported Node runtime, so provide an explicit adapter.
+neonConfig.webSocketConstructor = ws;
 
 const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
