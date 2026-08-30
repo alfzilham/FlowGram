@@ -111,9 +111,10 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
 
 ---
 
-### 5. Responsive & Mobile Optimization (`public/css/responsive.css`, `css/responsive.css`)
+### 5. Responsive & Mobile Optimization (`public/css/responsive.css`, `public/css/base.css`, `css/responsive.css`, `css/base.css`)
 - **Mobile Floating Bottom Bar**:
   - Toolbar canvas bergeser ke bagian bawah layar pada perangkat mobile dengan navigasi swipe horizontal dan target sentuh ramah jari (*min-height 38px*).
+  - Posisi toolbar dikunci menggunakan `position: fixed !important`, `z-index: 100`, dan `env(safe-area-inset-bottom)` serta dukungan `100dvh` (Dynamic Viewport Height) pada kontainer utama agar tidak terdorong keluar layar oleh address bar browser mobile.
 - **Mobile Glass Bottom Sheet**:
   - Context menu dan pemilih icon otomatis bertransformasi menjadi *bottom sheet drawer* dengan handle bar dan transisi slide-up yang mulus pada layar smartphone (≤768px).
 
