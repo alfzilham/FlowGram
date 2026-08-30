@@ -6,7 +6,7 @@ FlowGram lets a visitor or authenticated user create visual projects containing 
 
 - Demo mode uses localStorage without an account.
 - Login uses Google OAuth, application JWT (30 days), onboarding name update, project/folder CRUD, and account deletion.
-- Builder supports node editing, connections, selection, drag/pan/zoom, undo/redo, clipboard, JSON import/export, and debounced autosave.
+- Builder supports dynamic node editing (`width: auto`), connections, selection, drag/pan/zoom, undo/redo, clipboard, JSON import/export, and debounced autosave.
 - Public workflow export remains `{ nodes, connections }`; viewport is not exported.
 
 ## API contract
