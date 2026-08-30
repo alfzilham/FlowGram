@@ -101,10 +101,20 @@
     let authResolve = null;
 
     async function handleGoogleAuth() {
+        // Open synchronously from the click handler so popup blockers do not
+        // reject it while the public config request is still in flight.
+        const popup = window.open('', 'google-auth', 'width=500,height=650');
+        if (!popup) {
+            const error = 'Popup login diblokir browser. Izinkan popup lalu coba lagi.';
+            showAuthError(error);
+            return { ok: false, error: error };
+        }
+
         const clientId = await getConfig();
         if (!clientId) {
+            popup.close();
             showAuthError('Google Sign-In tidak dikonfigurasi.');
-            return;
+            return { ok: false, error: 'Google Sign-In tidak dikonfigurasi.' };
         }
 
         const redirectUri = window.location.origin + '/auth/google-callback.html';
@@ -120,15 +130,32 @@
             '&state=' + encodeURIComponent(state);
 
         return new Promise((resolve) => {
-            authResolve = resolve;
-            window.open(url, 'google-auth', 'width=500,height=650');
+            let settled = false;
+            let closeWatcher = null;
+
+            const finish = function (result) {
+                if (settled) return;
+                settled = true;
+                if (closeWatcher) clearInterval(closeWatcher);
+                if (authResolve === finish) authResolve = null;
+                resolve(result);
+            };
+
+            authResolve = finish;
+            popup.location.href = url;
+            closeWatcher = setInterval(function () {
+                if (!popup.closed) return;
+                finish({ ok: false, cancelled: true, error: 'Login dibatalkan.' });
+            }, 500);
         });
     }
 
     window.__fgAuthCallback = async function (googleToken, state) {
         if (!verifyState(state)) {
-            showAuthError('Login gagal: state tidak valid atau sudah kedaluwarsa.');
-            return;
+            const error = 'Login gagal: state tidak valid atau sudah kedaluwarsa.';
+            showAuthError(error);
+            if (authResolve) authResolve({ ok: false, error: error });
+            return { ok: false, error: error };
         }
 
         try {
@@ -146,30 +173,32 @@
                     // silent — migration best-effort
                 }
                 window.location.href = '/';
-                return;
+                return { ok: true, user: user, redirected: true };
             }
 
             if (isNew) {
                 window.location.href = '/onboarding.html';
-                return;
+                return { ok: true, user: user, redirected: true };
             }
 
             // Returning user — reload biar FGAuth.init() jalan lagi
             if (authResolve) {
-                authResolve(user);
-                authResolve = null;
+                authResolve({ ok: true, user: user });
             } else {
                 // Called from auth gate without promise — reload
                 window.location.reload();
             }
+            return { ok: true, user: user };
         } catch (e) {
-            if (authResolve) { authResolve(null); authResolve = null; }
-            showAuthError(e.message || 'Gagal login dengan Google');
+            const error = e.message || 'Gagal login dengan Google';
+            if (authResolve) authResolve({ ok: false, error: error });
+            showAuthError(error);
+            return { ok: false, error: error };
         }
     };
 
     // FG-003: Removed google_token query string fallback.
-    // The popup callback now uses postMessage with state validation.
+    // The popup callback uses a same-origin opener call with state validation.
     // If opener is unavailable, the callback page shows an error instead of
     // placing the bearer token in a URL query parameter.
 
@@ -209,7 +238,6 @@
         if (token === 'demo') {
             window.__fgIsDemo = true;
             closeAuthGate();
-            window.dispatchEvent(new CustomEvent('fg-auth-ready'));
             return 'demo';
         }
 
@@ -217,6 +245,8 @@
             validateToken().then(function (user) {
                 if (user) {
                     closeAuthGate();
+                } else {
+                    showAuthGate();
                 }
                 window.dispatchEvent(new CustomEvent('fg-auth-ready'));
             });
@@ -253,9 +283,15 @@
             btnGoogle.addEventListener('click', async () => {
                 btnGoogle.disabled = true;
                 btnGoogle.textContent = 'Memproses...';
-                await handleGoogleAuth();
-                // Returning user — reload page to trigger FGAuth.init()
-                window.location.reload();
+                const result = await handleGoogleAuth();
+                if (result && result.ok) {
+                    // Returning user — reload page to trigger FGAuth.init().
+                    // New users/migrations navigate inside __fgAuthCallback.
+                    if (!result.redirected) window.location.reload();
+                } else {
+                    btnGoogle.disabled = false;
+                    btnGoogle.textContent = 'Masuk dengan Google';
+                }
             });
         }
 

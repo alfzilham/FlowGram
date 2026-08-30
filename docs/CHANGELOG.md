@@ -16,6 +16,16 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [OAuth Login Flow Fixes] — 2026-08-30
+
+- Login sekarang membuka popup secara synchronous sebelum request konfigurasi agar tidak mudah diblokir browser.
+- Hasil callback menunggu proses exchange token selesai sebelum menampilkan status berhasil.
+- Reload halaman hanya dilakukan setelah login sukses; error backend tetap terlihat dan tombol login dapat digunakan kembali.
+- Popup yang diblokir atau ditutup pengguna ditangani dengan status pembatalan yang jelas.
+- Duplikasi event `fg-auth-ready` pada demo mode dihapus.
+
+---
+
 ## [UI/UX Revamp] — 2026-08-30
 
 Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) FlowGram dengan memadukan 3 arah desain utama:

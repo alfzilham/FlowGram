@@ -127,9 +127,20 @@
             }
 
             if (window.opener && typeof window.opener.__fgAuthCallback === 'function') {
-                window.opener.__fgAuthCallback(accessToken, state);
-                status.innerHTML = '<div class="status-badge success-badge">✓</div><div class="status-title success-text">Login berhasil! Menutup...</div>';
-                setTimeout(function () { window.close(); }, 1000);
+                Promise.resolve(window.opener.__fgAuthCallback(accessToken, state))
+                    .then(function (result) {
+                        if (!result || result.ok !== true) {
+                            status.innerHTML = '<div class="status-badge error-badge">✕</div><div class="status-title error-text">Login gagal. Silakan coba lagi.</div>';
+                            setTimeout(function () { window.close(); }, 3000);
+                            return;
+                        }
+                        status.innerHTML = '<div class="status-badge success-badge">✓</div><div class="status-title success-text">Login berhasil! Menutup...</div>';
+                        setTimeout(function () { window.close(); }, 1000);
+                    })
+                    .catch(function () {
+                        status.innerHTML = '<div class="status-badge error-badge">✕</div><div class="status-title error-text">Login gagal. Silakan coba lagi.</div>';
+                        setTimeout(function () { window.close(); }, 3000);
+                    });
             } else {
                 status.innerHTML = '<div class="status-badge error-badge">✕</div><div class="status-title error-text">Popup tidak tersedia. Silakan coba login lagi dari halaman utama.</div>';
                 setTimeout(function () { window.close(); }, 3000);
