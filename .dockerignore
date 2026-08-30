@@ -1,0 +1,13 @@
+.git
+.gitignore
+.vercel
+node_modules
+logs
+*.log
+.env
+.env.*
+!.env.example
+README.md
+docs
+css
+assets
