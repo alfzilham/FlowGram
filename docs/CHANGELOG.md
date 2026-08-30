@@ -4,6 +4,18 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Local Docker Deployment] — 2026-08-30
+
+- Deployment dipindahkan dari Vercel Functions ke Hono pada Node.js melalui `server/index.js`.
+- Ditambahkan `Dockerfile` dan `docker-compose.yml` untuk menjalankan aplikasi secara lokal pada port `3000`.
+- Frontend static dan API Hono kini disajikan oleh server yang sama.
+- Neon tetap digunakan sebagai database eksternal melalui `DATABASE_URL`.
+- Security headers yang sebelumnya berada di konfigurasi Vercel dipindahkan ke middleware server Node.
+- Ditambahkan endpoint health check `GET /health`.
+- `vercel.json` dan dependency CLI Vercel dihapus dari runtime project.
+
+---
+
 ## [UI/UX Revamp] — 2026-08-30
 
 Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) FlowGram dengan memadukan 3 arah desain utama:
