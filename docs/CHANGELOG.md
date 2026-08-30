@@ -33,7 +33,7 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
 1. **Modern Glassmorphism**: Penggunaan *backdrop-filter blur*, *layered elevation shadows*, serta gradasi aksen halus (*indigo-to-violet*).
 2. **Soft & Rounded Geometry**: Radius sudut yang lebih lembut dan ramah (*rounded corners* 12px – 24px) di seluruh kartu, modal, input, tombol, serta node builder.
 3. **Playful Micro-Interactions**: Efek hover *lift/scale/shadow*, transisi *spring animation*, *glowing pulse connector ports*, serta animasi *flowing dashed connection lines*.
-4. **Flexible Dynamic Node Sizing**: Penyesuaian dimensi `.node` kanvas menjadi `width: auto` tanpa batas kaku `min-width`/`max-width` agar memanjang dan memendek secara alami mengikuti konten teks dan ikon.
+4. **Dynamic Auto-Content Node Sizing**: Penyesuaian dimensi `.node` kanvas menjadi `width: max-content` dengan `min-width: 120px`, `max-width: 360px`, `word-break: normal`, dan `overflow-wrap: break-word` agar teks melebar secara alami tanpa terpotong per huruf vertikal.
 
 ---
 
@@ -86,7 +86,7 @@ Pembaruan menyeluruh pada antarmuka pengguna (UI) dan pengalaman pengguna (UX) F
   - Marquee selection box dengan efek garis putus-putus aksen dan latar glowing transparan.
   - Empty state kanvas dengan wadah kaca elegan dan panduan shortcut interaktif.
 - **Node Components**:
-  - Ukuran node fleksibel dengan `width: auto` tanpa batasan kaku `min-width`/`max-width`, otomatis menyesuaikan panjang teks dan ikon.
+  - Ukuran node dinamis dengan `width: max-content`, `min-width: 120px`, `max-width: 360px`, `word-break: normal`, dan `overflow-wrap: break-word` yang otomatis menyesuaikan panjang teks secara horizontal tanpa terpotong per huruf vertikal.
   - Node card dengan sudut membulat 18px, border tipis berbayang, dan animasi drag *spring scale*.
   - Status terpilih (*selected state*) dengan ring glow aksen (`0 0 0 3px var(--accent-soft-hover), 0 0 20px var(--accent-glow)`).
   - Port konektor lingkaran 12px dengan efek zoom hover 1.4x dan lingkaran denyut halo.

@@ -6,7 +6,7 @@ The interface is a modern glassmorphic indigo productivity workspace with rounde
 
 - **Dashboard**: Features a frosted glass sidebar (`backdrop-filter: var(--blur-lg)`), pill navigation, top bar with focused search glow, and a responsive grid of project cards with 18px rounded corners, dynamic mesh gradient thumbnails, floating node badges, and hover lift elevation (`translateY(-4px)`).
 - **Settings**: A 2-column modal dialog (inspired by modern workspace apps) with category tabs and interactive typography selector previewing available web fonts (Inter, Poppins, Plus Jakarta Sans, JetBrains Mono, etc.).
-- **Builder**: Features a floating glass pill toolbar (`backdrop-filter: var(--blur-md)`), subtle radial dot canvas grid, animated Bezier curve connections (`@keyframes flowDash`), pulsing 12px connector dots (`@keyframes pulsePort`), and flexible dynamic nodes (`width: auto`) that scale naturally with content.
+- **Builder**: Features a floating glass pill toolbar (`backdrop-filter: var(--blur-md)`), subtle radial dot canvas grid, animated Bezier curve connections (`@keyframes flowDash`), pulsing 12px connector dots (`@keyframes pulsePort`), and dynamic auto-content nodes (`width: max-content; min-width: 120px; max-width: 360px; word-break: normal; overflow-wrap: break-word`) that scale horizontally with text and wrap cleanly across multiple lines.
 - **Responsive**: On mobile viewports (≤768px), the toolbar shifts to a floating bottom bar, and context menus seamlessly morph into slide-up glass bottom sheet drawers with touch-friendly targets.
 
 ## Design Tokens & Preferences
