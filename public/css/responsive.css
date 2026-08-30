@@ -1,5 +1,6 @@
 /* ========================================
-   Responsive Design
+   Responsive Design (UI/UX Revamp)
+   Mobile Glass Sheets & Touch Optimization
    ======================================== */
 
 .tb-show-mobile { display: none; }
@@ -7,15 +8,15 @@
 /* ---------- Tablet (≤1024px) ---------- */
 @media (max-width: 1024px) {
     #toolbar {
-        gap: 1px;
-        padding: 5px;
+        gap: 2px;
+        padding: 5px 8px;
     }
 
     .tb-btn {
-        height: 34px;
-        min-width: 34px;
+        height: 36px;
+        min-width: 36px;
         padding: 0 8px;
-        font-size: 12px;
+        font-size: 12.5px;
     }
 
     .tb-btn span {
@@ -23,8 +24,8 @@
     }
 
     .tb-zoom-label {
-        min-width: 34px;
-        font-size: 11px;
+        min-width: 36px;
+        font-size: 11.5px;
     }
 
     .tb-logo {
@@ -32,26 +33,31 @@
     }
 
     .node {
-        max-width: 230px;
+        max-width: 240px;
     }
 }
 
 /* ---------- Mobile (≤768px) ---------- */
 @media (max-width: 768px) {
 
-    /* --- Toolbar → Bottom --- */
+    /* --- Toolbar → Floating Glass Bottom Bar --- */
     #toolbar {
         top: auto;
-        bottom: 14px;
+        bottom: 16px;
         left: 12px;
         right: 12px;
         transform: none;
-        border-radius: 14px;
-        padding: 6px 8px;
+        border-radius: var(--radius-xl);
+        background: var(--surface-glass-heavy);
+        backdrop-filter: var(--blur-lg);
+        -webkit-backdrop-filter: var(--blur-lg);
+        padding: 6px 10px;
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: none;
-        gap: 1px;
+        gap: 2px;
+        box-shadow: var(--shadow-xl);
+        border: 1px solid var(--border);
     }
 
     #toolbar::-webkit-scrollbar {
@@ -59,8 +65,8 @@
     }
 
     .tb-btn {
-        height: 36px;
-        min-width: 36px;
+        height: 38px;
+        min-width: 38px;
         font-size: 12px;
     }
 
@@ -92,40 +98,45 @@
 
     /* --- Canvas --- */
     #empty-state {
-        width: 85%;
+        width: 88%;
         max-width: 320px;
         font-size: 13px;
         line-height: 1.5;
         top: 38%;
+        padding: 20px 24px;
     }
 
     .node {
-        max-width: 200px;
+        max-width: 210px;
     }
 
-    /* --- Bottom Sheet --- */
+    /* --- Modern Glass Bottom Sheet --- */
     .ctx-menu {
         position: fixed !important;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        bottom: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
         top: auto !important;
-        border-radius: 16px 16px 0 0 !important;
-        max-height: 70vh;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0 !important;
+        max-height: 72vh;
         overflow-y: auto;
         min-width: auto !important;
-        animation: sheetUp .25s ease;
-        box-shadow: 0 -4px 28px rgba(0, 0, 0, 0.2);
-        z-index: 200 !important;
-        left: 0 !important;
+        animation: sheetUp 0.28s var(--ease-spring);
+        box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.25);
+        z-index: 500 !important;
         transform: none !important;
+        background: var(--surface-glass-heavy);
+        backdrop-filter: var(--blur-lg);
+        -webkit-backdrop-filter: var(--blur-lg);
+        border: 1px solid var(--border);
+        border-bottom: none;
+        padding-bottom: 24px;
     }
 
     @keyframes sheetUp {
         from {
             transform: translateY(100%);
         }
-
         to {
             transform: translateY(0);
         }
@@ -134,67 +145,70 @@
     .sheet-backdrop {
         position: fixed;
         inset: 0;
-        background: rgba(0, 0, 0, 0.45);
-        z-index: 199;
-        animation: fadeIn .2s ease;
+        background: var(--backdrop-overlay);
+        backdrop-filter: var(--blur-sm);
+        -webkit-backdrop-filter: var(--blur-sm);
+        z-index: 499;
+        animation: fadeIn 0.2s var(--ease-out);
     }
 
     @keyframes fadeIn {
         from {
             opacity: 0;
         }
-
         to {
             opacity: 1;
         }
     }
 
     .sheet-handle {
-        width: 36px;
-        height: 4px;
-        border-radius: 4px;
+        width: 40px;
+        height: 5px;
+        border-radius: var(--radius-full);
         background: var(--border-strong);
-        margin: 8px auto 4px;
+        margin: 10px auto 8px;
     }
 
-    /* --- Context menu items (bigger touch) --- */
+    /* --- Context menu items (touch-friendly) --- */
     .ctx-item {
-        padding: 12px 14px;
+        padding: 13px 16px;
         font-size: 14px;
+        border-radius: var(--radius-md);
     }
 
     .ctx-item svg {
-        width: 17px;
-        height: 17px;
+        width: 18px;
+        height: 18px;
     }
 
     .ctx-label {
         font-size: 12px;
-        padding: 10px 14px 6px;
+        padding: 12px 16px 6px;
     }
 
     .ctx-sep {
-        margin: 4px 12px;
+        margin: 6px 14px;
     }
 
     .ctx-colors {
-        gap: 8px;
-        padding: 8px 14px 10px;
+        gap: 10px;
+        padding: 10px 16px 14px;
     }
 
     .ctx-color-sw {
-        width: 26px;
-        height: 26px;
+        width: 28px;
+        height: 28px;
     }
 
     .ctx-icons {
-        padding: 4px 14px 10px;
-        gap: 6px;
+        padding: 6px 16px 14px;
+        gap: 8px;
     }
 
     .ctx-icon-cell {
-        width: 40px;
-        height: 40px;
+        width: 42px;
+        height: 42px;
+        border-radius: var(--radius-md);
     }
 
     .ctx-icon-cell svg {
@@ -202,7 +216,7 @@
         height: 22px;
     }
 
-    /* --- Icon submenu full-screen --- */
+    /* --- Icon submenu modal-sheet --- */
     .ctx-icon-submenu {
         position: fixed !important;
         top: 0 !important;
@@ -212,26 +226,29 @@
         border-radius: 0 !important;
         min-width: auto !important;
         max-height: none !important;
-        z-index: 201 !important;
-        animation: fadeIn .15s ease;
+        z-index: 501 !important;
+        animation: fadeIn 0.2s var(--ease-out);
         overflow-y: auto;
-        padding-top: 0;
+        background: var(--surface-glass-heavy);
+        backdrop-filter: var(--blur-lg);
+        -webkit-backdrop-filter: var(--blur-lg);
+        padding-top: 16px;
     }
 
     .ctx-icon-submenu .ctx-icon-category-label {
-        padding: 14px 16px 4px;
-        font-size: 12px;
+        padding: 14px 18px 6px;
+        font-size: 12.5px;
     }
 
     .ctx-icon-submenu .ctx-icons {
         grid-template-columns: repeat(5, 1fr);
-        gap: 8px;
-        padding: 4px 16px 12px;
+        gap: 10px;
+        padding: 6px 18px 14px;
     }
 
     .ctx-icon-submenu .ctx-icon-cell {
-        width: 44px;
-        height: 44px;
+        width: 48px;
+        height: 48px;
     }
 
     .ctx-icon-submenu .ctx-icon-cell svg {
@@ -241,27 +258,27 @@
 
     /* --- Toast --- */
     #toast {
-        bottom: 80px;
+        bottom: 84px;
     }
 }
 
 /* ---------- Small Mobile (≤480px) ---------- */
 @media (max-width: 480px) {
     #toolbar {
-        bottom: 10px;
+        bottom: 12px;
         left: 8px;
         right: 8px;
         padding: 5px 6px;
-        border-radius: 12px;
+        border-radius: var(--radius-lg);
     }
 
     .tb-btn {
-        height: 32px;
-        min-width: 32px;
+        height: 34px;
+        min-width: 34px;
     }
 
     .tb-logo {
-        height: 18px;
+        height: 20px;
     }
 
     .tb-btn svg {
@@ -270,13 +287,13 @@
     }
 
     .tb-zoom-label {
-        min-width: 28px;
-        font-size: 10px;
+        min-width: 30px;
+        font-size: 10.5px;
     }
 
     .ctx-item {
-        padding: 10px 12px;
-        font-size: 13px;
+        padding: 11px 14px;
+        font-size: 13.5px;
     }
 
     .ctx-icon-submenu .ctx-icons {
@@ -284,13 +301,13 @@
     }
 
     .ctx-icon-submenu .ctx-icon-cell {
-        width: 40px;
-        height: 40px;
+        width: 44px;
+        height: 44px;
     }
 
     #toast {
-        bottom: 72px;
-        font-size: 12px;
-        padding: 7px 12px;
+        bottom: 76px;
+        font-size: 12.5px;
+        padding: 8px 16px;
     }
 }
