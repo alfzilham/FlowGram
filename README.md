@@ -49,27 +49,31 @@ FlowGram runs in the browser for the frontend, with a serverless backend on Verc
    npm install
    ```
 
-3. Set up environment variables (see below)
+3. Set up `.env.local` from `.env.example` and fill in the Neon credentials (see below)
 
-4. Serve the frontend with any static file server:
-
-   ```bash
-   npx serve .
-   ```
-
-5. Run the API locally (optional, for auth + database features):
+4. Start the local Hono server:
 
    ```bash
-   npx vercel dev
+   npm start
    ```
 
-6. Open `http://localhost:3000` in your browser.
+5. Open `http://localhost:3000` in your browser.
+
+### Docker
+
+With Docker installed and `.env.local` configured:
+
+```bash
+docker compose up --build
+```
+
+The application and Hono API are served together at `http://localhost:3000`. Neon remains the database provider.
 
 > ⚠️ Do not open `index.html` directly via `file://` — localStorage may be blocked by the browser's tracking prevention.
 
 ### Environment Variables
 
-Set these in your Vercel dashboard or `.env` file:
+Set these in `.env.local` for local development. Never commit this file:
 
 ```
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -81,7 +85,7 @@ JWT_SECRET=your_random_jwt_secret
 ## Project Structure
 
 ```
-├── api/                # Hono MVC backend (Vercel Functions)
+├── api/                # Hono MVC backend modules
 │   ├── _db.js          # Neon connection pool
 │   ├── index.js        # Thin route composition
 │   ├── controllers/ services/ repositories/
@@ -108,8 +112,11 @@ JWT_SECRET=your_random_jwt_secret
 ├── onboarding.html     # Onboarding page (input name)
 ├── builder.html        # Canvas / workflow editor
 ├── index.html          # Homepage / project dashboard
-├── package.json        # Dependencies (hono, neon, jsonwebtoken)
-└── vercel.json         # Vercel deployment config
+├── server/             # Node HTTP entrypoint and static serving
+├── Dockerfile          # Local production-like image
+├── docker-compose.yml  # Local app container
+├── package.json        # Dependencies and start scripts
+└── .env.example        # Non-secret environment template
 ```
 
 ## Usage
@@ -140,7 +147,7 @@ JWT_SECRET=your_random_jwt_secret
 ## Tech Stack
 
 - **Frontend:** Vanilla HTML, CSS, and JavaScript — no frameworks, no build tools
-- **Backend:** [Hono.js](https://hono.dev) on Vercel Functions
+- **Backend:** [Hono.js](https://hono.dev) on Node.js (`@hono/node-server`)
 - **Database:** [Neon](https://neon.tech) PostgreSQL (serverless)
 - **Auth:** Google OAuth 2.0
 - **Icons:** [Lucide Icons](https://lucide.dev) + [Bootstrap Icons](https://icons.getbootstrap.com)
@@ -149,7 +156,7 @@ JWT_SECRET=your_random_jwt_secret
 
 ## Browser Support
 
-Works in all modern browsers (Chrome, Firefox, Edge, Safari). Requires a static file server for the frontend and Vercel Functions for the backend.
+Works in all modern browsers (Chrome, Firefox, Edge, Safari). Requires Node.js or Docker for the local Hono server.
 
 ## License
 

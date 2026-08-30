@@ -1,6 +1,6 @@
 # FlowGram Architecture
 
-FlowGram is a static HTML/vanilla JavaScript workflow builder with a Hono serverless API on Vercel and Neon PostgreSQL persistence.
+FlowGram is a static HTML/vanilla JavaScript workflow builder with a Hono API running on Node.js/Docker and Neon PostgreSQL persistence.
 
 ## Runtime
 
@@ -10,7 +10,7 @@ Browser pages -> frontend IIFE modules -> /api/* -> Hono -> services -> reposito
  localStorage       demo/login modes                    Google userinfo + JWT
 ```
 
-Active pages are `index.html`, `builder.html`, `onboarding.html`, and `auth/google-callback.html`. Active browser code is under `frontend/`; CSS and images are served from `public/`.
+Active pages are `index.html`, `builder.html`, `onboarding.html`, and `auth/google-callback.html`. Active browser code is under `frontend/`; CSS and images are served from `public/`; `server/index.js` owns the local HTTP entrypoint and static serving.
 
 ## Frontend modules
 
@@ -34,4 +34,4 @@ Demo mode uses the `demo` sentinel and localStorage keys such as `wf_projects_in
 
 ## Deployment
 
-`vercel.json` rewrites `/api/(.*)` to `api/index.js` and adds baseline security headers. Runtime secrets are `DATABASE_URL`, `JWT_SECRET`, Google credentials, and optional `ALLOWED_ORIGINS`. No database schema or automated test suite is stored in the repository.
+`server/index.js` exposes the Hono API, static files, health endpoint, and baseline security headers. `Dockerfile` and `docker-compose.yml` run the app locally while Neon remains external. Runtime secrets are `DATABASE_URL`, `JWT_SECRET`, Google credentials, and optional `ALLOWED_ORIGINS`. No database schema or automated test suite is stored in the repository.
