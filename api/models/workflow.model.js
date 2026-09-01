@@ -6,6 +6,7 @@ const MAX_TEXT_LENGTH = 500;
 const MAX_ID_LENGTH = 200;
 const MAX_COORDINATE = 1000000;
 const MAX_PAYLOAD_BYTES = 2 * 1024 * 1024;
+export const SCHEMA_VERSION = 1;
 const VALID_ICONS = new Set([
     'zap', 'play', 'circle-play', 'arrow-right-circle', 'database', 'file-text', 'table', 'file', 'mail',
     'message-circle', 'bell', 'share-2', 'image', 'camera', 'music', 'video', 'code', 'terminal', 'globe',
@@ -59,4 +60,40 @@ export function validateWorkflow(data) {
     }
 
     return null;
+}
+
+export function validateImportPayload(data) {
+    if (!data || typeof data !== 'object') return 'Import data harus berupa object';
+
+    const version = data.schemaVersion;
+    if (version === undefined) {
+        // V0: legacy format — just { nodes, connections }
+        if (!Array.isArray(data.nodes)) return 'nodes harus berupa array';
+        return null;
+    }
+
+    if (typeof version !== 'number' || version < 1 || version > SCHEMA_VERSION) {
+        return 'Schema version tidak didukung: ' + version;
+    }
+
+    if (version === 1) {
+        if (!data.project || typeof data.project !== 'object') return 'Project data diperlukan';
+        const proj = data.project;
+        if (proj.data) {
+            const err = validateWorkflow(proj.data);
+            if (err) return err;
+        }
+    }
+
+    return null;
+}
+
+export function migrateV0ToV1(data) {
+    return {
+        schemaVersion: 1,
+        project: {
+            name: 'Imported Workflow',
+            data: { nodes: data.nodes || [], connections: data.connections || [] }
+        }
+    };
 }

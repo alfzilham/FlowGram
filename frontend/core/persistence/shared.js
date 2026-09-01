@@ -281,6 +281,7 @@
             async getProject(id) { return (await apiCall('GET', '/projects/' + id)).project; },
             async createProject(data) { return (await apiCall('POST', '/projects', data)).project; },
             async updateProject(id, data) { return apiCall('PUT', '/projects/' + id, data); },
+            async autosaveProject(id, data) { return apiCall('PUT', '/projects/' + id + '/autosave', { data: data }); },
             async deleteProject(id) { return apiCall('DELETE', '/projects/' + id); },
 
             // ── Folders ──

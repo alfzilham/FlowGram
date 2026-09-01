@@ -40,3 +40,42 @@ export async function deleteFolderAndUnlinkProjects(id, userId) {
 export async function deleteFoldersByUserId(userId) {
     await pool.query('DELETE FROM folders WHERE user_id = $1', [userId]);
 }
+
+export async function softDeleteFolder(id, userId) {
+    await pool.query(
+        'UPDATE folders SET deleted_at = NOW() WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL',
+        [id, userId]
+    );
+    // Also soft delete projects in this folder
+    await pool.query(
+        'UPDATE projects SET deleted_at = NOW() WHERE folder_id = $1 AND user_id = $2 AND deleted_at IS NULL',
+        [id, userId]
+    );
+}
+
+export async function restoreFolder(id, userId) {
+    await pool.query(
+        'UPDATE folders SET deleted_at = NULL WHERE id = $1 AND user_id = $2 AND deleted_at IS NOT NULL',
+        [id, userId]
+    );
+    // Also restore projects in this folder
+    await pool.query(
+        'UPDATE projects SET deleted_at = NULL WHERE folder_id = $1 AND user_id = $2 AND deleted_at IS NOT NULL',
+        [id, userId]
+    );
+}
+
+export async function findTrashedFolders(userId) {
+    const { rows } = await pool.query(
+        'SELECT id, name, archived FROM folders WHERE user_id = $1 AND deleted_at IS NOT NULL ORDER BY deleted_at DESC',
+        [userId]
+    );
+    return rows.map(normalizeFolder);
+}
+
+export async function unlinkProjectsFromFolder(id, userId) {
+    await pool.query(
+        'UPDATE projects SET folder_id = NULL WHERE folder_id = $1 AND user_id = $2',
+        [id, userId]
+    );
+}
