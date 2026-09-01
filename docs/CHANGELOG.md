@@ -4,6 +4,16 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Autosave UX] — 2026-09-01
+
+- Builder kini menampilkan status penyimpanan yang dapat diakses melalui `role="status"`: `Menyimpan…`, `Tersimpan`, `Gagal menyimpan`, dan status offline.
+- Penyimpanan workflow menggunakan snapshot immutable dan sequence guard agar hasil request lama tidak menimpa status perubahan yang lebih baru.
+- Kegagalan API atau kondisi offline menyimpan draft sementara per project di `localStorage`, dengan tombol `Ulangi` dan retry otomatis ketika koneksi kembali.
+- Draft lokal yang lebih baru dari versi server dipulihkan saat builder dibuka dan memerlukan aksi eksplisit `Simpan ulang`.
+- Perubahan hanya menyentuh UX/persistence frontend; format workflow, endpoint API, mode demo, dan mode login dipertahankan.
+
+---
+
 ## [Local Docker Deployment] — 2026-08-30
 
 - Deployment dipindahkan dari Vercel Functions ke Hono pada Node.js melalui `server/index.js`.

@@ -129,6 +129,9 @@
     const zoomLabel = document.getElementById('zoom-label');
     const fileInput = document.getElementById('file-input');
     const toastEl = document.getElementById('toast');
+    const saveStatusEl = document.getElementById('save-status');
+    const saveStatusLabelEl = document.getElementById('save-status-label');
+    const saveRetryEl = document.getElementById('save-retry');
     const clearModal = document.getElementById('clear-modal');
     const clearBackdrop = document.getElementById('clear-backdrop');
     const clearConfirm = document.getElementById('clear-confirm');
@@ -164,18 +167,108 @@
 
     /* ---------------- persistence (project-aware) ---------------- */
     let saveTimer = null;
-    function scheduleSave() {
-        if (!currentProjectId) return;
-        clearTimeout(saveTimer);
-        saveTimer = setTimeout(() => {
-            var data = { nodes: state.nodes, connections: state.connections, viewport: viewport };
+    let saveSequence = 0;
+    let latestSaveData = null;
+    let pendingDraftData = null;
+    const PENDING_DRAFT_PREFIX = 'flowgram_pending_save_';
+
+    function pendingDraftKey() { return PENDING_DRAFT_PREFIX + currentProjectId; }
+    function snapshotWorkflow() {
+        return JSON.parse(JSON.stringify({ nodes: state.nodes, connections: state.connections, viewport: viewport }));
+    }
+    function setSaveStatus(status, label, actionLabel) {
+        if (!saveStatusEl) return;
+        saveStatusEl.dataset.state = status;
+        saveStatusLabelEl.textContent = label;
+        saveRetryEl.hidden = !actionLabel;
+        saveRetryEl.textContent = actionLabel || '';
+    }
+    function storePendingDraft(data) {
+        try {
+            localStorage.setItem(pendingDraftKey(), JSON.stringify({ savedAt: Date.now(), data: data }));
+            pendingDraftData = data;
+            return true;
+        } catch (e) {
+            pendingDraftData = data;
+            return false;
+        }
+    }
+    function readPendingDraft() {
+        try {
+            const raw = JSON.parse(localStorage.getItem(pendingDraftKey()) || 'null');
+            return raw && raw.data ? raw : null;
+        } catch (e) { return null; }
+    }
+    function clearPendingDraft() {
+        pendingDraftData = null;
+        try { localStorage.removeItem(pendingDraftKey()); } catch (e) { }
+    }
+    function applyWorkflowData(data) {
+        state.nodes = Array.isArray(data.nodes) ? data.nodes : [];
+        state.connections = Array.isArray(data.connections) ? data.connections : [];
+        viewport = data.viewport || { panX: 80, panY: 80, zoom: 1 };
+        render();
+    }
+    function recoverPendingDraft(serverData, serverUpdatedAt) {
+        const draft = readPendingDraft();
+        if (!draft) return false;
+        const serverTime = serverUpdatedAt ? new Date(serverUpdatedAt).getTime() || 0 : 0;
+        if (draft.savedAt <= serverTime) {
+            clearPendingDraft();
+            return false;
+        }
+        pendingDraftData = draft.data;
+        applyWorkflowData(draft.data);
+        setSaveStatus('draft', 'Draft offline dipulihkan', 'Simpan ulang');
+        return true;
+    }
+    async function persistSnapshot(data, sequence) {
+        if (sequence !== saveSequence) return;
+        setSaveStatus('saving', 'Menyimpan…');
+        try {
             if (FGAuth.isLoggedIn()) {
-                FG.api.updateProject(currentProjectId, { data: data }).catch(function () { });
+                if (navigator.onLine === false) throw new Error('offline');
+                await FG.api.updateProject(currentProjectId, { data: data });
             } else {
                 FG.recordProjectSave(currentProjectId, data);
             }
-        }, 300);
+            if (sequence !== saveSequence) return;
+            clearPendingDraft();
+            setSaveStatus('saved', 'Tersimpan');
+        } catch (e) {
+            if (sequence !== saveSequence) return;
+            storePendingDraft(data);
+            const offline = e && e.message === 'offline';
+            setSaveStatus(offline ? 'offline' : 'failed', offline ? 'Offline — draft tersimpan' : 'Gagal menyimpan', 'Ulangi');
+        }
     }
+    function scheduleSave() {
+        if (!currentProjectId) return;
+        clearTimeout(saveTimer);
+        latestSaveData = snapshotWorkflow();
+        const sequence = ++saveSequence;
+        setSaveStatus('saving', 'Menyimpan…');
+        saveTimer = setTimeout(() => persistSnapshot(latestSaveData, sequence), 300);
+    }
+    if (saveRetryEl) saveRetryEl.addEventListener('click', function () {
+        const data = latestSaveData || pendingDraftData || snapshotWorkflow();
+        const sequence = ++saveSequence;
+        latestSaveData = data;
+        persistSnapshot(data, sequence);
+    });
+    window.addEventListener('offline', function () {
+        if (currentProjectId && FGAuth.isLoggedIn()) setSaveStatus('offline', 'Offline — perubahan akan dicoba lagi', 'Ulangi');
+    });
+    window.addEventListener('online', function () {
+        if (!currentProjectId || !FGAuth.isLoggedIn()) return;
+        const draft = pendingDraftData || readPendingDraft();
+        if (draft && draft.data) {
+            pendingDraftData = draft.data;
+            const sequence = ++saveSequence;
+            latestSaveData = draft.data;
+            persistSnapshot(draft.data, sequence);
+        }
+    });
     function resolveProjectId() {
         const params = new URLSearchParams(window.location.search);
         return params.get('id');
@@ -199,7 +292,7 @@
                 state.connections = raw.connections || [];
                 viewport = raw.viewport || { panX: 80, panY: 80, zoom: 1 };
                 _pendingLoad = false;
-                render();
+                if (!recoverPendingDraft(raw, p.updatedAt)) render();
                 fadeOutLoader();
             }).catch(function () {
                 _pendingLoad = false;
@@ -218,6 +311,7 @@
         state.nodes = data.nodes || [];
         state.connections = data.connections || [];
         viewport = data.viewport || { panX: 80, panY: 80, zoom: 1 };
+        recoverPendingDraft(data, meta.updatedAt);
         return true;
     }
 

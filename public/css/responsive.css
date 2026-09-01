@@ -259,6 +259,11 @@
     #toast {
         bottom: 84px;
     }
+
+    .save-status {
+        top: 14px;
+        right: 12px;
+    }
 }
 
 /* ---------- Small Mobile (≤480px) ---------- */
@@ -317,5 +322,12 @@
         bottom: 76px;
         font-size: 12.5px;
         padding: 8px 16px;
+    }
+
+    .save-status {
+        top: 10px;
+        right: 8px;
+        min-height: 30px;
+        font-size: 11px;
     }
 }

@@ -211,6 +211,11 @@
         </div>
 
         <input type="file" id="file-input" accept="application/json" hidden>
+        <div id="save-status" class="save-status" data-state="saved" role="status" aria-live="polite" aria-atomic="true">
+            <span class="save-status-dot" aria-hidden="true"></span>
+            <span id="save-status-label">Tersimpan</span>
+            <button id="save-retry" type="button" hidden>Ulangi</button>
+        </div>
         <div id="toast"></div>
 
         <div id="clear-modal" class="hidden">
