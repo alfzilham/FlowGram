@@ -17,7 +17,7 @@ app.get('/health', (c) => c.json({ status: 'ok' }));
 app.route('/', api);
 app.use('*', serveStatic({ root: './' }));
 
-const port = Number(process.env.PORT || 3000);
+const port = Number(process.env.PORT || 3002);
 
 serve({ fetch: app.fetch, port }, (info) => {
     console.log(`FlowGram listening on http://localhost:${info.port}`);
