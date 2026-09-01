@@ -56,7 +56,7 @@ Setiap phase hanya dianggap selesai jika:
 - API contract dan workflow format kompatibel atau perubahan didokumentasikan;
 - project/folder ownership test lulus;
 - import/export, autosave, reload, dan mobile UI diuji;
-- syntax/static checks dan Docker smoke test lulus;
+- syntax/static checks dan local Node.js smoke test lulus;
 - perubahan terdokumentasi di `docs/CHANGELOG.md`;
 - Codex melakukan review integrasi sebelum merge/push.
 

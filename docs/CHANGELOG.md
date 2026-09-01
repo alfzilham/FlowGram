@@ -4,6 +4,14 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Remove Docker Deployment] — 2026-09-01
+
+- Artefak `Dockerfile`, `docker-compose.yml`, dan `.dockerignore` dihapus dari project.
+- Runtime lokal resmi sekarang menggunakan Node.js langsung melalui `npm start` atau `npm run dev`.
+- Dokumentasi penggunaan, arsitektur, dan konteks diperbarui agar tidak lagi bergantung pada Docker.
+
+---
+
 ## [Feature Security Hardening] — 2026-09-01
 
 - Version snapshot kini memverifikasi kepemilikan project, memvalidasi workflow, dan membatasi label versi.

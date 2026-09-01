@@ -25,14 +25,13 @@ Visual workflow builder — create, connect, and organize nodes on an infinite c
 
 ## Getting Started
 
-FlowGram runs in the browser for the frontend, with a serverless backend on Vercel Functions.
+FlowGram runs in the browser for the frontend, with a local Hono backend on Node.js.
 
 ### Prerequisites
 
-- Node.js 18+ (for local backend development)
+- Node.js 20+
 - A [Neon](https://neon.tech) PostgreSQL database
 - A Google Cloud OAuth client ID
-- (Optional) [Vercel](https://vercel.com) account for deployment
 
 ### Run locally
 
@@ -57,7 +56,7 @@ FlowGram runs in the browser for the frontend, with a serverless backend on Verc
    npm start
    ```
 
-5. Open `http://localhost:3001` in your browser.
+5. Open `http://localhost:3000` in your browser.
 
 If this is a new Neon database, initialize the schema once before login:
 
@@ -65,23 +64,7 @@ If this is a new Neon database, initialize the schema once before login:
 node --env-file=.env.local scripts/init-db.js
 ```
 
-When using Docker:
-
-```bash
-docker compose -p flowgram exec app node scripts/init-db.js
-```
-
 The initializer is idempotent and does not drop or delete existing data.
-
-### Docker
-
-With Docker installed and `.env.local` configured:
-
-```bash
-docker compose up --build
-```
-
-The application and Hono API are served together at `http://localhost:3001` by default. The host port can be changed with `FLOWGRAM_HOST_PORT`; the container port remains `3000`. Neon remains the database provider.
 
 > ⚠️ Do not open `index.html` directly via `file://` — localStorage may be blocked by the browser's tracking prevention.
 
@@ -127,8 +110,6 @@ JWT_SECRET=your_random_jwt_secret
 ├── builder.html        # Canvas / workflow editor
 ├── index.html          # Homepage / project dashboard
 ├── server/             # Node HTTP entrypoint and static serving
-├── Dockerfile          # Local production-like image
-├── docker-compose.yml  # Local app container
 ├── package.json        # Dependencies and start scripts
 └── .env.example        # Non-secret environment template
 ```
@@ -170,7 +151,7 @@ JWT_SECRET=your_random_jwt_secret
 
 ## Browser Support
 
-Works in all modern browsers (Chrome, Firefox, Edge, Safari). Requires Node.js or Docker for the local Hono server.
+Works in all modern browsers (Chrome, Firefox, Edge, Safari). Requires Node.js for the local Hono server.
 
 ## License
 
