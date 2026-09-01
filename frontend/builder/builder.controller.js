@@ -228,7 +228,7 @@
         try {
             if (FGAuth.isLoggedIn()) {
                 if (navigator.onLine === false) throw new Error('offline');
-                await FG.api.updateProject(currentProjectId, { data: data });
+                await FG.api.autosaveProject(currentProjectId, data);
             } else {
                 FG.recordProjectSave(currentProjectId, data);
             }
