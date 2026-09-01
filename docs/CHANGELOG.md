@@ -4,6 +4,14 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Default Local Port] — 2026-09-01
+
+- Default port Node.js diubah dari `3000` menjadi `3002`.
+- Dokumentasi dan contoh `ALLOWED_ORIGINS` diselaraskan ke `http://localhost:3002`.
+- Nilai `PORT` tetap dapat dioverride melalui environment variable.
+
+---
+
 ## [Remove Docker Deployment] — 2026-09-01
 
 - Artefak `Dockerfile`, `docker-compose.yml`, dan `.dockerignore` dihapus dari project.
