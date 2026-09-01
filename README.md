@@ -64,6 +64,8 @@ If this is a new Neon database, initialize the schema once before login:
 node --env-file=.env.local scripts/init-db.js
 ```
 
+Run the same initializer after pulling database-related changes. It applies all pending migrations idempotently, including the soft-delete columns used by the project and folder queries, and does not drop existing data.
+
 The initializer is idempotent and does not drop or delete existing data.
 
 > ⚠️ Do not open `index.html` directly via `file://` — localStorage may be blocked by the browser's tracking prevention.
