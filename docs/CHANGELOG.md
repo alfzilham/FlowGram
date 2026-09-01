@@ -4,6 +4,13 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Database Migration Note] — 2026-09-01
+
+- Dokumentasi setup diperjelas: `scripts/init-db.js` perlu dijalankan setelah perubahan schema atau pada database yang belum menerapkan migration.
+- Ini memastikan kolom `deleted_at` tersedia sebelum query project/folder soft-delete digunakan oleh server.
+
+---
+
 ## [OAuth Popup Compatibility] — 2026-09-01
 
 - Header `Cross-Origin-Opener-Policy: same-origin-allow-popups` ditambahkan agar popup Google OAuth tetap dapat diamati oleh halaman pembuka selama redirect.
