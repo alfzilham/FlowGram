@@ -4,6 +4,14 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [OAuth Popup Compatibility] — 2026-09-01
+
+- Header `Cross-Origin-Opener-Policy: same-origin-allow-popups` ditambahkan agar popup Google OAuth tetap dapat diamati oleh halaman pembuka selama redirect.
+- Ini menghilangkan konflik browser pada akses `window.closed` tanpa mengekspos token ke URL atau mengubah validasi OAuth state.
+- Peringatan Tracking Prevention dari resource pihak ketiga tetap bergantung pada kebijakan browser dan tidak berasal dari exception aplikasi FlowGram.
+
+---
+
 ## [Default Local Port] — 2026-09-01
 
 - Default port Node.js diubah dari `3000` menjadi `3002`.
