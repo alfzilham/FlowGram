@@ -74,6 +74,8 @@ export async function handleImport(c, payload) {
         }
 
         const proj = importData.project || {};
+        const workflowErr = validateWorkflow(proj.data || { nodes: [], connections: [] });
+        if (workflowErr) return c.json({ error: workflowErr }, 400);
         const project = await projectService.createProject(payload.userId, {
             name: proj.name || 'Imported Workflow',
             folderId: proj.folderId || null,

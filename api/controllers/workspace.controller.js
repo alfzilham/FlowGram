@@ -11,6 +11,7 @@ export async function handleImport(c, payload) {
         const result = await workspaceService.importWorkspace(payload.userId, body);
         return c.json(result);
     } catch (e) {
+        if (e && e.status === 400) return c.json({ error: e.message }, 400);
         return c.json({ error: e.message || 'Gagal import workspace' }, 500);
     }
 }

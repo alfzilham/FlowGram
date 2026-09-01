@@ -23,6 +23,8 @@ export async function handleCreateVersion(c, payload) {
         const version = await versionService.createSnapshot(projectId, payload.userId, body.data, body.label);
         return c.json({ version });
     } catch (e) {
+        if (e && e.status === 400) return c.json({ error: e.message }, 400);
+        if (e && e.status === 404) return c.json({ error: e.message }, 404);
         return c.json({ error: e.message || 'Gagal membuat versi' }, 500);
     }
 }

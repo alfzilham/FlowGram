@@ -18,7 +18,11 @@ export async function handleAddTag(c, payload) {
     const projectId = c.req.param('id');
     const body = await c.req.json();
     if (!body.tag) return c.json({ error: 'Tag diperlukan' }, 400);
-    await tagRepo.addTag(projectId, payload.userId, body.tag.trim());
+    if (typeof body.tag !== 'string' || body.tag.trim().length < 1 || body.tag.trim().length > 100) {
+        return c.json({ error: 'Tag tidak valid' }, 400);
+    }
+    const added = await tagRepo.addTag(projectId, payload.userId, body.tag.trim().toLowerCase());
+    if (!added) return c.json({ error: 'Project tidak ditemukan' }, 404);
     return c.json({ success: true });
 }
 
@@ -32,6 +36,7 @@ export async function handleRemoveTag(c, payload) {
 export async function handleGetProjectTags(c, payload) {
     const projectId = c.req.param('id');
     const tags = await tagRepo.getTagsByProject(projectId, payload.userId);
+    if (tags === null) return c.json({ error: 'Project tidak ditemukan' }, 404);
     return c.json({ tags });
 }
 

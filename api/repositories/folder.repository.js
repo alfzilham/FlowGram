@@ -3,7 +3,7 @@ import { normalizeFolder } from '../models/folder.model.js';
 
 export async function findFoldersByUserId(userId) {
     const { rows } = await pool.query(
-        'SELECT id, name, archived FROM folders WHERE user_id = $1 ORDER BY name',
+        'SELECT id, name, archived FROM folders WHERE user_id = $1 AND deleted_at IS NULL ORDER BY name',
         [userId]
     );
     return rows.map(normalizeFolder);
@@ -11,7 +11,7 @@ export async function findFoldersByUserId(userId) {
 
 export async function findFolderByIdAndUser(id, userId) {
     const { rows } = await pool.query(
-        'SELECT id FROM folders WHERE id = $1 AND user_id = $2',
+        'SELECT id FROM folders WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL',
         [id, userId]
     );
     return rows.length > 0;

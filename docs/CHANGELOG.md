@@ -4,6 +4,18 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Feature Security Hardening] — 2026-09-01
+
+- Version snapshot kini memverifikasi kepemilikan project, memvalidasi workflow, dan membatasi label versi.
+- Tag project kini hanya dapat dibuat atau dibaca oleh pemilik project; pencarian mengecualikan project yang sudah di-trash.
+- Workspace import memvalidasi jumlah dan struktur item, membuat ID baru, serta memetakan folder internal agar ID eksternal tidak dapat menunjuk ke folder user lain.
+- Template, legacy import, dan version history menggunakan validasi workflow server-side.
+- Query project/folder normal mengecualikan data soft-deleted.
+- Rate limiter tidak mempercayai `X-Forwarded-For` kecuali `TRUST_PROXY=true`.
+- Modul autosave browser duplikat yang tidak dipakai dihapus agar hanya ada satu implementasi persistence.
+
+---
+
 ## [Autosave UX] — 2026-09-01
 
 - Builder kini menampilkan status penyimpanan yang dapat diakses melalui `role="status"`: `Menyimpan…`, `Tersimpan`, `Gagal menyimpan`, dan status offline.

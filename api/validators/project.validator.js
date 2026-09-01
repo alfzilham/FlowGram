@@ -8,7 +8,7 @@ export function validateProjectData(body) {
         const err = validateWorkflow(body.data);
         if (err) return err;
     }
-    if (body.name !== undefined && (typeof body.name !== 'string' || body.name.trim().length > 255)) {
+    if (body.name !== undefined && (typeof body.name !== 'string' || !body.name.trim() || body.name.trim().length > 255)) {
         return 'Nama project tidak valid';
     }
     if (body.color !== undefined && body.color !== null && !VALID_COLORS.includes(body.color)) {

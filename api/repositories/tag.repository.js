@@ -1,10 +1,14 @@
 import { pool } from '../_db.js';
 
 export async function addTag(projectId, userId, tag) {
-    await pool.query(
-        'INSERT INTO project_tags (project_id, user_id, tag) VALUES ($1, $2, $3) ON CONFLICT DO NOTHING',
+    const result = await pool.query(
+        `INSERT INTO project_tags (project_id, user_id, tag)
+         SELECT p.id, $2, $3 FROM projects p
+         WHERE p.id = $1 AND p.user_id = $2 AND p.deleted_at IS NULL
+         ON CONFLICT DO NOTHING`,
         [projectId, userId, tag]
     );
+    return result.rowCount > 0;
 }
 
 export async function removeTag(projectId, userId, tag) {
@@ -15,6 +19,8 @@ export async function removeTag(projectId, userId, tag) {
 }
 
 export async function getTagsByProject(projectId, userId) {
+    const project = await pool.query('SELECT 1 FROM projects WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL', [projectId, userId]);
+    if (!project.rowCount) return null;
     const { rows } = await pool.query(
         'SELECT tag FROM project_tags WHERE project_id = $1 AND user_id = $2 ORDER BY tag',
         [projectId, userId]
@@ -33,7 +39,7 @@ export async function getAllUserTags(userId) {
 export async function searchProjects(userId, { query, folderId, tag, from, to, archived }) {
     let sql = `SELECT p.id, p.name, p.folder_id, p.archived, p.color, p.node_count, p.created_at, p.updated_at
                FROM projects p`;
-    const conditions = ['p.user_id = $1'];
+    const conditions = ['p.user_id = $1', 'p.deleted_at IS NULL'];
     const vals = [userId];
     let idx = 2;
 

@@ -4,7 +4,7 @@ import { normalizeProject, normalizeProjectWithData } from '../models/project.mo
 export async function findProjectsByUserId(userId) {
     const { rows } = await pool.query(
         `SELECT id, name, folder_id, archived, color, node_count, created_at, updated_at
-         FROM projects WHERE user_id = $1 ORDER BY updated_at DESC`,
+         FROM projects WHERE user_id = $1 AND deleted_at IS NULL ORDER BY updated_at DESC`,
         [userId]
     );
     return rows.map(normalizeProject);
@@ -12,7 +12,7 @@ export async function findProjectsByUserId(userId) {
 
 export async function findProjectByIdAndUser(id, userId) {
     const { rows } = await pool.query(
-        'SELECT * FROM projects WHERE id = $1 AND user_id = $2',
+        'SELECT * FROM projects WHERE id = $1 AND user_id = $2 AND deleted_at IS NULL',
         [id, userId]
     );
     return rows.length > 0 ? normalizeProjectWithData(rows[0]) : null;

@@ -1,4 +1,5 @@
 import * as templateService from '../services/template.service.js';
+import { validateTemplatePayload } from '../validators/template.validator.js';
 
 export async function handleListTemplates(c, payload) {
     const templates = await templateService.listTemplates(payload.userId);
@@ -14,7 +15,8 @@ export async function handleGetTemplate(c, payload) {
 export async function handleCreateTemplate(c, payload) {
     try {
         const body = await c.req.json();
-        if (!body.name) return c.json({ error: 'Nama template diperlukan' }, 400);
+        const validationError = validateTemplatePayload(body);
+        if (validationError) return c.json({ error: validationError }, 400);
         const template = await templateService.createTemplate(payload.userId, body);
         return c.json({ template });
     } catch (e) {
@@ -25,6 +27,8 @@ export async function handleCreateTemplate(c, payload) {
 export async function handleUpdateTemplate(c, payload) {
     try {
         const body = await c.req.json();
+        const validationError = validateTemplatePayload(body, true);
+        if (validationError) return c.json({ error: validationError }, 400);
         await templateService.updateTemplate(c.req.param('id'), payload.userId, body);
         return c.json({ success: true });
     } catch (e) {
