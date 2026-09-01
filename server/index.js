@@ -9,6 +9,9 @@ app.use('*', async (c, next) => {
     await next();
     c.header('X-Content-Type-Options', 'nosniff');
     c.header('X-Frame-Options', 'DENY');
+    // Keep the OAuth popup in the same browsing context group so the opener
+    // can safely observe its lifecycle during the Google redirect.
+    c.header('Cross-Origin-Opener-Policy', 'same-origin-allow-popups');
     c.header('Referrer-Policy', 'strict-origin-when-cross-origin');
     c.header('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 });
