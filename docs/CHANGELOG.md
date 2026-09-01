@@ -4,6 +4,13 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Remove Canvas Save Badge] — 2026-09-01
+
+- Badge `Tersimpan` di canvas dihapus sesuai perubahan UX.
+- Autosave, retry, dan offline draft recovery tetap berjalan di background.
+
+---
+
 ## [Database Migration Note] — 2026-09-01
 
 - Dokumentasi setup diperjelas: `scripts/init-db.js` perlu dijalankan setelah perubahan schema atau pada database yang belum menerapkan migration.
