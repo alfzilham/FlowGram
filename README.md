@@ -56,7 +56,7 @@ FlowGram runs in the browser for the frontend, with a local Hono backend on Node
    npm start
    ```
 
-5. Open `http://localhost:3000` in your browser.
+5. Open `http://localhost:3002` in your browser.
 
 If this is a new Neon database, initialize the schema once before login:
 
