@@ -111,6 +111,18 @@
                     <path d="M3 3v5h5" />
                 </svg>
             </button>
+            <button class="tb-btn" id="btn-diagram" title="Buka diagram Mermaid/Markdown" aria-label="Buka editor diagram">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M4 5h16M4 12h16M4 19h10" /><path d="M18 16v5M15.5 18.5h5" />
+                </svg>
+                Diagram
+            </button>
+            <button class="tb-btn" id="btn-ai" title="Buka AI assistant" aria-label="Buka AI assistant">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3 14.5 9.5 21 12l-6.5 2.5L12 21l-2.5-6.5L3 12l6.5-2.5L12 3Z" />
+                </svg>
+                AI
+            </button>
             <div class="tb-sep"></div>
             <button class="tb-btn tb-hide-mobile" id="btn-export" title="Export JSON"
                 aria-label="Ekspor workflow sebagai JSON">
@@ -177,6 +189,42 @@
                 </svg>
             </button>
         </div>
+
+        <aside id="diagram-panel" class="hidden" aria-label="Editor diagram">
+            <div class="diagram-panel-header">
+                <div><span class="diagram-kicker">Workflow language</span><h2>Diagram studio</h2></div>
+                <button id="diagram-close" class="diagram-close" type="button" aria-label="Tutup editor diagram">&times;</button>
+            </div>
+            <div class="diagram-tabs" role="tablist" aria-label="Format diagram">
+                <button class="diagram-tab active" data-diagram-type="mermaid" role="tab" aria-selected="true">Mermaid</button>
+                <button class="diagram-tab" data-diagram-type="markdown" role="tab" aria-selected="false">Markdown</button>
+            </div>
+            <label class="diagram-field-label" for="diagram-source">Source</label>
+            <textarea id="diagram-source" spellcheck="false" placeholder="graph TD&#10;  A[Mulai] --> B[Proses]"></textarea>
+            <div class="diagram-preview-heading"><span>Preview</span><span id="diagram-preview-status">Siap</span></div>
+            <div id="diagram-preview" class="diagram-preview" aria-live="polite"></div>
+            <div class="diagram-panel-footer">
+                <button id="diagram-apply" class="btn-primary" type="button">Terapkan ke project</button>
+                <span id="diagram-save-note">Perubahan tersimpan bersama workflow.</span>
+            </div>
+        </aside>
+
+        <aside id="ai-panel" class="hidden" aria-label="FlowGram AI assistant">
+            <div class="diagram-panel-header">
+                <div><span class="diagram-kicker">Read · write · edit</span><h2>FlowGram AI</h2></div>
+                <button id="ai-close" class="diagram-close" type="button" aria-label="Tutup AI assistant">&times;</button>
+            </div>
+            <p class="ai-description">Jelaskan perubahan workflow. AI akan membuat preview yang harus Anda setujui sebelum diterapkan.</p>
+            <label class="diagram-field-label" for="ai-instruction">Instruksi</label>
+            <textarea id="ai-instruction" maxlength="4000" placeholder="Contoh: tambahkan node Validasi di antara Mulai dan Proses"></textarea>
+            <button id="ai-ask" class="btn-primary ai-ask" type="button">Buat preview perubahan</button>
+            <div id="ai-result" class="ai-result" aria-live="polite"></div>
+            <div class="ai-actions">
+                <button id="ai-apply" class="btn-primary" type="button" disabled>Setujui &amp; terapkan</button>
+                <button id="ai-discard" class="btn-secondary" type="button" disabled>Buang</button>
+            </div>
+            <p class="ai-security-note">AI tidak dapat menyimpan perubahan tanpa persetujuan Anda.</p>
+        </aside>
 
         <div id="canvas-wrapper">
             <div id="world">
@@ -268,6 +316,11 @@
     <script src="frontend/core/persistence/shared.js"></script>
     <script src="frontend/core/auth/auth.js"></script>
     <script src="frontend/builder/builder.controller.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+    <script src="frontend/builder/diagram.controller.js"></script>
+    <script src="frontend/builder/ai.controller.js"></script>
 </body>
 
 </html>
