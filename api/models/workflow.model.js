@@ -6,6 +6,7 @@ const MAX_TEXT_LENGTH = 500;
 const MAX_ID_LENGTH = 200;
 const MAX_COORDINATE = 1000000;
 const MAX_PAYLOAD_BYTES = 2 * 1024 * 1024;
+const MAX_DIAGRAM_SOURCE_LENGTH = 100000;
 export const SCHEMA_VERSION = 1;
 const VALID_ICONS = new Set([
     'zap', 'play', 'circle-play', 'arrow-right-circle', 'database', 'file-text', 'table', 'file', 'mail',
@@ -29,6 +30,11 @@ export function validateWorkflow(data) {
 
     if (!Array.isArray(nodes)) return 'nodes harus berupa array';
     if (!Array.isArray(connections)) return 'connections harus berupa array';
+    if (data.diagram !== undefined) {
+        if (!data.diagram || typeof data.diagram !== 'object' || Array.isArray(data.diagram)) return 'diagram tidak valid';
+        if (!['mermaid', 'markdown'].includes(data.diagram.type)) return 'Tipe diagram tidak valid';
+        if (typeof data.diagram.source !== 'string' || data.diagram.source.length > MAX_DIAGRAM_SOURCE_LENGTH) return 'Source diagram tidak valid';
+    }
     if (nodes.length > MAX_NODES) return `Jumlah node terlalu banyak (maks ${MAX_NODES})`;
     if (connections.length > MAX_CONNECTIONS) return `Jumlah koneksi terlalu banyak (maks ${MAX_CONNECTIONS})`;
 
