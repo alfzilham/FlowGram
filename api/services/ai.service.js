@@ -1,8 +1,8 @@
 import config from '../config/index.js';
 import { validateWorkflow } from '../models/workflow.model.js';
+import { validateAiOperations } from '../validators/ai.validator.js';
 
 const MAX_INSTRUCTION_LENGTH = 4000;
-const MAX_OPERATIONS = 100;
 
 function extractContent(payload) {
     const content = payload?.choices?.[0]?.message?.content ?? payload?.content;
@@ -68,7 +68,8 @@ export async function assist({ instruction, workflow }) {
     } finally { clearTimeout(timeout); }
     if (!response.ok) throw Object.assign(new Error('AI provider request gagal'), { status: 502 });
     const parsed = JSON.parse(extractContent(await response.json()));
-    if (!Array.isArray(parsed.operations) || parsed.operations.length > MAX_OPERATIONS) throw Object.assign(new Error('Respons operasi AI tidak valid'), { status: 502 });
+    const operationsError = validateAiOperations(parsed.operations);
+    if (operationsError) throw Object.assign(new Error(operationsError), { status: 502 });
     for (const op of parsed.operations) {
         const error = validateOperation(op);
         if (error) throw Object.assign(new Error(error), { status: 502 });
