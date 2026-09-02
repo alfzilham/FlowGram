@@ -983,7 +983,7 @@
 
     /* ---------------- export / import ---------------- */
     document.getElementById('btn-export').addEventListener('click', () => {
-        const data = { nodes: state.nodes, connections: state.connections };
+        const data = { schemaVersion: 1, nodes: state.nodes, connections: state.connections, diagram: state.diagram || null };
         const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1002,9 +1002,11 @@
             try {
                 const data = JSON.parse(reader.result);
                 if (!Array.isArray(data.nodes)) throw new Error('invalid');
+                if (data.diagram !== undefined && (!data.diagram || !['mermaid', 'markdown'].includes(data.diagram.type) || typeof data.diagram.source !== 'string' || data.diagram.source.length > 100000)) throw new Error('invalid');
                 pushHistory();
                 state.nodes = data.nodes;
                 state.connections = Array.isArray(data.connections) ? data.connections : [];
+                state.diagram = data.diagram || null;
                 clearSelection();
                 render();
                 scheduleSave();
@@ -1521,6 +1523,17 @@
         },
         applyAiOperations: function (operations) {
             if (!Array.isArray(operations) || operations.length > 100) return false;
+            var allowedPatchKeys = ['x', 'y', 'text', 'color', 'icon'];
+            var validOperation = function (op) {
+                if (!op || typeof op !== 'object') return false;
+                if (op.op === 'add_node') return op.node && typeof op.node.id === 'string' && typeof op.node.x === 'number' && typeof op.node.y === 'number' && typeof op.node.text === 'string';
+                if (op.op === 'add_connection') return op.connection && typeof op.connection.id === 'string' && op.connection.from && op.connection.to;
+                if (op.op === 'set_diagram') return op.diagram && ['mermaid', 'markdown'].includes(op.diagram.type) && typeof op.diagram.source === 'string' && op.diagram.source.length <= 100000;
+                if (!['update_node', 'delete_node', 'delete_connection'].includes(op.op) || typeof op.id !== 'string' || !op.id) return false;
+                if (op.op === 'update_node') return op.patch && Object.keys(op.patch).every(function (key) { return allowedPatchKeys.includes(key); });
+                return true;
+            };
+            if (!operations.every(validOperation)) return false;
             pushHistory();
             operations.forEach(function (op) {
                 if (op.op === 'add_node' && op.node && typeof op.node === 'object') {
