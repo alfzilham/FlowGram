@@ -4,6 +4,14 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Diagram Export & AI Validation] — 2026-09-03
+
+- Diagram kini ikut dalam export/import workflow dengan `schemaVersion: 1`.
+- Operasi AI divalidasi kembali di browser dan patch node tidak dapat mengubah field `id`.
+- Ditambahkan script `npm test` dan regression tests untuk diagram serta AI operation validation.
+
+---
+
 ## [Diagram Studio & AI Assistant] — 2026-09-02
 
 - Ditambahkan editor Mermaid dan Markdown pada builder dengan preview terpisah dan persistence di workflow.
