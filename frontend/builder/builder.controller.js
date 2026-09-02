@@ -174,7 +174,7 @@
 
     function pendingDraftKey() { return PENDING_DRAFT_PREFIX + currentProjectId; }
     function snapshotWorkflow() {
-        return JSON.parse(JSON.stringify({ nodes: state.nodes, connections: state.connections, viewport: viewport }));
+        return JSON.parse(JSON.stringify({ nodes: state.nodes, connections: state.connections, viewport: viewport, diagram: state.diagram || null }));
     }
     function setSaveStatus(status, label, actionLabel) {
         if (!saveStatusEl) return;
@@ -207,6 +207,7 @@
         state.nodes = Array.isArray(data.nodes) ? data.nodes : [];
         state.connections = Array.isArray(data.connections) ? data.connections : [];
         viewport = data.viewport || { panX: 80, panY: 80, zoom: 1 };
+        state.diagram = data.diagram || null;
         render();
     }
     function recoverPendingDraft(serverData, serverUpdatedAt) {
@@ -291,6 +292,7 @@
                 state.nodes = raw.nodes || [];
                 state.connections = raw.connections || [];
                 viewport = raw.viewport || { panX: 80, panY: 80, zoom: 1 };
+                state.diagram = raw.diagram || null;
                 _pendingLoad = false;
                 if (!recoverPendingDraft(raw, p.updatedAt)) render();
                 fadeOutLoader();
@@ -311,6 +313,7 @@
         state.nodes = data.nodes || [];
         state.connections = data.connections || [];
         viewport = data.viewport || { panX: 80, panY: 80, zoom: 1 };
+        state.diagram = data.diagram || null;
         recoverPendingDraft(data, meta.updatedAt);
         return true;
     }
@@ -1506,6 +1509,45 @@
             });
         });
     }
+
+    // Public bridge for focused builder tools (diagram and future AI actions).
+    // The bridge exposes snapshots and controlled mutations, not mutable state.
+    window.FGBuilder = {
+        getWorkflow: function () { return snapshotWorkflow(); },
+        getDiagram: function () { return state.diagram || null; },
+        setDiagram: function (diagram) {
+            state.diagram = diagram || null;
+            scheduleSave();
+        },
+        applyAiOperations: function (operations) {
+            if (!Array.isArray(operations) || operations.length > 100) return false;
+            pushHistory();
+            operations.forEach(function (op) {
+                if (op.op === 'add_node' && op.node && typeof op.node === 'object') {
+                    var node = JSON.parse(JSON.stringify(op.node));
+                    if (state.nodes.some(function (n) { return n.id === node.id; })) node.id = uid('n');
+                    state.nodes.push(node);
+                } else if (op.op === 'update_node') {
+                    var target = state.nodes.find(function (n) { return n.id === op.id; });
+                    if (target && op.patch && typeof op.patch === 'object') Object.assign(target, op.patch);
+                } else if (op.op === 'delete_node') {
+                    state.nodes = state.nodes.filter(function (n) { return n.id !== op.id; });
+                    state.connections = state.connections.filter(function (c) { return c.from?.nodeId !== op.id && c.to?.nodeId !== op.id; });
+                } else if (op.op === 'add_connection' && op.connection) {
+                    if (!state.connections.some(function (c) { return c.id === op.connection.id; })) state.connections.push(JSON.parse(JSON.stringify(op.connection)));
+                } else if (op.op === 'delete_connection') {
+                    state.connections = state.connections.filter(function (c) { return c.id !== op.id; });
+                } else if (op.op === 'set_diagram' && op.diagram) {
+                    state.diagram = JSON.parse(JSON.stringify(op.diagram));
+                }
+            });
+            render();
+            scheduleSave();
+            return true;
+        },
+        render: render,
+        scheduleSave: scheduleSave
+    };
 
     /* ---------------- init ---------------- */
     initTheme();
