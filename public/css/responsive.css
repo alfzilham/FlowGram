@@ -260,6 +260,8 @@
         bottom: 84px;
     }
 
+    #diagram-panel, #ai-panel { top: 12px; right: 12px; bottom: 12px; width: min(440px, calc(100vw - 24px)); padding: 18px; }
+
 }
 
 /* ---------- Small Mobile (≤480px) ---------- */
@@ -319,5 +321,7 @@
         font-size: 12.5px;
         padding: 8px 16px;
     }
+
+    #diagram-panel, #ai-panel { top: 8px; right: 8px; bottom: 8px; width: calc(100vw - 16px); padding: 15px; }
 
 }
