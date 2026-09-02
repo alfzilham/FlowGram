@@ -46,3 +46,4 @@ export function createRateLimit(maxRequests) {
 export const loginRateLimit = createRateLimit(10);
 export const projectRateLimit = createRateLimit(60);
 export const folderRateLimit = createRateLimit(30);
+export const aiRateLimit = createRateLimit(20);

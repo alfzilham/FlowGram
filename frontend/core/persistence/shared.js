@@ -283,6 +283,7 @@
             async updateProject(id, data) { return apiCall('PUT', '/projects/' + id, data); },
             async autosaveProject(id, data) { return apiCall('PUT', '/projects/' + id + '/autosave', { data: data }); },
             async deleteProject(id) { return apiCall('DELETE', '/projects/' + id); },
+            async aiAssist(instruction, workflow) { return apiCall('POST', '/ai/assist', { instruction: instruction, workflow: workflow }); },
 
             // ── Folders ──
             async folders() { return (await apiCall('GET', '/folders')).folders; },

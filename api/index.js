@@ -3,7 +3,7 @@ import { createCors } from './middleware/cors.middleware.js';
 import { errorHandler } from './middleware/error.middleware.js';
 import { enforceRequestLimit } from './middleware/request-limit.middleware.js';
 import { requireAuth } from './middleware/auth.middleware.js';
-import { loginRateLimit, projectRateLimit, folderRateLimit } from './middleware/rate-limit.middleware.js';
+import { loginRateLimit, projectRateLimit, folderRateLimit, aiRateLimit } from './middleware/rate-limit.middleware.js';
 import { requestLogger } from './middleware/logging.middleware.js';
 import * as authController from './controllers/auth.controller.js';
 import * as projectController from './controllers/project.controller.js';
@@ -13,6 +13,7 @@ import * as templateController from './controllers/template.controller.js';
 import * as searchController from './controllers/search.controller.js';
 import * as trashController from './controllers/trash.controller.js';
 import * as workspaceController from './controllers/workspace.controller.js';
+import * as aiController from './controllers/ai.controller.js';
 import config from './config/index.js';
 
 const app = new Hono();
@@ -264,6 +265,13 @@ app.post('/api/workspace/import', (c) => {
     const { payload, error } = requireAuth(c);
     if (error) return error;
     return workspaceController.handleImport(c, payload);
+});
+
+/* ---------- AI assistant ---------- */
+app.post('/api/ai/assist', aiRateLimit, (c) => {
+    const { payload, error } = requireAuth(c);
+    if (error) return error;
+    return aiController.handleAssist(c, payload);
 });
 
 export default app;
