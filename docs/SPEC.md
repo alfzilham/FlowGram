@@ -7,6 +7,8 @@ FlowGram lets a visitor or authenticated user create visual projects containing 
 - Demo mode uses localStorage without an account.
 - Login uses Google OAuth, application JWT (30 days), onboarding name update, project/folder CRUD, and account deletion.
 - Builder supports dynamic node editing (`width: max-content`, auto-wrapping), connections, selection, drag/pan/zoom, undo/redo, clipboard, JSON import/export, and debounced autosave.
+- Builder includes Diagram Studio with Mermaid and Markdown source editing, sanitized preview, and workflow persistence under optional `diagram` data.
+- Builder includes FlowGram AI preview mode: authenticated users submit an instruction, review validated operations, and explicitly approve or discard changes.
 - Public workflow export remains `{ nodes, connections }`; viewport is not exported.
 
 ## API contract

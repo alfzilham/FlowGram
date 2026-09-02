@@ -17,7 +17,9 @@ Active pages are `index.html`, `builder.html`, `onboarding.html`, and `auth/goog
 - `frontend/core/auth/auth.js`: token/cache handling, demo mode, auth gate, OAuth popup and one-time state validation.
 - `frontend/core/persistence/shared.js`: `window.FG`, localStorage CRUD, API wrapper, legacy migration, and demo migration.
 - `frontend/dashboard/dashboard.controller.js`: project/folder dashboard, search, settings, profile, and optimistic API adapter.
-- `frontend/builder/builder.controller.js`: canvas, nodes, connections, viewport, history, import/export, and autosave.
+- `frontend/builder/builder.controller.js`: canvas, nodes, connections, viewport, history, import/export, autosave, and the controlled `FGBuilder` bridge.
+- `frontend/builder/diagram.controller.js`: Mermaid/Markdown source editor and sanitized preview.
+- `frontend/builder/ai.controller.js`: AI instruction panel, preview, explicit approval, and operation application.
 - `frontend/onboarding/onboarding.controller.js`: display-name submission.
 
 Scripts are loaded in dependency order: persistence, auth, then page controller.
@@ -34,4 +36,6 @@ Demo mode uses the `demo` sentinel and localStorage keys such as `wf_projects_in
 
 ## Deployment
 
-`server/index.js` exposes the Hono API, static files, health endpoint, and baseline security headers. Runtime secrets are `DATABASE_URL`, `JWT_SECRET`, Google credentials, and optional `ALLOWED_ORIGINS`. The application is started with `npm start` or `npm run dev`; Neon remains external.
+`server/index.js` exposes the Hono API, static files, health endpoint, and baseline security headers. Runtime secrets are `DATABASE_URL`, `JWT_SECRET`, Google credentials, and optional `ALLOWED_ORIGINS`. Optional AI integration uses server-only `AI_API_URL`, `AI_API_KEY`, and `AI_MODEL`. The application is started with `npm start` or `npm run dev`; Neon remains external.
+
+AI requests are authenticated, rate-limited, bounded by instruction/workflow validation, and return a reviewable operation list. The browser applies operations only after explicit user approval.

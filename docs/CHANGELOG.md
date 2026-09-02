@@ -4,6 +4,16 @@ Semua perubahan frontend penting pada proyek **FlowGram** didokumentasikan dalam
 
 ---
 
+## [Diagram Studio & AI Assistant] — 2026-09-02
+
+- Ditambahkan editor Mermaid dan Markdown pada builder dengan preview terpisah dan persistence di workflow.
+- Markdown preview disanitasi dengan DOMPurify dan Mermaid dijalankan dalam strict security mode.
+- Ditambahkan AI assistant provider-agnostic melalui `AI_API_URL`, `AI_API_KEY`, dan `AI_MODEL` yang hanya digunakan server.
+- AI hanya mengembalikan operasi workflow yang divalidasi; perubahan tidak diterapkan tanpa approval eksplisit pengguna.
+- Ditambahkan rate limit AI, batas instruksi, validasi workflow, serta audit log ringkas tanpa token atau isi workflow.
+
+---
+
 ## [Remove Canvas Save Badge] — 2026-09-01
 
 - Badge `Tersimpan` di canvas dihapus sesuai perubahan UX.
